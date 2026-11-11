@@ -32,6 +32,7 @@
 | D-27 | `apilibreria` hoy despliega desde `eEmanuel07/Librer-a_Prog.3_2026`, rama `despliegue`, commit `e623a77`. Cuando Elías lo pase a este repo, desplegará desde `main` con Build Path `/backend` | Reemplaza los TBD de rama y commit en `12_despliegue_easypanel.md` y C-10 |
 | D-28 | Formato de `CORS_ORIGINS`: una o varias URL de origen exacto (esquema + host, sin barra final) separadas por coma. Local: `http://127.0.0.1:8080,http://localhost:8080`; Easypanel: `https://<dominio-del-front>`. En el back: `os.getenv("CORS_ORIGINS", "").split(",")`, quitando espacios y vacíos | Cierra el TBD de formato. El dominio concreto sigue dependiendo de C-08 |
 | D-29 | El servicio `frontend` de Easypanel (C-08) despliega desde la rama `main` de este repo, Build Path `/frontend` | Cierra el TBD de rama |
+| D-30 | El catálogo (C-03, Hernán) **no usa** el filtro `genero_id` de `GET /libros/`: solo busca por `titulo` y pagina con `limit`/`offset`. El filtro existe en la API y queda documentado como no usado | No lo pide la consigna del Ej. 1 y sumaría un `GET /generos/` y un select más. Cierra la pregunta de prioridad baja de `10_preguntas_abiertas.md` |
 
 ## Supuestos inferidos
 - **Suposición:** el corrector no ejecuta el código; evalúa «funcionamiento observado» desde la URL pública (consigna + contexto del grupo).
