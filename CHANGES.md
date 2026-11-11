@@ -39,7 +39,7 @@ C-01 imagen-frontend-docker [x]  (B)
  │                                                      │
  │        C-03 + C-04 + C-05 mergeados ─────────────────┴── C-08 despliegue-frontend-easypanel (B)
  │                                                              │
-C-09 cors-backend (E)   ── sin dependencias de código ──────────┤
+C-09 cors-backend [~] (E) ── sin dependencias de código ──────────┤
  │                                                              ▼
  └────────────────────────────────────────── C-10 apilibreria-desde-monorepo (E)   [necesita C-09 y el dominio de C-08]
                                                                 │
@@ -246,7 +246,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 ## FASE 3 — Servicios y despliegue (Ej. 5, 20 pts)
 
 ### [C-09] `cors-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` en revisión (rama `feat/cors-backend`): change propuesto, aplicado y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-cors-backend/`; spec en `openspec/specs/cors-api/spec.md`); 18 tests con `unittest` en `backend/tests/`. El `min_length=1` de I-01 quedó afuera (a acordar con Bruno).
 - **Dueño**: E (Elías) · **Ej.**: 5 · US-5.1
 - **Scope**:
   - `backend/app/main.py`: middleware CORS leyendo la variable `CORS_ORIGINS` (hoy no existe, I-06). Formato: una o varias URL de origen exacto (esquema + host, sin barra final) separadas por coma; se lee con `os.getenv("CORS_ORIGINS", "").split(",")`, quitando espacios y vacíos. Local: `CORS_ORIGINS=http://127.0.0.1:8080,http://localhost:8080`.
@@ -362,7 +362,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-06 | `estante-estetica` | B | transversal | `[ ]` | C-03 | BAJO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
-| C-09 | `cors-backend` | E | 5 | `[ ]` | — | ALTO |
+| C-09 | `cors-backend` | E | 5 | `[~]` | — | ALTO |
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[ ]` | C-09, C-08 | ALTO |
 | C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[ ]` | C-03, C-04, C-05, C-08, C-10 | BAJO |
 | C-12 | `deploy-md` | B | 5 | `[ ]` | C-08, C-10 | BAJO |
