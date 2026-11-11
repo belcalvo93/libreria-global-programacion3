@@ -22,6 +22,7 @@ venv/
 
 # Lo que no se usa para correr la aplicación.
 test/
+tests/
 evidencia/
 Dockerfile
 .dockerignore

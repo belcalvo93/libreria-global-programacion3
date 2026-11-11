@@ -53,6 +53,7 @@ cp env.example .env
 |---|---|
 | `DATABASE_URL` | Conexión a PostgreSQL con el driver async: `postgresql+asyncpg://USUARIO:CONTRASEÑA@localhost:5432/libreria`. El puerto tiene que coincidir con el del contenedor (por defecto 5432, igual que en env.example). Si ya tenés otro PostgreSQL usando el 5432, mapeá el contenedor a otro puerto (por ejemplo 5433) y poné ese mismo puerto en tu .env. |
 | `SQL_ECHO` | `true` muestra en la consola cada consulta SQL (sirve para la evidencia del caso C-07). Por defecto `false`. |
+| `CORS_ORIGINS` | Orígenes del navegador que pueden llamar a la API, separados por coma y exactos (esquema + host[:puerto], sin barra final): `http://127.0.0.1:8080,http://localhost:8080`. En Easypanel, `https://<dominio-del-front>`. Vacía o sin definir = sin CORS (la API arranca igual). Se lee al arrancar: si la cambiás, reiniciá la API. |
 
 ## Base de datos
 
@@ -166,6 +167,14 @@ Los listados se paginan con `limit` (1 a 100, por defecto 20) y `offset` (desde 
 En `test/` hay un archivo `.http` por módulo. Se abren en VS Code con la extensión
 **REST Client** y se ejecuta cada pedido con *Send Request*. Usan `@host = http://localhost:8000`
 y los ids de los datos iniciales, así que conviene correr `python -m scripts.seed` antes.
+
+## Tests automáticos
+
+Corren sin base de datos ni `DATABASE_URL`. Desde `backend/`:
+
+```bash
+python -m unittest discover -s tests
+```
 
 ## Nota para Windows
 
