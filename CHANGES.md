@@ -28,7 +28,7 @@ Cronograma del grupo: **mié 11** base (C-01; C-02 es lo primero del día, tras 
 
 ```
 C-01 imagen-frontend-docker [x]  (B)
- ├── C-02 cliente-http-api-js [~]  (B, retroactivo)
+ ├── C-02 cliente-http-api-js [~]  (B, retroactivo archivado; PR abierto)
  │     ├── C-03 catalogo-api (H, G-01)
  │     │     ├── C-06 estante-estetica (B)
  │     │     └──┐
@@ -59,7 +59,7 @@ Notas de dependencia:
 
 ```
 GATE 0: C-01 ✓ (hecha)
-  → C-02 cliente-http-api-js                 [B — mié 11, lo primero del día: change retroactivo + PR, tras mergear la fundación]
+  → C-02 cliente-http-api-js                 [B — mié 11: change retroactivo hecho y archivado; PR de feat/api-cliente en revisión, api.js queda en main al mergearlo; no bloquea a nadie]
   → C-09 cors-backend                        [E — independiente: solo toca backend/]
 
 GATE 1: C-02 ✓ (api.js mergeado)             ← PRIMER FORK
@@ -100,7 +100,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 
 | Paso | B (Belén) | H (Hernán) | R (Bruno) | J (Joaquín) | E (Elías) |
 |------|-----------|------------|-----------|-------------|-----------|
-| 0 · mié 11 | C-02 (lo primero del día, tras mergear el PR de la fundación): propose/archive retroactivo y PR de `feat/api-cliente` | — | — | — | C-09 cors-backend |
+| 0 · mié 11 | C-02: change retroactivo ya archivado; PR de `feat/api-cliente` en revisión (`api.js` queda en main al mergearlo; no bloquea a nadie) | — | — | — | C-09 cors-backend |
 | 1 · jue 12 | Revisar y mergear C-02 (con otro revisor); revisar PRs | C-03 catalogo-api | C-04 altas-libros-clientes | C-05 ventas-historial | C-09 (cierre y PR) |
 | 2 · vie 13 día | C-06 estante-estetica (tras C-03 mergeado) | Cierre de C-03 y PR; revisiones | Cierre de C-04 y PR | Cierre de C-05 y PR | Preparar C-10 (repo, rama, Build Path) |
 | 3 · vie 13 tarde | C-07 limpieza (con H, R, J mergeados) | — | — | — | — |
@@ -126,7 +126,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/09_decisiones_y_supuestos.md` D-02, D-12
 
 ### [C-02] `cliente-http-api-js`
-- **Estado**: `[~]` en revisión: el código vive en la rama `feat/api-cliente`, **sin PR**; `main` no lo carga en `index.html`. **Change RETROACTIVO**: falta proponerlo y archivarlo en OpenSpec a posteriori (`/opsx:propose` → `/opsx:apply` para verificar contra el código existente → `/opsx:archive`) y abrir el PR. **Orden decidido**: primero se mergea el PR de esta fundación (AGENTS.md, KB, CHANGES.md, design-system); después Belén hace su change retroactivo y su PR. Es lo primero del día siguiente, miércoles 11.
+- **Estado**: `[~]` en revisión (PR abierto): el código vive en la rama `feat/api-cliente`; `main` todavía no lo carga en `index.html` hasta mergear el PR. **Change RETROACTIVO** ya propuesto, verificado contra el código y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-cliente-http-api-js/`; spec en `openspec/specs/cliente-http/spec.md`). Falta revisar y mergear el PR (con otro revisor) y correr las pruebas manuales de abajo.
 - **Dueño**: B (Belén) · **Ej.**: 1 (parte técnica, US-1.7)
 - **Scope**:
   - `frontend/public/js/api.js` expone `window.Api` con `get`, `post`, `patch`, `numero`, `ApiError` (IIFE, `var`, `"use strict"`).
@@ -355,7 +355,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | ID | Change | Dueño | Ej. / Casos | Estado | Dependencias | Governance |
 |----|--------|-------|-------------|--------|--------------|------------|
 | C-01 | `imagen-frontend-docker` | B | 4 | `[x]` hecha (PR #1) | — | BAJO |
-| C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[~]` en revisión, retroactivo | C-01 | ALTO |
+| C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[~]` en revisión (PR abierto), retroactivo archivado | C-01 | ALTO |
 | C-03 | `catalogo-api` | H | 1 · G-01 | `[ ]` | C-02 | MEDIO |
 | C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[ ]` | C-02 (blanda C-03) | MEDIO |
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
@@ -370,7 +370,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 
 **Totales**: 13 changes en 4 fases · 6 gates de paralelismo (GATE 0 a GATE 6, con 2 forks) · camino crítico de 5 changes terminando en C-07.
 
-**Primer change recomendado**: `C-02` (cliente-http-api-js), lo primero del miércoles 11 tras mergear el PR de la fundación: correr `/opsx:propose` retroactivo y `/opsx:archive` y abrir el PR de `feat/api-cliente`, porque bloquea a Hernán, Bruno y Joaquín. En paralelo, Elías puede arrancar `C-09`.
+**Primer change recomendado**: `C-02` (cliente-http-api-js), lo primero del miércoles 11 tras mergear el PR de la fundación: el change retroactivo ya está propuesto y archivado (`/opsx:propose` + `/opsx:archive`); falta solo el PR de `feat/api-cliente` (revisión y merge), porque bloquea a Hernán, Bruno y Joaquín. En paralelo, Elías puede arrancar `C-09`.
 
 ## Pendientes y (TBD) que afectan a este plan
 

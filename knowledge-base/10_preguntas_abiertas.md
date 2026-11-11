@@ -19,7 +19,7 @@
 |---|----------|---------|
 | I-09 | Dueño de `js/api.js` | `README.md` del repo (reparto «propuesta») lo asigna a **Hernán**; el contexto del grupo y el reparto decidido lo asignan a **Belén**. Vale Belén (rama `feat/api-cliente`) |
 | I-10 | Reparto desactualizado en `README.md` | README: Elías hace «servicios en Easypanel, DEPLOY.md»; reparto decidido: Belén despliega el frontend y escribe `DEPLOY.md`, Elías hace CORS, `/backend`, evidencia y ZIP. Belén además tiene estante y estética (README lo menciona pero el contexto no). Conviene actualizar el README |
-| I-11 | `api.js` «ya está hecho» (contexto) | No está en `main`: vive en `feat/api-cliente` sin PR, en revisión. `index.html` en `main` no lo carga |
+| I-11 | `api.js` «ya está hecho» (contexto) | Está en el PR de C-02 (rama `feat/api-cliente`); `main` lo incorpora, junto con la carga en `index.html`, al mergearlo. No bloquea a nadie |
 | I-12 | `frontend/public/` en `main` solo tiene `index.html`, `css/styles.css` y `js/{altas,catalogo,datos,persistencia,ventas}.js`; no hay `img/` | La consigna y el README mencionan `img/` |
 | I-13 | `DEPLOY.md` y `evidencia/` figuran en el README pero no existen en la raíz | Los crean Belén y Elías. Existen `backend/DEPLOY.md` y `backend/evidencia/` del TP anterior |
 | I-14 | `openspec/config.yaml` no define `context` ni `rules` (todo comentado) | Los artefactos OpenSpec no reciben convenciones del proyecto; considerar copiar allí las convenciones del front y «escribir en español» |

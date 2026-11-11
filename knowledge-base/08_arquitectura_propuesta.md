@@ -10,7 +10,7 @@ frontend/
   public/
     index.html             secciones: catalogo, libros, clientes, ventas, historial
     css/styles.css         CSS del parcial (política de diseño light)
-    js/api.js              cliente HTTP (rama feat/api-cliente; NO está aún en main)
+    js/api.js              cliente HTTP (en el PR de C-02, rama feat/api-cliente; queda en main al mergearlo)
     js/datos.js            heredado del parcial (se elimina en la tarea final)
     js/persistencia.js     heredado del parcial (se elimina en la tarea final)
     js/catalogo.js  js/altas.js  js/ventas.js
@@ -22,7 +22,7 @@ DEPLOY.md                  (raíz; pendiente, lo escribe Belén)
 evidencia/                 (raíz; pendiente, casos G-01 a G-07; el backend tiene su propio backend/evidencia/ del TP)
 knowledge-base/            esta KB
 ```
-Orden de carga de scripts en `index.html` (clásicos, sin módulos): `api.js` primero, luego los demás. En `main` hoy se cargan `datos.js`, `persistencia.js`, `catalogo.js`, `altas.js`, `ventas.js` (sin `api.js`).
+Orden de carga de scripts en `index.html` (clásicos, sin módulos): `api.js` primero, luego los demás. En la rama `feat/api-cliente` (PR de C-02) `index.html` ya carga `api.js` primero; `main` lo incorpora al mergear ese PR. Hasta entonces `main` carga solo `datos.js`, `persistencia.js`, `catalogo.js`, `altas.js`, `ventas.js`.
 
 ## Cliente HTTP: `js/api.js` (dueña: Belén)
 Expone `window.Api`:
