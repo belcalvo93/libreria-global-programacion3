@@ -29,7 +29,7 @@ Cronograma del grupo: **mié 11** base (C-01; C-02 es lo primero del día, tras 
 ```
 C-01 imagen-frontend-docker [x]  (B)
  ├── C-02 cliente-http-api-js [~]  (B, retroactivo archivado; PR abierto)
- │     ├── C-03 catalogo-api (H, G-01)
+ │     ├── C-03 catalogo-api [x] (H, G-01)
  │     │     ├── C-06 estante-estetica (B)
  │     │     └──┐
  │     ├── C-04 altas-libros-clientes (R, G-02/G-03) ──┤  (aviso blando a C-03: window.renderCatalogo)
@@ -150,7 +150,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 > Fork: C-03, C-04 y C-05 corren en paralelo porque cada integrante toca solo su archivo JS y su sección del `index.html` (sin conflictos de merge). Todas parten de `api.js` mergeado (C-02).
 
 ### [C-03] `catalogo-api`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` implementado, probado (G-01 local) y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-catalogo-api/`; spec en `openspec/specs/catalogo-libros/spec.md`) — listo para PR en `feat/catalogo-api`
 - **Dueño**: H (Hernán) · **Ej.**: 1 (20 pts) · US-1.1..1.6 · **Caso**: G-01 · Rama de ejemplo: `feat/catalogo-api`
 - **Scope**:
   - `js/catalogo.js` + `<section id="catalogo">` consumiendo `GET /libros/?titulo=&limit=&offset=` (búsqueda parcial por título, `offset` = 0 al cambiar el filtro).
@@ -356,7 +356,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 |----|--------|-------|-------------|--------|--------------|------------|
 | C-01 | `imagen-frontend-docker` | B | 4 | `[x]` hecha (PR #1) | — | BAJO |
 | C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[~]` en revisión (PR abierto), retroactivo archivado | C-01 | ALTO |
-| C-03 | `catalogo-api` | H | 1 · G-01 | `[ ]` | C-02 | MEDIO |
+| C-03 | `catalogo-api` | H | 1 · G-01 | `[x]` archivado (rama `feat/catalogo-api`) | C-02 | MEDIO |
 | C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[ ]` | C-02 (blanda C-03) | MEDIO |
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
 | C-06 | `estante-estetica` | B | transversal | `[ ]` | C-03 | BAJO |

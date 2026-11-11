@@ -35,7 +35,6 @@
 | Media | ¿La base desplegada ya tiene datos de pruebas del grupo? ¿Hace falta recargar el seed (que vacía tablas)? | Datos de G-01..G-06 | Elías |
 | Media | ¿El backend conserva hoy su dominio público automático? La consigna pide quitarlo | Cierre del Ej. 5 | Elías |
 | Media | Texto completo de las reglas RN del TP original (aquí solo se infiere del código) | Documentación | Equipo |
-| Baja | ¿Se usa el filtro `genero_id` de `GET /libros/` en el catálogo? (hoy no usado) | — | Hernán |
 | Baja | Fecha y canal oficiales de entrega comunicados por la cátedra (el grupo asume sábado 14 de noviembre a la noche) | Cronograma | Grupo |
 
 ## Resueltas (pasaron a `09_decisiones_y_supuestos.md`)
@@ -47,3 +46,4 @@
 - Formato de `CORS_ORIGINS` → D-28.
 - Rama del servicio `frontend` (C-08) → D-29.
 - Cuándo se abre el PR de `api.js` → D-13 (miércoles 11, después de mergear la fundación).
+- Filtro `genero_id` de `GET /libros/` en el catálogo → D-30 (no se usa; lo decidió Hernán en C-03).

@@ -22,77 +22,64 @@
   <main>
     <section id="catalogo" class="card">
       <h2>Catálogo</h2>
-      <div class="form__grupo">
-        <label for="catalogo-busqueda">Buscar por título</label>
-        <input type="search" id="catalogo-busqueda" name="catalogo-busqueda" placeholder="Título del libro">
-        <button id="catalogo-buscar" class="btn" type="button">Buscar en el catálogo</button>
-      </div>
+      <form id="form-catalogo" class="form" role="search" novalidate>
+        <div class="form__grupo">
+          <label for="catalogo-busqueda">Buscar por título</label>
+          <input type="search" id="catalogo-busqueda" name="catalogo-busqueda" placeholder="Título del libro">
+          <button id="catalogo-buscar" class="btn" type="submit">Buscar en el catálogo</button>
+        </div>
+      </form>
+      <p id="mensaje-catalogo-cargando" class="mensaje" role="status" hidden>Cargando catálogo...</p>
+      <p id="mensaje-catalogo-error" class="mensaje mensaje--error" role="alert" hidden></p>
       <div class="tabla-contenedor">
-        <table id="tabla-catalogo" class="tabla">
-        <thead>
-          <tr>
-            <th scope="col">Título</th>
-            <th scope="col">ISBN</th>
-            <th scope="col">Editorial</th>
-            <th scope="col">Género</th>
-            <th scope="col">Autores</th>
-            <th scope="col">Precio</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>El mapa de las horas lentas</td>
-            <td>9789500100011</td>
-            <td>Editorial Faro Austral</td>
-            <td>Fantasía Urbana</td>
-            <td>Lucía Ferreyra</td>
-            <td>1500.00</td>
-          </tr>
-          <tr>
-            <td>Crónicas del patio interior</td>
-            <td>9789500100028</td>
-            <td>Ediciones Puente Alto</td>
-            <td>Ensayo Breve</td>
-            <td>Tomás Iriarte</td>
-            <td>2000.00</td>
-          </tr>
-          <tr>
-            <td>Noche de vidrio molido</td>
-            <td>9789500100035</td>
-            <td>Editorial Faro Austral</td>
-            <td>Sin clasificar</td>
-            <td>Camila Duarte</td>
-            <td>1750.00</td>
-          </tr>
-          <tr>
-            <td>Manual para perder trenes</td>
-            <td>9789500100042</td>
-            <td>Ediciones Puente Alto</td>
-            <td>Fantasía Urbana</td>
-            <td>Lucía Ferreyra, Tomás Iriarte</td>
-            <td>2300.00</td>
-          </tr>
-          <tr>
-            <td>El oficio de la marea</td>
-            <td>9789500100059</td>
-            <td>Editorial Faro Austral</td>
-            <td>Ensayo Breve</td>
-            <td>Camila Duarte</td>
-            <td>3100.00</td>
-          </tr>
-          <tr>
-            <td>Inventario de luces mínimas</td>
-            <td>9789500100066</td>
-            <td>Ediciones Puente Alto</td>
-            <td>Sin clasificar</td>
-            <td>Tomás Iriarte</td>
-            <td>2800.00</td>
-          </tr>
-        </tbody>
+        <table id="tabla-catalogo" class="tabla" hidden>
+          <thead>
+            <tr>
+              <th scope="col">Título</th>
+              <th scope="col">ISBN</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Editorial</th>
+              <th scope="col">Género</th>
+              <th scope="col">Detalle</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
         </table>
       </div>
       <p id="mensaje-catalogo-vacia" class="mensaje" hidden>No hay libros en el catálogo.</p>
       <p id="mensaje-catalogo-sin-resultados" class="mensaje" hidden>No se encontraron libros con ese título.</p>
+      <div class="form__grupo" role="group" aria-label="Paginación del catálogo">
+        <output id="catalogo-pagina" aria-live="polite">Página 1</output>
+        <button id="catalogo-anterior" class="btn" type="button" disabled>Anterior</button>
+        <button id="catalogo-siguiente" class="btn" type="button" disabled>Siguiente</button>
+      </div>
+      <article id="catalogo-detalle" class="card" aria-labelledby="catalogo-detalle-titulo" hidden>
+        <h3 id="catalogo-detalle-titulo" tabindex="-1">Detalle del libro</h3>
+        <p id="mensaje-catalogo-detalle-cargando" class="mensaje" role="status" hidden>Cargando detalle del libro...</p>
+        <p id="mensaje-catalogo-detalle-error" class="mensaje mensaje--error" role="alert" hidden></p>
+        <div id="catalogo-detalle-contenido" class="form__grupo" hidden>
+          <p><strong>Título:</strong> <span id="detalle-libro-titulo"></span></p>
+          <p><strong>ISBN:</strong> <span id="detalle-libro-isbn"></span></p>
+          <p><strong>Precio:</strong> <span id="detalle-libro-precio"></span></p>
+          <p><strong>Stock:</strong> <span id="detalle-libro-stock"></span></p>
+          <p><strong>Editorial:</strong> <span id="detalle-libro-editorial"></span></p>
+          <p><strong>Género:</strong> <span id="detalle-libro-genero"></span></p>
+          <div class="tabla-contenedor">
+            <table id="tabla-detalle-autores" class="tabla">
+              <thead>
+                <tr>
+                  <th scope="col">Autor</th>
+                  <th scope="col">Rol</th>
+                  <th scope="col">Orden</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p id="mensaje-detalle-sin-autores" class="mensaje" hidden>Este libro no tiene autorías registradas.</p>
+        </div>
+        <button id="catalogo-detalle-cerrar" class="btn" type="button">Cerrar detalle</button>
+      </article>
     </section>
 
     <section id="libros" class="card">
