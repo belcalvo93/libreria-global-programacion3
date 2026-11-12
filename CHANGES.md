@@ -41,7 +41,7 @@ C-01 imagen-frontend-docker [x]  (B)
  │                                                              │
 C-09 cors-backend [x] (E) ── sin dependencias de código ──────────┤
  │                                                              ▼
- └────────────────────────────────────────── C-10 apilibreria-desde-monorepo (E)   [necesita C-09 y el dominio de C-08]
+ └────────────────────────────────────────── C-10 apilibreria-desde-monorepo [x] (E)   [necesita C-09 y el dominio de C-08]
                                                                 │
                               C-08 + C-10 ──────────────────────┼── C-12 deploy-md (B)
                               C-03,C-04,C-05 + C-08 + C-10 ─────┴── C-11 evidencia-casos-g (todos, junta E)
@@ -305,7 +305,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/10_preguntas_abiertas.md` (dominio del front / `CORS_ORIGINS`)
 
 ### [C-10] `apilibreria-desde-monorepo`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecha en Easypanel el 12/11 y archivada en OpenSpec (`openspec/changes/archive/2026-11-12-apilibreria-desde-monorepo/`; spec en `openspec/specs/despliegue-api/spec.md`). `apilibreria` despliega `main` desde `/backend` (commit `391bb61`), `CORS_ORIGINS` con el dominio del front, sin dominio público; G-07 OK (evidencia `evidencia/G-07_*`). Sin despliegue automático: tras un merge que toque `backend/` hay que apretar Deploy.
 - **Dueño**: E (Elías) · **Ej.**: 5 · US-5.2 · **Caso**: G-07 (deploy)
 - **Scope**:
   - Cambiar la fuente del servicio `apilibreria` (hoy despliega desde `eEmanuel07/Librer-a_Prog.3_2026`, rama `despliegue`, commit `e623a77`) a `belcalvo93/libreria-global-programacion3`, rama `main`, Build Path `/backend`, Dockerfile `Dockerfile`; mantener las mismas variables (`DATABASE_URL`, `SQL_ECHO`) y la misma base `dblibreria`.
@@ -388,7 +388,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
-| C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[ ]` | C-09, C-08 | ALTO |
+| C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[x]` hecha (12/11), archivada | C-09, C-08 | ALTO |
 | C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[ ]` | C-03, C-04, C-05, C-08, C-10 | BAJO |
 | C-12 | `deploy-md` | B | 5 | `[ ]` | C-08, C-10 | BAJO |
 | C-13 | `zip-entrega` | E | 5 | `[ ]` | C-11, C-12 | MEDIO |
@@ -399,9 +399,9 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 
 ## Pendientes y (TBD) que afectan a este plan
 
-- URL pública del front y dominio exacto para `CORS_ORIGINS`: (TBD) hasta que Belén cree el servicio `frontend` (C-08); C-09 y C-10 dependen de ese dato.
+- ~~URL pública del front y dominio exacto para `CORS_ORIGINS`~~: resuelto, `https://grupo2-elias-frontend.ugpvou.easypanel.host` (C-08), cargado en `CORS_ORIGINS` (C-10).
 - Resuelto: formato de `CORS_ORIGINS` (una o varias URL de origen exacto separadas por coma, sin barra final) y rama del servicio `frontend` (`main`); ver D-28 y D-29.
-- Datos en la base desplegada y dominio público automático de `apilibreria`: pendientes de confirmar con Elías (C-10).
+- ~~Datos en la base desplegada y dominio público automático de `apilibreria`~~: resuelto en C-10. La base tiene datos (6 libros, 2 ventas, cliente 1; no se corrió el seed) y el dominio público del backend se quitó tras salir las notas del parcial anterior.
 - ~~Valores de la paleta «librería mágica» (C-06)~~: resueltos (D-31; hex y contrastes en `design-system/README.md`). Pendiente solo la aprobación de la revisión 4 (D-32 y D-33).
 - Fecha y canal oficiales de entrega: (TBD).
 
