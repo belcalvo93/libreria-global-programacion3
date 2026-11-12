@@ -98,7 +98,7 @@ Si una petición del listado termina después de otra iniciada más tarde, el ca
 - **THEN** la tabla muestra el resultado de «ficciones»
 
 ### Requirement: Detalle del libro con autores
-Al pedir el detalle de un libro, el catálogo SHALL consultar `GET /api/libros/{id}` y mostrar título, ISBN, precio, stock, editorial, género y las autorías con nombre del autor, rol y orden, ordenadas por `orden` ascendente. El foco MUST moverse al detalle y cerrarlo MUST ocultarlo.
+Al pedir el detalle de un libro, el catálogo SHALL consultar `GET /api/libros/{id}` y mostrar título, ISBN, precio, stock, editorial, género y las autorías con nombre del autor, rol y orden, ordenadas por `orden` ascendente. El foco MUST moverse al detalle y cerrarlo MUST ocultarlo y devolver el foco al control que lo abrió si sigue en el documento.
 
 #### Scenario: Detalle de la Antología
 - **WHEN** el usuario abre el detalle de la «Antología de la literatura fantástica»
@@ -121,11 +121,11 @@ El frontend SHALL exponer `window.renderCatalogo()`, que recarga desde la API la
 - **THEN** la promesa se resuelve sin lanzar y se ve el mensaje de error del catálogo
 
 ### Requirement: Detalle reutilizable
-El frontend SHALL exponer `window.mostrarDetalleLibro(id)`, que abre el mismo detalle del catálogo para el libro indicado y devuelve una promesa.
+El frontend SHALL exponer `window.mostrarDetalleLibro(id, botonOrigen)`, que abre el mismo detalle del catálogo para el libro indicado, recuerda `botonOrigen` (o el elemento activo si corresponde) para devolverle el foco al cerrar el detalle y devuelve una promesa.
 
 #### Scenario: Apertura desde otra sección
-- **WHEN** otro script llama a `window.mostrarDetalleLibro(3)`
-- **THEN** se pide `GET /api/libros/3` y se muestra el detalle de ese libro
+- **WHEN** otro script llama a `window.mostrarDetalleLibro(3, boton)`
+- **THEN** se pide `GET /api/libros/3`, se muestra el detalle de ese libro y, al cerrarlo, el foco vuelve a `boton` si sigue en el documento
 
 ### Requirement: Accesibilidad y adaptabilidad
 Todos los controles nuevos del catálogo (búsqueda, paginación, detalle, cerrar) SHALL alcanzarse con Tab, mostrar foco visible y tener un nombre accesible. La sección MUST usarse sin desplazamiento horizontal de la página entre 320 y 1280 px; la tabla puede desplazarse dentro de su contenedor.
