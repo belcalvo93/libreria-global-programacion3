@@ -88,3 +88,130 @@ test("hayMas es true solo cuando llegan tantos libros como limite", function () 
   assert.equal(catalogo.hayMas(0, 5), false);
   assert.equal(catalogo.hayMas(5, 0), false);
 });
+
+test("resolverOrigenDetalle devuelve el botón indicado o el activeElement si no es body", function () {
+  var boton = { focus: function () {} };
+  var otro = { focus: function () {} };
+  var cuerpo = {};
+
+  assert.equal(
+    catalogo.resolverOrigenDetalle(boton, { activeElement: otro, body: cuerpo }),
+    boton
+  );
+  assert.equal(
+    catalogo.resolverOrigenDetalle(null, { activeElement: otro, body: cuerpo }),
+    otro
+  );
+  assert.equal(
+    catalogo.resolverOrigenDetalle(undefined, { activeElement: cuerpo, body: cuerpo }),
+    null
+  );
+  assert.equal(catalogo.resolverOrigenDetalle(null, null), null);
+});
+
+test("enfocarOrigenDetalle enfoca el botón solo cuando sigue en document.body", function () {
+  var focos = 0;
+  var boton = {
+    focus: function () {
+      focos += 1;
+    }
+  };
+  var docPresente = {
+    body: {
+      contains: function (el) {
+        return el === boton;
+      }
+    }
+  };
+  var docAusente = {
+    body: {
+      contains: function () {
+        return false;
+      }
+    }
+  };
+
+  assert.equal(catalogo.enfocarOrigenDetalle(boton, docPresente), true);
+  assert.equal(focos, 1);
+
+  assert.equal(catalogo.enfocarOrigenDetalle(boton, docAusente), false);
+  assert.equal(focos, 1);
+
+  assert.equal(catalogo.enfocarOrigenDetalle(null, docPresente), false);
+  assert.equal(focos, 1);
+});
+
+test("mostrarDetalleLibro conserva el botón de origen y cerrarDetalle le devuelve el foco", async function () {
+  var focoEnTitulo = 0;
+  var focoEnBoton = 0;
+  var botonEstante = {
+    focus: function () {
+      focoEnBoton += 1;
+    }
+  };
+  var elementos = {
+    "catalogo-detalle": { hidden: true },
+    "catalogo-detalle-titulo": {
+      focus: function () {
+        focoEnTitulo += 1;
+      }
+    },
+    "mensaje-catalogo-detalle-cargando": { hidden: true },
+    "mensaje-catalogo-detalle-error": { hidden: true, textContent: "" },
+    "catalogo-detalle-contenido": { hidden: true },
+    "detalle-libro-titulo": { textContent: "" },
+    "detalle-libro-isbn": { textContent: "" },
+    "detalle-libro-precio": { textContent: "" },
+    "detalle-libro-stock": { textContent: "" },
+    "detalle-libro-editorial": { textContent: "" },
+    "detalle-libro-genero": { textContent: "" },
+    "tabla-detalle-autores": { hidden: true },
+    "mensaje-detalle-sin-autores": { hidden: true }
+  };
+  var docAnterior = globalThis.document;
+  var apiGetAnterior = globalThis.Api.get;
+
+  globalThis.document = {
+    body: {
+      contains: function (el) {
+        return el === botonEstante;
+      }
+    },
+    activeElement: null,
+    getElementById: function (id) {
+      return elementos[id] || null;
+    },
+    querySelector: function () {
+      return null;
+    }
+  };
+  globalThis.Api.get = function () {
+    return Promise.resolve({
+      id: 3,
+      titulo: "Ficciones",
+      isbn: "978-0",
+      precio: "1500.00",
+      stock: 4,
+      editorial: { nombre: "Sur" },
+      genero: { nombre: "Cuento" },
+      autores: []
+    });
+  };
+
+  try {
+    await globalThis.window.mostrarDetalleLibro(3, botonEstante);
+    assert.equal(elementos["catalogo-detalle"].hidden, false);
+    assert.equal(focoEnTitulo, 1);
+
+    catalogo.cerrarDetalle();
+    assert.equal(elementos["catalogo-detalle"].hidden, true);
+    assert.equal(focoEnBoton, 1);
+  } finally {
+    if (docAnterior === undefined) {
+      delete globalThis.document;
+    } else {
+      globalThis.document = docAnterior;
+    }
+    globalThis.Api.get = apiGetAnterior;
+  }
+});
