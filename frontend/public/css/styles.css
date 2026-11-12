@@ -233,17 +233,26 @@ header {
   }
 }
 
-/* Estrella fugaz (solo animada con `no-preference`). */
+/* Estrella fugaz (solo se anima con `no-preference`; sin movimiento queda en
+   opacity 0). Cabeza luminosa a la derecha y estela dorada → blanca a la
+   izquierda en una sola capa. z-index -1: detrás del texto y de la nav, delante
+   del cielo (igual que la luna). No ocupa lugar (absolute) ni recibe clics. */
 header::after {
   content: "";
   position: absolute;
-  top: 25%;
-  left: 8%;
-  inline-size: 5rem;
-  block-size: 2px;
-  background: linear-gradient(to right, transparent, var(--magia-estrella));
+  top: 8%;
+  left: 6%;
+  z-index: -1;
+  inline-size: 9rem;
+  block-size: 4px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 100% 50%, #ffffff 0 1.5px, rgba(255, 246, 216, 0.9) 3px, transparent 6px),
+    linear-gradient(to right, transparent, rgba(232, 196, 106, 0.55) 55%, var(--magia-estrella));
+  filter: drop-shadow(0 0 4px rgba(255, 224, 140, 0.9));
   opacity: 0;
-  transform: rotate(20deg);
+  transform: rotate(12deg);
+  transform-origin: 0 50%;
   pointer-events: none;
 }
 
@@ -1082,6 +1091,233 @@ main > .card {
 
 
 /* ==========================================================================
+   15b. Secciones de abajo: «cristal nocturno» (change tema-secciones)
+   Catálogo, Libros, Clientes, Ventas e Historial. Solo estilo: no toca la
+   portada ni la estantería (`.portada`, `.estante`, `nav`, `.libro`, `.gato`).
+   ========================================================================== */
+main {
+  max-width: 68.75rem; /* ~1100 px */
+  gap: var(--esp-6);
+}
+
+main > .card {
+  gap: var(--esp-5);
+  padding: var(--esp-5);
+  background: rgba(10, 14, 40, 0.9); /* alternativa sin backdrop-filter */
+  border: 1px solid rgba(232, 196, 106, 0.28);
+  border-radius: 16px;
+  box-shadow: 0 0.5rem 1.75rem rgba(0, 0, 0, 0.35);
+}
+
+@supports ((backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))) {
+  main > .card {
+    background: rgba(10, 14, 40, 0.62);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* Tarjeta anidada (detalle, resultado de búsqueda): más tenue que la sección. */
+main .card .card {
+  padding: var(--esp-4);
+  background: rgba(22, 26, 51, 0.7);
+  border: 1px solid rgba(232, 196, 106, 0.2);
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+main > .card > h2 {
+  position: relative;
+  padding: 0 0 var(--esp-3);
+  border-bottom: 1px solid rgba(232, 196, 106, 0.45);
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  line-height: 1.2;
+}
+
+main > .card > h2::before {
+  content: "\2726"; /* ✦ */
+  display: inline-block;
+  margin-inline-end: 0.5em;
+  color: var(--color-foco);
+  font-size: 0.7em;
+  vertical-align: 0.12em;
+}
+
+/* Formularios: aire y labels legibles. */
+.form {
+  gap: var(--esp-4) var(--esp-5);
+}
+
+.form__grupo label {
+  color: var(--color-texto);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+}
+
+.form__grupo input,
+.form__grupo select {
+  min-height: 44px;
+  background: rgba(14, 17, 40, 0.92);
+  border: 1px solid rgba(232, 196, 106, 0.4);
+  border-radius: 10px;
+}
+
+.form__grupo input:hover,
+.form__grupo select:hover {
+  border-color: var(--color-primario);
+}
+
+.form__grupo input:focus-visible,
+.form__grupo select:focus-visible {
+  border-color: var(--color-foco);
+  outline: 3px solid var(--color-foco);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(255, 215, 94, 0.18);
+}
+
+/* Botones: primario dorado; secundarios discretos (tabla, paginación, cerrar). */
+.btn {
+  border-radius: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 3px;
+}
+
+.tabla .btn:not(.btn--peligro),
+[role="group"] .btn,
+article .btn {
+  background: transparent;
+  border: 1px solid var(--color-primario);
+  color: var(--color-primario);
+}
+
+.tabla .btn:not(.btn--peligro):hover,
+.tabla .btn:not(.btn--peligro):active,
+[role="group"] .btn:hover,
+[role="group"] .btn:active,
+article .btn:hover,
+article .btn:active {
+  background: rgba(232, 196, 106, 0.16);
+  border-color: var(--color-primario-oscuro);
+  color: var(--color-primario-oscuro);
+}
+
+.tabla .btn {
+  width: auto;
+  min-height: 40px;
+}
+
+/* Tablas: cabecera dorada tenue, separadores finos, hover suave. */
+.tabla-contenedor {
+  border: 1px solid rgba(232, 196, 106, 0.22);
+  border-radius: 12px;
+  background: rgba(14, 17, 40, 0.45);
+}
+
+/* Contenedor de una tabla oculta (`hidden`): no dibuja un marco vacío. */
+.tabla-contenedor:has(> .tabla[hidden]) {
+  display: none;
+}
+
+.tabla th,
+.tabla td {
+  padding: var(--esp-3) var(--esp-4);
+  border: 0;
+  border-bottom: 1px solid rgba(232, 196, 106, 0.16);
+}
+
+.tabla th {
+  background: rgba(232, 196, 106, 0.14);
+  color: var(--color-primario-oscuro);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tabla tbody tr:nth-child(even) {
+  background: transparent;
+}
+
+.tabla tbody tr:hover {
+  background: rgba(232, 196, 106, 0.08);
+}
+
+.tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Números a la derecha: ID, precio, stock, orden, cantidad y totales. */
+#tabla-catalogo :is(th, td):nth-child(3),
+#tabla-libros :is(th, td):is(:nth-child(3), :nth-child(4)),
+#tabla-clientes :is(th, td):nth-child(1),
+#tabla-libro-autorias :is(th, td):nth-child(3),
+#tabla-detalle-autores :is(th, td):nth-child(3),
+#tabla-historial :is(th, td):nth-child(4),
+#historial details .tabla :is(th, td):is(:nth-child(2), :nth-child(3), :nth-child(4)) {
+  text-align: right;
+}
+
+details {
+  border-color: rgba(232, 196, 106, 0.3);
+  border-radius: 12px;
+  background: rgba(35, 40, 72, 0.55);
+}
+
+/* Mensajes: borde lateral de color, buen contraste. */
+.mensaje {
+  padding: var(--esp-3) var(--esp-4);
+  border: 1px solid rgba(232, 196, 106, 0.22);
+  border-left: 4px solid var(--color-texto-suave);
+  border-radius: 10px;
+  background: rgba(35, 40, 72, 0.7);
+}
+
+.mensaje--error {
+  background: var(--color-error-fondo);
+  border-color: rgba(255, 107, 94, 0.35);
+  border-left-color: var(--color-error-borde);
+}
+
+.mensaje--ok {
+  background: var(--color-ok-fondo);
+  border-color: rgba(76, 195, 138, 0.35);
+  border-left-color: var(--color-ok-borde);
+}
+
+/* Escritorio: el botón principal no ocupa todo el ancho de la tarjeta. */
+@media (min-width: 48rem) {
+  .btn {
+    width: auto;
+    min-width: 9rem;
+    justify-self: start;
+  }
+
+  main > .card {
+    padding: var(--esp-6);
+  }
+
+  /* En el renglón de venta, el botón quitar conserva su celda. */
+  .form .form__grupo:has(output) > .btn {
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .btn {
+    width: 100%;
+  }
+}
+
+
+/* ==========================================================================
    16. Movimiento (design.md D4)
    TODA `animation` y `transition` vive solo aquí, dentro de `no-preference`:
    con «reducir movimiento» nada se anima, los libros no giran ni se mueven y
@@ -1089,7 +1325,7 @@ main > .card {
    ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
   header::after {
-    animation: estrella-fugaz 14s linear 3s infinite;
+    animation: estrella-fugaz 10s linear 2s infinite;
   }
 
   .luna {
@@ -1145,10 +1381,11 @@ main > .card {
   }
 
   @keyframes estrella-fugaz {
-    0% { opacity: 0; transform: translate(0, 0) rotate(20deg); }
-    1% { opacity: 1; }
-    6% { opacity: 0; transform: translate(12rem, 4.5rem) rotate(20deg); }
-    100% { opacity: 0; transform: translate(12rem, 4.5rem) rotate(20deg); }
+    0% { opacity: 0; transform: rotate(12deg) translateX(0); }
+    2% { opacity: 1; }
+    10% { opacity: 1; }
+    14% { opacity: 0; transform: rotate(12deg) translateX(min(48vw, 38rem)); }
+    100% { opacity: 0; transform: rotate(12deg) translateX(min(48vw, 38rem)); }
   }
 
   @keyframes halo-luna {
