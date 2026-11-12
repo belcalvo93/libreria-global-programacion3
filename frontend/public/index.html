@@ -7,18 +7,34 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header>
-    <h1>Librería Página Viva</h1>
-  </header>
-  <nav aria-label="Navegación principal">
-    <ul>
-      <li><a href="#catalogo">Catálogo</a></li>
-      <li><a href="#libros">Libros</a></li>
-      <li><a href="#clientes">Clientes</a></li>
-      <li><a href="#ventas">Ventas</a></li>
-      <li><a href="#historial">Historial</a></li>
-    </ul>
-  </nav>
+  <div class="portada">
+    <header id="inicio">
+      <img class="luna" src="img/luna.webp" width="380" height="380" alt="" aria-hidden="true" decoding="async">
+      <h1><a href="#inicio">Librería Página Viva</a></h1>
+    </header>
+    <nav aria-label="Navegación principal">
+      <ul>
+        <li><a href="#catalogo">Catálogo</a></li>
+        <li><a href="#libros">Libros</a></li>
+        <li><a href="#clientes">Clientes</a></li>
+        <li><a href="#ventas">Ventas</a></li>
+        <li><a href="#historial">Historial</a></li>
+      </ul>
+    </nav>
+    <section id="estante" class="card estante" aria-labelledby="estante-titulo">
+      <div class="estante__escena">
+        <h2 id="estante-titulo">Estantería</h2>
+        <img class="gato" src="img/gato.webp" width="364" height="960" alt="" aria-hidden="true" decoding="async">
+        <div class="estante__mueble">
+          <p id="estante-etiqueta" class="estante__etiqueta" aria-hidden="true" hidden></p>
+          <ul class="estante__repisa" aria-label="Libros de la estantería"></ul>
+        </div>
+      </div>
+      <p id="mensaje-estante-cargando" class="mensaje" role="status" hidden>Cargando estantería...</p>
+      <p id="mensaje-estante-vacio" class="mensaje" hidden>Todavía no hay libros en la estantería.</p>
+      <p id="mensaje-estante-error" class="mensaje mensaje--error" role="alert" hidden></p>
+    </section>
+  </div>
   <main>
     <section id="catalogo" class="card">
       <h2>Catálogo</h2>
@@ -331,5 +347,6 @@
   <script src="js/catalogo.js"></script>
   <script src="js/altas.js"></script>
   <script src="js/ventas.js"></script>
+  <script src="js/estante.js"></script>
 </body>
 </html>

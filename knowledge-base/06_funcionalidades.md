@@ -40,9 +40,21 @@ Organizadas por ejercicio de la consigna (épica), con dueño y casos asociados.
 - **US-5.5** Evidencia en `evidencia/` y ZIP final — Elías.
 
 ## Épica transversal — Estante y estética · Belén (después del catálogo de Hernán)
-- **Alcance decidido (D-25)**: una sección propia con un estante de libros cuyos lomos salen del catálogo de la API (`GET /libros/`): al pasar el cursor se levantan y al hacer clic abren el detalle (`GET /libros/{id}`).
-- Etiquetas de navegación arriba del estante (similar a un menú).
-- Paleta «librería mágica» definida en variables de `:root` (valores: TBD, ver `design-system/README.md`).
+- **Alcance decidido (D-25, ampliado en D-31 a D-35)**. Propuesta: `openspec/changes/estante-estetica/`.
+- **Estantería**: sección propia `#estante`, en la pantalla de inicio (junto a la cabecera y el nav, en 100dvh), un gabinete compacto de madera con hasta 12 libros de lomo de `GET /libros/?limit=12` (en escritorio entran los 12; en pantallas angostas se desplaza horizontalmente).
+  - Cada libro es un botón de lomo de cuero con bandas doradas y el título en vertical de abajo hacia arriba, en blanco y siempre completo (sin recorte); los lomos son más anchos y más altos según el título y de alturas desparejas. Con el cursor o el foco sale al frente, se inclina mostrando su tapa y destella (con «reducir movimiento» solo cambian brillo y borde), y aparece una etiqueta con el título completo. Al hacer clic abre el detalle (`GET /libros/{id}`) con `window.mostrarDetalleLibro`.
+  - Color e inclinación salen del id; ancho, altura y tamaño de letra, del largo del título y del id (D-33 y D-34). Hay una capa opcional de portadas reales por ISBN, solo al salir el libro (hoy sin imágenes).
+  - Muestra estados de carga, vacío y error.
+- **Gato y luna**: imágenes decorativas (`img/gato.webp`, `img/luna.webp`); el gato se sienta sobre el estante y el gato nuevo se sienta arriba a la izquierda del gabinete, mirando a la luna, y la luna (~120 px) queda entera, detrás del contenido, arriba a la derecha.
+- **Navegación**: etiquetas tipo pestaña arriba del estante. Es el mismo `<nav>` con sus enlaces ancla, con `aria-current` en la sección activa.
+- **Tema «librería mágica» en todo el front**:
+  - cielo nocturno con estrellas, luna (imagen) y estrella fugaz;
+  - dorado y violeta suave como acentos;
+  - tipografía Georgia (título normal sin contorno; encabezados y pestañas en negrita), sin fuentes locales;
+  - componentes en tema oscuro con contraste AA;
+  - todo se apaga con `prefers-reduced-motion`.
+
+  Los valores están en `design-system/README.md` (revisión 9, **aprobada** por Belén Calvo el 2026-11-12; C-06 archivado, falta el PR).
 - La tabla del catálogo de Hernán se mantiene; el estante no la reemplaza. Se hace después de C-03 mergeado.
 
 ## Tarea final — Limpieza · Belén
