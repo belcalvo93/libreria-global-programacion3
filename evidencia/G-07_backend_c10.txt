@@ -1,0 +1,45 @@
+G-07 · Despliegue del backend (apilibreria) desde el monorepo — C-10
+Fecha: 2026-11-12 · Responsable: Elías
+Sin valores de variables ni credenciales: solo nombres.
+
+== Servicio apilibreria (Easypanel, proyecto grupo2-elias)
+Fuente: GitHub belcalvo93/libreria-global-programacion3, rama main, Build Path /backend, builder Dockerfile
+Commit desplegado: 391bb61 (Merge pull request #19), incluye C-09 (CORS)
+Imagen: python:3.12-alpine · Build: Success
+Variables (nombres): DATABASE_URL, SQL_ECHO, CORS_ORIGINS
+CORS_ORIGINS = https://grupo2-elias-frontend.ugpvou.easypanel.host
+Dominios: ninguno (solo red interna: grupo2-elias_apilibreria:8000)
+
+== Log del contenedor
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+
+== CORS desde afuera (antes de quitar el dominio público)
+$ curl -si -H "Origin: https://grupo2-elias-frontend.ugpvou.easypanel.host" .../health/live
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: https://grupo2-elias-frontend.ugpvou.easypanel.host
+
+$ curl -si -H "Origin: https://otro.ejemplo.com" .../health/live
+HTTP/1.1 200 OK            (sin Access-Control-Allow-Origin)
+
+$ curl -si -X OPTIONS -H "Origin: https://grupo2-elias-frontend.ugpvou.easypanel.host" \
+    -H "Access-Control-Request-Method: POST" -H "Access-Control-Request-Headers: content-type" .../libros/
+HTTP/1.1 200 OK
+Access-Control-Allow-Headers: Accept, Accept-Language, Content-Language, Content-Type
+Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS
+Access-Control-Allow-Origin: https://grupo2-elias-frontend.ugpvou.easypanel.host
+(sin Access-Control-Allow-Credentials)
+
+== Dominio público quitado
+https://grupo2-elias-apilibreria.ugpvou.easypanel.host/health/ready -> 404
+https://grupo2-elias-frontend.ugpvou.easypanel.host/api/health/ready -> 200 {"estado":"listo","base":"ok"}
+
+== CORS desde la consola del servicio (red interna)
+https://grupo2-elias-frontend.ugpvou.easypanel.host 200 https://grupo2-elias-frontend.ugpvou.easypanel.host
+https://otro.ejemplo.com 200 None
+
+== G-07: los datos persisten tras redesplegar (consultado por el front, /api/...)
+Antes del redeploy:   6 libros · 2 ventas [(1, '50000.00'), (2, '77000.00')] · cliente 1 existe
+Después del redeploy: 6 libros · 2 ventas [(1, '50000.00'), (2, '77000.00')] · cliente 1 existe
+Resultado: OK
