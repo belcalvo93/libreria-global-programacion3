@@ -7,7 +7,7 @@
 Integrantes: **B** Belén Calvo · **H** Hernán González · **R** Bruno Fiouchetta · **J** Joaquín Morán · **E** Elías Tello.
 Entrega prevista: sábado 14 de noviembre (fecha y canal oficiales: TBD, ver `knowledge-base/10_preguntas_abiertas.md`).
 
-Leyenda de estado: `[x]` hecho y mergeado · `[~]` en revisión (rama sin PR) · `[ ]` pendiente.
+Leyenda de estado: `[x]` hecho (mergeado, o archivado en OpenSpec con su PR por abrir: se aclara en cada entrada) · `[~]` en revisión (rama sin PR) · `[ ]` pendiente.
 Leyenda de gobernanza: BAJO (LOW) autonomía plena si pasan las pruebas · MEDIO (MEDIUM) implementar con checkpoints · ALTO (HIGH) proponer y esperar revisión antes de escribir · CRITICO (CRITICAL) solo análisis hasta aprobación. Este proyecto no tiene auth ni pagos, por eso no hay changes CRITICO.
 
 ---
@@ -28,9 +28,9 @@ Cronograma del grupo: **mié 11** base (C-01; C-02 es lo primero del día, tras 
 
 ```
 C-01 imagen-frontend-docker [x]  (B)
- ├── C-02 cliente-http-api-js [~]  (B, retroactivo archivado; PR abierto)
+ ├── C-02 cliente-http-api-js [x]  (B, retroactivo archivado; PR #4 mergeado)
  │     ├── C-03 catalogo-api [x] (H, G-01)
- │     │     ├── C-06 estante-estetica (B)
+ │     │     ├── C-06 estante-estetica [x] (B, archivado; PR por abrir)
  │     │     └──┐
  │     ├── C-04 altas-libros-clientes (R, G-02/G-03) ──┤  (aviso blando a C-03: window.renderCatalogo)
  │     └── C-05 ventas-historial (J, G-04/G-05/G-06) ──┤
@@ -39,7 +39,7 @@ C-01 imagen-frontend-docker [x]  (B)
  │                                                      │
  │        C-03 + C-04 + C-05 mergeados ─────────────────┴── C-08 despliegue-frontend-easypanel (B)
  │                                                              │
-C-09 cors-backend [~] (E) ── sin dependencias de código ──────────┤
+C-09 cors-backend [x] (E) ── sin dependencias de código ──────────┤
  │                                                              ▼
  └────────────────────────────────────────── C-10 apilibreria-desde-monorepo (E)   [necesita C-09 y el dominio de C-08]
                                                                 │
@@ -126,7 +126,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/09_decisiones_y_supuestos.md` D-02, D-12
 
 ### [C-02] `cliente-http-api-js`
-- **Estado**: `[~]` en revisión (PR abierto): el código vive en la rama `feat/api-cliente`; `main` todavía no lo carga en `index.html` hasta mergear el PR. **Change RETROACTIVO** ya propuesto, verificado contra el código y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-cliente-http-api-js/`; spec en `openspec/specs/cliente-http/spec.md`). Falta revisar y mergear el PR (con otro revisor) y correr las pruebas manuales de abajo.
+- **Estado**: `[x]` hecha y mergeada (PR #4, `feat/api-cliente`, merge `9b0e52a`). **Change RETROACTIVO** verificado contra el código y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-cliente-http-api-js/`; spec en `openspec/specs/cliente-http/spec.md`). Las pruebas manuales de abajo siguen siendo la guía de verificación (no hay constancia en el repo de que se hayan corrido: sin confirmar).
 - **Dueño**: B (Belén) · **Ej.**: 1 (parte técnica, US-1.7)
 - **Scope**:
   - `frontend/public/js/api.js` expone `window.Api` con `get`, `post`, `patch`, `numero`, `ApiError` (IIFE, `var`, `"use strict"`).
@@ -150,7 +150,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 > Fork: C-03, C-04 y C-05 corren en paralelo porque cada integrante toca solo su archivo JS y su sección del `index.html` (sin conflictos de merge). Todas parten de `api.js` mergeado (C-02).
 
 ### [C-03] `catalogo-api`
-- **Estado**: `[x]` implementado, probado (G-01 local) y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-catalogo-api/`; spec en `openspec/specs/catalogo-libros/spec.md`) — listo para PR en `feat/catalogo-api`
+- **Estado**: `[x]` hecha y mergeada (PR #19, `feat/catalogo-api`, merge `391bb61`); implementada, probada (G-01 local) y archivada en OpenSpec (`openspec/changes/archive/2026-11-11-catalogo-api/`; spec en `openspec/specs/catalogo-libros/spec.md`)
 - **Dueño**: H (Hernán) · **Ej.**: 1 (20 pts) · US-1.1..1.6 · **Caso**: G-01 · Rama de ejemplo: `feat/catalogo-api`
 - **Scope**:
   - `js/catalogo.js` + `<section id="catalogo">` consumiendo `GET /libros/?titulo=&limit=&offset=` (búsqueda parcial por título, `offset` = 0 al cambiar el filtro).
@@ -212,14 +212,39 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
 ### [C-06] `estante-estetica`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho y **archivado** el 2026-11-12 (`openspec/changes/archive/2026-11-12-estante-estetica/`; specs sincronizadas en `openspec/specs/estante-libros/`, `navegacion-principal/` y `tema-visual/`). Design system **revisión 9 aprobada por Belén Calvo el 2026-11-12**. **Falta abrir el PR** de `feat/estante-estetica` a `main` (con aviso a Hernán, Bruno y Joaquín del cambio visual global; revisión de otro integrante y merge común). Seguimiento manual abierto: tarea 5.4 (lector de pantalla NVDA o Narrador), que no se automatiza
 - **Dueño**: B (Belén) · **Ej.**: transversal (sin puntaje propio en la consigna según la KB)
-- **Scope**:
-  - Alcance decidido (D-25): una sección propia con un **estante de libros** cuyos lomos salen del catálogo de la API (al pasar el cursor se levantan; al hacer clic abren el detalle `GET /libros/{id}`), **etiquetas de navegación** arriba del estante (similar a un menú) y una paleta **«librería mágica»** en variables de `:root` (valores: TBD). La tabla del catálogo se mantiene.
-  - Cambios sobre `css/styles.css` y variables de `:root` (política de diseño **light**: sin mockups por change, D-10); los valores de la paleta se registran en `design-system/README.md` (sube `Revision:`). Posibles `img/` o recursos locales: (TBD).
+- **Scope** (D-25, ampliado en D-31 a D-41):
+  - **Tema global «librería mágica»**: el clima de una librería encantada de noche en todo el front.
+    - Cielo nocturno con la imagen `fondo-noche.webp` (1920x1072) y un velo azul noche, fijo detrás de toda la página; luna (imagen) y una estrella fugaz ocasional.
+    - Dorado como acento y violeta suave como segundo acento.
+    - `.card`, formularios, tablas, botones y mensajes en tema oscuro con contraste AA y foco dorado.
+    - Se reasignan las variables `--color-*` de `:root` y se agregan `--magia-*`, `--lomo-*`, `--oro-lomo`, `--nogal*`, `--libro-prof`, `--fuente-titulo`, `--fuente-encabezados` y `--mov-*`. Los hex y los contrastes están en `design-system/README.md` (revisión 9) y en `design.md` D2 del change.
+  - **Tipografía**: Georgia (título normal sin contorno; `h2`, `h3` y pestañas en negrita) y fuentes del sistema; **sin fuentes locales** (se eliminó Almendra: ya no hay `fonts/` ni `types` en nginx).
+  - **Inicio en una pantalla**: un bloque de 100dvh con cabecera, nav y estantería enteras a 1366x768, 1920x1080 y 390x844; las demás secciones siguen debajo y las anclas del nav no cambian.
+  - **Estantería**: `<section id="estante">` en la pantalla de inicio, un **gabinete compacto de madera** (nogal con vetas, fondo en sombra cálida con luz dorada y repisa de madera) con hasta 12 libros de lomo de `GET /libros/?limit=12` (en escritorio entran los 12; el resto, con scroll horizontal).
+    - Cada libro es un `<button>` de lomo de cuero con bandas doradas y el título en vertical de abajo hacia arriba, en blanco, directo sobre el cuero y **nunca recortado** (hasta 80 caracteres). Con el cursor o el foco sale al frente, se inclina mostrando su tapa en 3D y destella (con «reducir movimiento» solo cambian brillo y borde), y aparece una etiqueta con el título completo. Al hacer clic abre el detalle con `window.mostrarDetalleLibro(id, boton)`.
+    - El color (`id % 5`) y la inclinación (`id % 7`) salen del id; el ancho (3.5 a 6 rem), la altura (11 a 16 rem) y el tamaño de letra, del largo del título y del id, con alturas desparejas a propósito. Todo con clases.
+    - Portada real opcional (`img/portadas/<isbn>`) solo para los ISBN de una lista en `estante.js` (hoy vacía) y solo al salir el libro.
+    - Muestra estados de carga, vacío y error.
+  - **Gato y luna**: imágenes `img/gato.webp` (364x960, arriba a la izquierda del gabinete, mirando a la luna) y `img/luna.webp` (380x380, decorativas, `alt=""`, `aria-hidden`). El gato se sienta sobre el mueble y su resplandor respira; el gato (110 a 140 px) se sienta sobre el borde superior derecho del mueble y la luna (90 a 120 px) está entera arriba a la derecha, detrás del contenido y sin pisar la navegación. Origen de las imágenes: TBD.
+  - **Nav**: el mismo `<nav>`, ahora una franja fija con **marcapáginas colgantes** de una varilla dorada (la activa, dorada y más larga), y `aria-current="location"` por clic, hash o scroll. El título «Librería Página Viva» es un enlace que vuelve al inicio (`#inicio`).
+  - **Escena continua**: la estantería no tiene tarjeta; el cielo estrellado se ve de borde a borde detrás de toda la portada.
+  - **Movimiento**: todo se declara solo con `prefers-reduced-motion: no-preference`. Responsive de 320 a 1280 px. Sin recursos remotos.
+  - **Archivos**:
+    - `css/styles.css`;
+    - `index.html` (solo `#estante`, el `<script>` final y lo decorativo de nav y cabecera; el texto del título no cambia);
+    - `js/estante.js` (nuevo);
+    - `img/` (se versiona);
+    - `default.conf.template` (solo el cache de `/img/`);
+    - `tests/estante.test.js` (nuevo);
+    - `design-system/README.md`.
+
+    No se toca `catalogo.js`, `altas.js`, `ventas.js`, `api.js`, el HTML de las secciones ajenas ni `backend/`.
+  - **Riesgo**: el tema cambia el aspecto de las secciones de Hernán, Bruno y Joaquín (solo CSS). Las tasks §6 exigen verificarlas a mano y el PR debe avisarles.
   - Se hace **después** del catálogo de Hernán (C-03 mergeado) para no pisar su sección.
 - **Dependencias**: `C-03`
-- **Governance**: BAJO
+- **Governance**: MEDIO (antes BAJO: el tema reasigna estilos compartidos que afectan secciones ajenas)
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §Épica transversal
   - `knowledge-base/08_arquitectura_propuesta.md` §convenciones del front
@@ -246,7 +271,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 ## FASE 3 — Servicios y despliegue (Ej. 5, 20 pts)
 
 ### [C-09] `cors-backend`
-- **Estado**: `[~]` en revisión (rama `feat/cors-backend`): change propuesto, aplicado y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-cors-backend/`; spec en `openspec/specs/cors-api/spec.md`); 18 tests con `unittest` en `backend/tests/`. El `min_length=1` de I-01 quedó afuera (a acordar con Bruno).
+- **Estado**: `[x]` hecha y mergeada (PR #18, `feat/cors-backend`, merge `5afb40c`): change propuesto, aplicado y archivado en OpenSpec (`openspec/changes/archive/2026-11-11-cors-backend/`; spec en `openspec/specs/cors-api/spec.md`); 18 tests con `unittest` en `backend/tests/`. El `min_length=1` de I-01 quedó afuera (a acordar con Bruno). El dominio del front para `CORS_ORIGINS` sigue TBD hasta C-08.
 - **Dueño**: E (Elías) · **Ej.**: 5 · US-5.1
 - **Scope**:
   - `backend/app/main.py`: middleware CORS leyendo la variable `CORS_ORIGINS` (hoy no existe, I-06). Formato: una o varias URL de origen exacto (esquema + host, sin barra final) separadas por coma; se lee con `os.getenv("CORS_ORIGINS", "").split(",")`, quitando espacios y vacíos. Local: `CORS_ORIGINS=http://127.0.0.1:8080,http://localhost:8080`.
@@ -355,14 +380,14 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | ID | Change | Dueño | Ej. / Casos | Estado | Dependencias | Governance |
 |----|--------|-------|-------------|--------|--------------|------------|
 | C-01 | `imagen-frontend-docker` | B | 4 | `[x]` hecha (PR #1) | — | BAJO |
-| C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[~]` en revisión (PR abierto), retroactivo archivado | C-01 | ALTO |
-| C-03 | `catalogo-api` | H | 1 · G-01 | `[x]` archivado (rama `feat/catalogo-api`) | C-02 | MEDIO |
+| C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[x]` hecha (PR #4), retroactivo archivado | C-01 | ALTO |
+| C-03 | `catalogo-api` | H | 1 · G-01 | `[x]` hecha (PR #19), archivada | C-02 | MEDIO |
 | C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[ ]` | C-02 (blanda C-03) | MEDIO |
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
-| C-06 | `estante-estetica` | B | transversal | `[ ]` | C-03 | BAJO |
+| C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
-| C-09 | `cors-backend` | E | 5 | `[~]` | — | ALTO |
+| C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[ ]` | C-09, C-08 | ALTO |
 | C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[ ]` | C-03, C-04, C-05, C-08, C-10 | BAJO |
 | C-12 | `deploy-md` | B | 5 | `[ ]` | C-08, C-10 | BAJO |
@@ -377,7 +402,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 - URL pública del front y dominio exacto para `CORS_ORIGINS`: (TBD) hasta que Belén cree el servicio `frontend` (C-08); C-09 y C-10 dependen de ese dato.
 - Resuelto: formato de `CORS_ORIGINS` (una o varias URL de origen exacto separadas por coma, sin barra final) y rama del servicio `frontend` (`main`); ver D-28 y D-29.
 - Datos en la base desplegada y dominio público automático de `apilibreria`: pendientes de confirmar con Elías (C-10).
-- Valores de la paleta «librería mágica» (C-06): (TBD valores).
+- ~~Valores de la paleta «librería mágica» (C-06)~~: resueltos (D-31; hex y contrastes en `design-system/README.md`). Pendiente solo la aprobación de la revisión 4 (D-32 y D-33).
 - Fecha y canal oficiales de entrega: (TBD).
 
 Resuelto (ver `knowledge-base/09_decisiones_y_supuestos.md` D-23..D-27): C-07 se mergea antes del deploy final; «al menos un autor» se valida en el front; alcance de C-06; aprobación del design-system; rama y commit de `apilibreria`.

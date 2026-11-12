@@ -7,6 +7,13 @@ server {
         try_files $uri $uri/ =404;
     }
 
+    # Imágenes (fondo, gato y luna): cache largo en el navegador.
+    location /img/ {
+        expires 30d;
+        add_header Cache-Control "public";
+        try_files $uri =404;
+    }
+
     location /api/ {
         proxy_pass http://${API_UPSTREAM}/;
     }

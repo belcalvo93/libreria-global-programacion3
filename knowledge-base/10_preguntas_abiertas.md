@@ -10,7 +10,7 @@
 | I-03 | `GET /editoriales/` y `GET /generos/` están paginados (def. 20, máx. 100) | Contexto: «listas» sin mencionar la paginación | Con más de 20 registros faltarían opciones en los selects | Pedir `limit=100` |
 | I-04 | `ClienteRead.perfil` puede traer un objeto `{id, cliente_id, telefono, direccion}` (el seed crea un perfil para el cliente 1) | Contexto: ejemplo con `"perfil": null` | Ninguno si el front ignora `perfil` | Ignorar `perfil` (no usado) |
 | I-05 | `GET /health/ready` devuelve `{"estado":"listo","base":"ok"}` o 503 con `detail` | Contexto: «200 / 503» | Ninguno | — |
-| I-06 | **No hay CORS** en `backend/app/main.py` ni variable `CORS_ORIGINS` | Contexto: Elías hace CORS con variable de entorno | Con el proxy nginx (mismo origen) no bloquea al front; sí a un acceso cross-origin | Elías lo implementa (C-09, ver `12_despliegue_easypanel.md`); el dominio a permitir lo define Belén en C-08 |
+| I-06 | **No hay CORS** en `backend/app/main.py` ni variable `CORS_ORIGINS` | Contexto: Elías hace CORS con variable de entorno | Con el proxy nginx (mismo origen) no bloquea al front; sí a un acceso cross-origin | Resuelto: C-09 mergeado (PR #18, CORS con `CORS_ORIGINS`; ver `12_despliegue_easypanel.md`); el dominio a permitir lo define Belén en C-08 |
 | I-07 | Los mensajes de 409 en ventas son «No existe el libro con id X» y «El cliente indicado no existe» | Contexto: «409 cliente o libro inexistente» (sin texto) | Ninguno | Mostrar `error.message` tal cual |
 | I-08 | Existen además `GET /health/live`, `GET /editoriales/{id}`, `POST` de editoriales/géneros/autores, PATCH de clientes/autores/editoriales, `POST /clientes/{id}/perfil`, `GET /clientes/{id}/ventas` y listados `/{recurso}/{id}/libros` | Contexto: contrato acotado | Ninguno | Marcados «no usado por el front» en `11_contrato_api.md` |
 
@@ -35,12 +35,18 @@
 | Media | ¿La base desplegada ya tiene datos de pruebas del grupo? ¿Hace falta recargar el seed (que vacía tablas)? | Datos de G-01..G-06 | Elías |
 | Media | ¿El backend conserva hoy su dominio público automático? La consigna pide quitarlo | Cierre del Ej. 5 | Elías |
 | Media | Texto completo de las reglas RN del TP original (aquí solo se infiere del código) | Documentación | Equipo |
+| Media | Tarea 5.4 de C-06: probar con lector de pantalla (NVDA o Narrador) que los libros se anuncian como «<título>, ver detalle», que el gato, la luna y la etiqueta no se anuncian y que la nav se anuncia como «Navegación principal» | Cierre manual de C-06 | Belén |
+| Baja | Origen (autoría y licencia) de `gato.webp`, `luna.webp` y `fondo-noche.webp` (TBD: no se inventa) | DEPLOY.md y entrega | Belén |
+| Baja | Bloque `location /img/` (cache de 30 días) de `frontend/default.conf.template`: sin probar con `docker build` | Deploy del front (C-08) | Belén |
+| Baja | Si la nav fija al 85 % de opacidad molesta (el contenido se insinúa entre los marcapáginas), subir la opacidad de `--magia-franja` | Estética | Belén |
 | Baja | Fecha y canal oficiales de entrega comunicados por la cátedra (el grupo asume sábado 14 de noviembre a la noche) | Cronograma | Grupo |
 
 ## Resueltas (pasaron a `09_decisiones_y_supuestos.md`)
 - Orden de C-07 respecto del deploy final → D-23.
 - «Al menos un autor»: validación en el front → D-24.
 - Alcance de «estante y estética» (C-06) → D-25.
+- Estantería aprobada (design-system revisión 9) y C-06 archivado → D-42. Aprobación visual del design-system: Belén Calvo, 2026-11-12.
+- Paleta «librería mágica» y tema global de C-06 → D-31 (design-system revisión 2, aprobada el 2026-11-12). Tipografía Almendra, gato y luna como imágenes → D-32; título, luna nueva y estantería de lomos con etiqueta → D-33; luna y gato ajustados y títulos de lomo blancos y sin recorte → D-34 (design-system revisión 5); rediseño en una sola pantalla, gato nuevo, «Estantería» y vuelta a Georgia sin Almendra → D-35; gato detrás del gabinete y libros de proporción real → D-36 y D-37 y escena continua, marcapáginas y navegación fija → D-38 a D-40 (design-system revisión 8); fondo de cielo con imagen → D-41 (design-system revisión 9, aprobación pendiente; reemplaza a la 8, la 7, la 6, la 5, la 4 y la 3, nunca aprobadas). Origen (autoría y licencia) de `gato.webp` y `luna.webp`: TBD. Título «Librería Página Viva»: se mantiene.
 - Aprobación del design-system y valor de `visual_design.mode` → D-26 (y D-10).
 - Rama y commit de `apilibreria` → D-27.
 - Formato de `CORS_ORIGINS` → D-28.
