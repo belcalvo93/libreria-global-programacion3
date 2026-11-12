@@ -191,7 +191,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/10_preguntas_abiertas.md` I-01, I-03 y `knowledge-base/09_decisiones_y_supuestos.md` D-24 (autor mínimo validado en el front)
 
 ### [C-05] `ventas-historial`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` implementada, probada (14 tests en `frontend/tests/ventas.test.js` y G-04, G-05 y G-06 detrás del proxy `/api` contra el backend local con el seed) y archivada en OpenSpec (`openspec/changes/archive/2026-11-12-ventas-historial/`; spec en `openspec/specs/ventas-historial/spec.md`); PR a `main`
 - **Dueño**: J (Joaquín) · **Ej.**: 3 (25 pts) · US-3.1..3.6 · **Casos**: G-04, G-05, G-06
 - **Scope**:
   - `js/ventas.js` + `<section id="ventas">` y `<section id="historial">`.

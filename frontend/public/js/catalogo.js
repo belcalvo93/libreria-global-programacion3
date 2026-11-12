@@ -74,7 +74,40 @@
   var detallePeticion = 0;
   var botonDetalleOrigen = null;
 
+  function resolverOrigenDetalle(botonOrigen, doc) {
+    if (botonOrigen && typeof botonOrigen.focus === "function") {
+      return botonOrigen;
+    }
+    if (
+      doc &&
+      doc.activeElement &&
+      doc.activeElement !== doc.body &&
+      typeof doc.activeElement.focus === "function"
+    ) {
+      return doc.activeElement;
+    }
+    return null;
+  }
+
+  function enfocarOrigenDetalle(botonOrigen, doc) {
+    if (
+      botonOrigen &&
+      typeof botonOrigen.focus === "function" &&
+      doc &&
+      doc.body &&
+      typeof doc.body.contains === "function" &&
+      doc.body.contains(botonOrigen)
+    ) {
+      botonOrigen.focus();
+      return true;
+    }
+    return false;
+  }
+
   function obtenerElementos() {
+    if (typeof document === "undefined") {
+      return {};
+    }
     return {
       form: document.getElementById("form-catalogo"),
       campoBusqueda: document.getElementById("catalogo-busqueda"),
@@ -294,7 +327,10 @@
 
     detallePeticion += 1;
     var numeroDetalle = detallePeticion;
-    botonDetalleOrigen = botonOrigen || null;
+    botonDetalleOrigen = resolverOrigenDetalle(
+      botonOrigen,
+      typeof document !== "undefined" ? document : null
+    );
 
     els.panelDetalle.hidden = false;
     if (els.detalleCargando) { els.detalleCargando.hidden = false; }
@@ -333,9 +369,10 @@
     if (els.detalleError) { els.detalleError.hidden = true; }
     if (els.detalleContenido) { els.detalleContenido.hidden = true; }
 
-    if (botonDetalleOrigen && document.body && document.body.contains(botonDetalleOrigen)) {
-      botonDetalleOrigen.focus();
-    }
+    enfocarOrigenDetalle(
+      botonDetalleOrigen,
+      typeof document !== "undefined" ? document : null
+    );
     botonDetalleOrigen = null;
   }
 
@@ -373,13 +410,15 @@
       conectarEventos();
       cargarCatalogo(0);
     });
+  }
 
+  if (typeof window !== "undefined") {
     // Expuestas para C-04 (refresco tras un alta) y C-06 (apertura desde el estante).
     window.renderCatalogo = function () {
       return cargarCatalogo(estado.offset);
     };
-    window.mostrarDetalleLibro = function (id) {
-      return cargarDetalleLibro(id, null);
+    window.mostrarDetalleLibro = function (id, botonOrigen) {
+      return cargarDetalleLibro(id, botonOrigen);
     };
   }
 
@@ -392,7 +431,10 @@
       autoriasOrdenadas: autoriasOrdenadas,
       parametrosListado: parametrosListado,
       decidirVista: decidirVista,
-      hayMas: hayMas
+      hayMas: hayMas,
+      resolverOrigenDetalle: resolverOrigenDetalle,
+      enfocarOrigenDetalle: enfocarOrigenDetalle,
+      cerrarDetalle: cerrarDetalle
     };
   }
 })();
