@@ -170,7 +170,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/10_preguntas_abiertas.md` (filtro `genero_id`: baja prioridad, decide Hernán)
 
 ### [C-04] `altas-libros-clientes`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` implementada, probada con 10 tests unitarios en `frontend/tests/altas.test.js` y archivada en OpenSpec (`openspec/changes/archive/2026-11-12-altas-libros-clientes/`; spec en `openspec/specs/altas-libros-clientes/spec.md`); falta prueba manual E2E de G-02/G-03 detrás de nginx y PR a `main`
 - **Dueño**: R (Bruno) · **Ej.**: 2 (20 pts) · US-2.1..2.6 · **Casos**: G-02, G-03
 - **Scope**:
   - `js/altas.js` + `<section id="libros">` y `<section id="clientes">`.
@@ -382,7 +382,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-01 | `imagen-frontend-docker` | B | 4 | `[x]` hecha (PR #1) | — | BAJO |
 | C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[x]` hecha (PR #4), retroactivo archivado | C-01 | ALTO |
 | C-03 | `catalogo-api` | H | 1 · G-01 | `[x]` hecha (PR #19), archivada | C-02 | MEDIO |
-| C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[ ]` | C-02 (blanda C-03) | MEDIO |
+| C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[x]` hecha y archivada; PR por abrir (falta prueba E2E detrás de nginx) | C-02 (blanda C-03) | MEDIO |
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
 | C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
