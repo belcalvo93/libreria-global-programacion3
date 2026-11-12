@@ -25,7 +25,7 @@
 | I-14 | `openspec/config.yaml` no define `context` ni `rules` (todo comentado) | Los artefactos OpenSpec no reciben convenciones del proyecto; considerar copiar allí las convenciones del front y «escribir en español» |
 | I-15 | Consigna: ejemplo de `backend/Dockerfile` con `python:3.12-slim` y `CMD alembic ... && exec uvicorn ...` | El Dockerfile del repo usa `python:3.12-alpine`, usuario `app`, `HEALTHCHECK` y `CMD ["sh","-c",...]` equivalente; cumple (escucha en `0.0.0.0:8000`, aplica migraciones) |
 | I-16 | Local: `env.example` del backend usa la base `libreria`; el grupo debe usar `libreria_tp` | Cambiar `DATABASE_URL` en el `.env` local |
-| I-17 | Contexto: `venta-libro-N` usa el **ISBN** como `value` en el HTML heredado | No verificado en `ventas.js`/`index.html`; Joaquín debe pasar al `id` del libro |
+| I-17 | Contexto: `venta-libro-N` usa el **ISBN** como `value` en el HTML heredado | Resuelto (C-05): los `<select>` de la venta se arman desde `GET /libros/` y su `value` es el `id` del libro |
 | I-18 | El contexto pide «Documentar en el README que autores y clientes se buscan por ID» | El README actual no lo documenta |
 
 ## Preguntas abiertas (priorizadas)

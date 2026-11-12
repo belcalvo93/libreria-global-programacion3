@@ -253,89 +253,104 @@
       <h2>Ventas</h2>
       <form id="form-venta" class="form" novalidate>
         <div class="form__grupo">
-          <label for="venta-cliente">Cliente</label>
-          <select id="venta-cliente" name="venta-cliente">
-            <option value="valentina-rios">Valentina Ríos</option>
-            <option value="martin-aguirre">Martín Aguirre</option>
-            <option value="sofia-benitez">Sofía Benítez</option>
-          </select>
-        </div>
-        <div class="form__grupo">
-          <label for="venta-libro-1">Libro del renglón 1</label>
-          <select id="venta-libro-1" name="venta-libro-1">
-            <option value="9789500100011">El mapa de las horas lentas</option>
-            <option value="9789500100028">Crónicas del patio interior</option>
-            <option value="9789500100035">Noche de vidrio molido</option>
-            <option value="9789500100042">Manual para perder trenes</option>
-            <option value="9789500100059">El oficio de la marea</option>
-            <option value="9789500100066">Inventario de luces mínimas</option>
-          </select>
-          <label for="venta-cantidad-1">Cantidad del renglón 1</label>
-          <input type="number" id="venta-cantidad-1" name="venta-cantidad-1" min="1" value="2">
-          <p>Precio unitario: <output id="venta-precio-1" for="venta-libro-1">1500.00</output></p>
-          <p>Subtotal: <output id="venta-subtotal-1" for="venta-libro-1 venta-cantidad-1">3000.00</output></p>
-          <button id="venta-quitar-1" class="btn btn--peligro" type="button">Quitar renglón 1</button>
+          <label for="venta-cliente-id">ID del cliente</label>
+          <input type="number" id="venta-cliente-id" name="venta-cliente-id" min="1" step="1" inputmode="numeric" placeholder="Por ejemplo, 1">
+          <button id="venta-buscar-cliente" class="btn" type="button">Buscar cliente</button>
+          <p>Cliente: <output id="venta-cliente-nombre" for="venta-cliente-id" aria-live="polite">Sin buscar</output></p>
         </div>
         <button id="venta-agregar" class="btn" type="button">Agregar renglón</button>
-        <p>Total: <output id="venta-total" for="venta-libro-1 venta-cantidad-1">5000.00</output></p>
         <button id="venta-confirmar" class="btn" type="submit">Confirmar venta</button>
       </form>
-      <p id="mensaje-error-venta" class="mensaje mensaje--error" role="alert" hidden>No se pudo confirmar la venta. Revisá los datos.</p>
-      <p id="mensaje-ok-venta" class="mensaje mensaje--ok" hidden>Venta confirmada correctamente.</p>
+      <p id="mensaje-venta-libros" class="mensaje" role="status" hidden>Cargando libros del catálogo...</p>
+      <p id="mensaje-error-venta" class="mensaje mensaje--error" role="alert" hidden></p>
+      <p id="mensaje-ok-venta" class="mensaje mensaje--ok" role="status" hidden></p>
+      <article id="venta-confirmada" class="card" aria-labelledby="venta-confirmada-titulo" hidden>
+        <h3 id="venta-confirmada-titulo" tabindex="-1">Venta confirmada</h3>
+        <p><strong>Venta:</strong> <span id="venta-confirmada-id"></span></p>
+        <p><strong>Fecha:</strong> <span id="venta-confirmada-fecha"></span></p>
+        <p><strong>Cliente:</strong> <span id="venta-confirmada-cliente"></span></p>
+        <div class="tabla-contenedor">
+          <table id="tabla-venta-confirmada" class="tabla">
+            <thead>
+              <tr>
+                <th scope="col">Libro</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio unitario</th>
+                <th scope="col">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p><strong>Total:</strong> <span id="venta-confirmada-total"></span></p>
+      </article>
     </section>
 
     <section id="historial" class="card">
       <h2>Historial</h2>
+      <p id="mensaje-historial-cargando" class="mensaje" role="status" hidden>Cargando historial...</p>
+      <p id="mensaje-historial-error" class="mensaje mensaje--error" role="alert" hidden></p>
       <div class="tabla-contenedor">
-        <table id="tabla-historial" class="tabla">
-        <thead>
-          <tr>
-            <th scope="col">Identificador</th>
-            <th scope="col">Fecha</th>
-            <th scope="col">Cliente</th>
-            <th scope="col">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>V-001</td>
-            <td>2026-10-14</td>
-            <td>Valentina Ríos</td>
-            <td>5000.00</td>
-          </tr>
-        </tbody>
-        </table>
-      </div>
-      <details>
-        <summary>Ver detalle de V-001</summary>
-        <div class="tabla-contenedor">
-          <table class="tabla">
+        <table id="tabla-historial" class="tabla" hidden>
           <thead>
             <tr>
-              <th scope="col">Libro</th>
-              <th scope="col">Cantidad</th>
-              <th scope="col">Precio unitario</th>
-              <th scope="col">Subtotal</th>
+              <th scope="col">Venta</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Total</th>
+              <th scope="col">Detalle</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>El mapa de las horas lentas</td>
-              <td>2</td>
-              <td>1500.00</td>
-              <td>3000.00</td>
-            </tr>
-            <tr>
-              <td>Crónicas del patio interior</td>
-              <td>1</td>
-              <td>2000.00</td>
-              <td>2000.00</td>
-            </tr>
-          </tbody>
-          </table>
-        </div>
-      </details>
+          <tbody></tbody>
+        </table>
+      </div>
       <p id="mensaje-historial-vacia" class="mensaje" hidden>No hay ventas registradas.</p>
+      <p id="mensaje-historial-fin" class="mensaje" hidden>No hay más ventas.</p>
+      <div class="form__grupo" role="group" aria-label="Paginación del historial">
+        <span id="historial-pagina" aria-live="polite">Página 1</span>
+        <button id="historial-anterior" class="btn" type="button" disabled>Anterior</button>
+        <button id="historial-siguiente" class="btn" type="button" disabled>Siguiente</button>
+      </div>
+      <article id="historial-detalle" class="card" aria-labelledby="historial-detalle-titulo" hidden>
+        <h3 id="historial-detalle-titulo" tabindex="-1">Detalle de la venta</h3>
+        <p id="mensaje-historial-detalle-cargando" class="mensaje" role="status" hidden>Cargando detalle de la venta...</p>
+        <p id="mensaje-historial-detalle-error" class="mensaje mensaje--error" role="alert" hidden></p>
+        <div id="historial-detalle-contenido" class="form__grupo" hidden>
+          <p><strong>Venta:</strong> <span id="detalle-venta-id"></span></p>
+          <p><strong>Fecha:</strong> <span id="detalle-venta-fecha"></span></p>
+          <p><strong>Cliente:</strong> <span id="detalle-venta-cliente"></span></p>
+          <div class="tabla-contenedor">
+            <table id="tabla-detalle-venta" class="tabla">
+              <thead>
+                <tr>
+                  <th scope="col">Libro</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Precio unitario</th>
+                  <th scope="col">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p><strong>Total:</strong> <span id="detalle-venta-total"></span></p>
+        </div>
+        <button id="historial-detalle-cerrar" class="btn" type="button">Cerrar detalle</button>
+      </article>
+      <h3 id="precio-titulo">Cambiar el precio de un libro</h3>
+      <p>Las ventas ya registradas conservan el precio que tenían al venderse.</p>
+      <form id="form-precio" class="form" aria-labelledby="precio-titulo" novalidate>
+        <div class="form__grupo">
+          <label for="precio-libro">Libro</label>
+          <select id="precio-libro" name="precio-libro">
+            <option value="">Elegí un libro</option>
+          </select>
+          <label for="precio-nuevo">Nuevo precio</label>
+          <input type="number" id="precio-nuevo" name="precio-nuevo" min="0.01" step="0.01" inputmode="decimal">
+          <button id="precio-guardar" class="btn" type="submit">Guardar precio</button>
+        </div>
+      </form>
+      <p id="mensaje-error-precio" class="mensaje mensaje--error" role="alert" hidden></p>
+      <p id="mensaje-ok-precio" class="mensaje mensaje--ok" role="status" hidden></p>
     </section>
   </main>
   <footer>
