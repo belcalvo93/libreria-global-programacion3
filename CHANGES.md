@@ -211,6 +211,10 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/05_reglas_de_negocio.md` (RN-06 precio histórico)
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
+### [C-06c] `pulido-diseno-ux`
+- **Estado**: `[x]` hecho y **archivado**; `Approval` de la revisión 11 del design system: pending. Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
+- **Dueño**: B · **Scope**: marca «Gatoteca Lunar», lema bajo el título, formulario «Libros» en 3 bloques con orden de autoría automático (`siguienteOrden`) y hover de los libros con inclinación y sombra. Decisión D-47.
+
 ### [C-06b] `tema-secciones`
 - **Estado**: `[x]` hecho y **archivado** (revisión 10 aprobada el 2026-11-12; specs sincronizadas en `openspec/specs/tema-visual/`); PR por abrir. Ajuste posterior: las rayitas del borde de páginas de los libros van inclinadas como «/» (D-45). No reordena ni renumera los demás changes.
 - **Dueño**: B · **Scope**: estrella fugaz recuperada en la cabecera y secciones de abajo en «cristal nocturno». Solo `frontend/public/css/styles.css`; sin `.js` ni cambios en `index.html`. Decisión D-43. Segunda pasada (Ventas e Historial; también `ventas.js`, `ventas.test.js` y clases en `index.html`): D-44.
