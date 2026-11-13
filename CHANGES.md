@@ -211,6 +211,10 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/05_reglas_de_negocio.md` (RN-06 precio histórico)
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
+### [C-06g] `musica-fondo`
+- **Estado**: `[x]` hecho y **archivado**; revisión 15 del design system **pendiente de aprobación de Belén**. Rama `feat/c-06g-musica`, PR a `main`. No reordena los demás changes.
+- **Dueño**: B · **Scope**: música de fondo opcional (`audio/ambiente.mp3`, «Midnight in the Gatoteca») que arranca con la primera interacción, botón `#boton-musica` accesible, pausa con la pestaña oculta y `location /audio/` en nginx (`js/musica.js`, nuevo); cola del gato en dos tramos que ondula y reacciona al cursor cercano (`estante.js`). Decisiones D-52 y D-53.
+
 ### [C-06f] `pulido-visual`
 - **Estado**: `[x]` hecho y **archivado** (change retroactivo, como C-02); revisión 14 del design system aprobada por Belén el 2026-11-13. Rama `feat/pulido-visual`, PR a `main`. No reordena los demás changes.
 - **Dueño**: E (propuesta de Elías, aprobada por Belén) · **Scope**: equilibrio visual (nav, cabecera en celular, buscador en una fila, botón de Libros al pie, tamaños de títulos y etiquetas); errores por campo en Libros y Clientes y aviso de carga en el catálogo (`altas.js`, `catalogo.js`, 86 tests); tablas como tarjetas en celular; estantería en varias filas hasta el ancho de las secciones, mueble de madera en 3D con tapa superior, lomos del ancho de su título con título estampado en oro y canto de páginas en perspectiva; gato más grande, con luz de luna, sentado sobre la tapa, que respira, se inclina hacia los libros y mueve la cola. Toca archivos de Hernán (`catalogo.js`) y Bruno (`altas.js`). Pendiente: imágenes al doble de Belén (lomo, tapa y fondo).
@@ -410,6 +414,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha y archivada (revisión 12 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06c | BAJO |
 | C-06e | `paginas-tapa-estrella` | B | transversal | `[x]` hecha y archivada (revisión 13 aprobada el 2026-11-13; páginas con imagen descartadas, D-51); va en la rama `feat/c-07-limpieza` | C-06d | BAJO |
 | C-06f | `pulido-visual` | E | transversal | `[x]` hecha y archivada (retroactivo; revisión 14 aprobada por Belén el 2026-11-13); PR de `feat/pulido-visual` | C-07 | BAJO |
+| C-06g | `musica-fondo` | B | transversal | `[x]` hecha y archivada (revisión 15 pendiente de aprobación); PR de `feat/c-06g-musica` | C-06f | BAJO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |

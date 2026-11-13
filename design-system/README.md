@@ -1,8 +1,8 @@
 # Design system — Gatoteca Lunar
 
 Mode: system-only
-Revision: 14
-Approval: approved (Belén, 2026-11-13; propuesta de Elías)
+Revision: 15
+Approval: pending
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
 > - La revisión 1 (tema claro del parcial) la aprobó la usuaria el 2026-11-10.
@@ -16,6 +16,9 @@ Approval: approved (Belén, 2026-11-13; propuesta de Elías)
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
+> - La revisión 15 (2026-11-13, C-06g `musica-fondo`, rama `feat/c-06g-musica`) **pendiente de aprobación de Belén**. No cambia paleta, tipografía ni imágenes:
+>   - **botón de música** (`.boton-musica`, sección 15e del CSS): círculo de 44x44 px fijo abajo a la derecha (lejos del nav, la luna y el gato), cristal nocturno (`--magia-franja` con desenfoque, respaldo opaco sin `backdrop-filter`), borde dorado apagado que pasa a `--color-primario` en hover y mientras suena, halo `--magia-brillo` sonando, ícono 🔊/🔇 teñido de dorado con `filter` (los emojis traen colores propios) y foco de 3 px `--color-foco`. Solo su transición de borde y brillo vive en `no-preference`;
+>   - **cola del gato en dos tramos**: la misma `gato.webp` en tres recortes (cuerpo, base de la cola del 65 al 85 % y punta del 83 al 100 %, articulada en 18 % 84 %). En calma la punta repite el vaivén de la base con 0.4 s de retraso (onda) y cada tanto se enrosca; con el cursor a menos de 1.2 altos del gato da golpecitos (`punta-golpe`, 1.6 s) y a menos de 0.4 toda la cola se agita (`cola-latigo`, 1.2 s). Vuelve a la calma al terminar el ciclo, sin saltos. Con «reducir movimiento» queda quieta.
 > - La revisión 14 (2026-11-13, rama `feat/pulido-visual`, propuesta de Elías) ajusta el **equilibrio visual** sin cambiar paleta, tipografía, imágenes ni comportamiento:
 >   - la franja del nav baja de 4.5 a 3.75 rem (sin banda vacía bajo los marcapáginas);
 >   - en móvil (≤ 48rem) la luna es más chica (`clamp(3rem, 11vw, 4rem)`) y la cabecera reserva su ancho a ambos lados, así título y lema quedan centrados y no la rozan;
@@ -33,7 +36,7 @@ Approval: approved (Belén, 2026-11-13; propuesta de Elías)
 >   - **cola del gato animada**: el `<img class="gato">` pasa a `<span class="gato">` con dos piezas de la **misma imagen** recortadas con `clip-path`: el cuerpo (`img.gato__cuerpo`) y la cola (`span.gato__cola`, con la imagen de fondo). Los recortes se superponen en la raíz (65–68 % del alto) y la cola gira sobre ella (`transform-origin: 14% 68%`), medido sobre la silueta de `gato.webp`. Animación `cola-gato` de 7.5 s: vaivén lento entre −3° y 6° y un coletazo a 10°; solo con `prefers-reduced-motion: no-preference`. El brillo, la respiración y la inclinación siguen en el contenedor, así cuerpo y cola se mueven juntos. Revisado ampliado 3×: sin hueco en la unión a 10° ni a −4°;
 >   - **Pendiente de Belén (imágenes al doble)**: `lomo-cuero.webp` (120x512) y `tapa-cuero.webp` (120x680) se muestran hasta ~76x432 px y el fondo (1920x1072) a pantalla completa; con zoom de Windows o pantallas retina el navegador las estira y se ven borrosas. Hace falta exportar `lomo-cuero@2x.webp` 240x1024, `tapa-cuero@2x.webp` 240x1360 y `fondo-noche@2x.webp` 3840x2144; recién con los archivos en `img/` se agregan con `image-set()` (si el CSS apunta a un archivo que no existe, las pantallas 2x no muestran nada).
 >   Verificado en 320x568, 390x844, 768x1024 y 1366x768: sin scroll horizontal, portada en una pantalla y 73 tests del front en verde (86 al final de la revisión). **Aprobada por Belén el 2026-11-13**; es la revisión vigente.
-> - La revisión 13 (2026-11-13, C-06e) pasa la tapa a cuero (`tapa-cuero.webp`) teñido con el color de cada libro y la estrella de la tapa a `estrella-dorada.webp` con resplandor, centra «Estantería» sobre el gabinete y ubica el nombre del libro junto al gato, a la altura del borde superior del gabinete. El canto de páginas con imagen (`paginas-forma.webp`) se probó y **se descartó** porque no ensamblaba con el lomo: el canto sigue siendo el bloque crema con líneas a 95° (D-51). **Aprobada por Belén el 2026-11-13**; la reemplaza la 14.
+> - La revisión 13 (2026-11-13, C-06e) pasa la tapa a cuero (`tapa-cuero.webp`) teñido con el color de cada libro y la estrella de la tapa a `estrella-dorada.webp` con resplandor, centra «Estantería» sobre el gabinete y ubica el nombre del libro junto al gato, a la altura del borde superior del gabinete. El canto de páginas con imagen (`paginas-forma.webp`) se probó y **se descartó** porque no ensamblaba con el lomo: el canto sigue siendo el bloque crema con líneas a 95° (D-51). **Aprobada por Belén el 2026-11-13**; la reemplaza la 14 (aprobada por Belén el 2026-11-13), y a esta la 15.
 > - La revisión 12 (2026-11-13, change `lomos-cuero-titulo-gato`, C-06d) pone **lomos de cuero gastado** (textura `lomo-cuero.webp` teñida con el color de cada libro) y muestra el **título del libro junto al gato**, sin fondo, en lugar de la pastilla sobre el gabinete. **Aprobada por Belén el 2026-11-13**, junto con la 11.
 > - La revisión 11 (2026-11-13, change `pulido-diseno-ux`, C-06c) cambia la marca a **Gatoteca Lunar**, agrega el **lema** bajo el título, ordena el formulario «Libros» en 3 bloques y suma inclinación y sombra a los libros de la estantería al hover o foco. **Aprobada por Belén el 2026-11-13**, junto con la 12.
 > - La revisión 10 (2026-11-12, change `tema-secciones`) recupera la **estrella fugaz** de la cabecera y pasa las secciones de abajo (Catálogo, Libros, Clientes, Ventas, Historial) a «**cristal nocturno**»: tarjetas azul noche translúcidas con borde dorado tenue, títulos con línea y ✦, formularios en grilla, botones primario/secundario, tablas y mensajes coherentes. No toca la portada ni la estantería. Una segunda pasada (Ventas e Historial) agrega botones secundario/compacto/fantasma, fila de libro, cliente por ID y paginación centrada. **Aprobada por Belén Calvo el 2026-11-12; reemplaza a la 9.**
@@ -85,6 +88,12 @@ Approval: approved (Belén, 2026-11-13; propuesta de Elías)
 - Ambas van con `<img>` de `width`/`height` fijos, `alt=""`, `aria-hidden="true"` y `decoding="async"`. El tamaño mostrado lo define el CSS.
 - No se dibujan con CSS ni SVG. Son decorativas.
 - Portadas reales opcionales: `frontend/public/img/portadas/<isbn>.jpg|webp`, solo para los ISBN de la lista `PORTADAS_DISPONIBLES` de `estante.js` (hoy vacía).
+
+## Audio (revisión 15)
+
+| Archivo | Formato | Uso | Origen |
+|---|---|---|---|
+| `frontend/public/audio/ambiente.mp3` | MP3, 168 s, 96 kbps, ~2 MB (recortado desde el segundo 8, con fade-in) | música de fondo opcional (`#musica-fondo`, botón `#boton-musica`) | **Origen y licencia: tema «Midnight in the Gatoteca», generado por Belén con Gemini Hydrogen (plan pago); uso en este trabajo académico sin fines comerciales.** |
 
 ## Tokens (`:root`)
 

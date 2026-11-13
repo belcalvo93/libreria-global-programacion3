@@ -28,7 +28,12 @@
         <p id="estante-etiqueta" class="estante__etiqueta" aria-hidden="true" hidden></p>
         <span class="gato" aria-hidden="true">
           <img class="gato__cuerpo" src="img/gato.webp" width="364" height="960" alt="" decoding="async">
-          <span class="gato__cola"></span>
+          <span class="gato__cola">
+            <span class="gato__cola-giro">
+              <span class="gato__cola-base"></span>
+              <span class="gato__cola-punta"></span>
+            </span>
+          </span>
         </span>
         <div class="estante__mueble">
           <ul class="estante__repisa" aria-label="Libros de la estantería"></ul>
@@ -347,10 +352,13 @@
   <footer>
     <p>© 2026 Gatoteca Lunar</p>
   </footer>
+  <audio id="musica-fondo" src="/audio/ambiente.mp3" loop preload="none"></audio>
+  <button id="boton-musica" class="boton-musica" type="button" aria-pressed="false" aria-label="Música de fondo" title="Activar música"><span class="boton-musica__icono" aria-hidden="true">🔇</span></button>
   <script src="js/api.js"></script>
   <script src="js/catalogo.js"></script>
   <script src="js/altas.js"></script>
   <script src="js/ventas.js"></script>
   <script src="js/estante.js"></script>
+  <script src="js/musica.js"></script>
 </body>
 </html>
