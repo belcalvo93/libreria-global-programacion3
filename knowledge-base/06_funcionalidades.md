@@ -58,7 +58,7 @@ Organizadas por ejercicio de la consigna (épica), con dueño y casos asociados.
 - La tabla del catálogo de Hernán se mantiene; el estante no la reemplaza. Se hace después de C-03 mergeado.
 
 ## Tarea final — Limpieza · Belén
-- Eliminar `js/datos.js` y `js/persistencia.js` cuando Hernán, Bruno y Joaquín estén mergeados y ninguna sección use `DATOS`. Se mergea ANTES del deploy final del viernes 13 a la noche (D-23); si se atrasa, se redespliega el sábado.
+- **Hecho (C-07, D-46):** `js/datos.js` y `js/persistencia.js` fueron eliminados; ninguna sección usaba `DATOS`. Se mergea ANTES del deploy final del viernes 13 a la noche (D-23); si se atrasa, se redespliega el sábado.
 
 ## Endpoints disponibles y no consumidos
 Ver la tabla «usado / no usado por el front» en `11_contrato_api.md`.

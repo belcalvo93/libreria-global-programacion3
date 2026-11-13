@@ -51,7 +51,7 @@ C-09 cors-backend [x] (E) ── sin dependencias de código ──────�
 
 Notas de dependencia:
 - C-01 está hecha (PR #1): es la base de todo el frente.
-- `js/datos.js` y `js/persistencia.js` **no se borran** hasta C-07; hasta entonces las secciones que aún usan `DATOS` siguen funcionando.
+- `js/datos.js` y `js/persistencia.js` se borraron en C-07 (D-46); ninguna sección usaba ya `DATOS`.
 - C-04 llama a `window.renderCatalogo()` (lo expone C-03); es una dependencia **blanda**: C-04 debe guardar con `typeof window.renderCatalogo === "function"` y no bloquearse si C-03 aún no está mergeado.
 - C-08 y C-10 quedan acoplados: el dominio del front (que asigna Easypanel al crear el servicio; lo define Belén en C-08) alimenta `CORS_ORIGINS`. C-09 y C-10 dependen de ese dato, que sigue (TBD) hasta C-08.
 
@@ -92,7 +92,7 @@ GATE 6: C-11 ✓ + C-12 ✓
 C-01 ✓ → C-02 → C-03 | C-04 | C-05 (las tres en paralelo; manda la más lenta) → C-07 ★
 ```
 
-★ C-07 (limpieza de `datos.js` y `persistencia.js`) es la **última** tarea del camino crítico: depende de que H, R y J estén mergeados. Decisión: se mergea ANTES del deploy final del viernes 13 a la noche; si se atrasa, se redespliega el sábado (en Easypanel es un clic).
+★ C-07 (limpieza de `datos.js` y `persistencia.js`, hecha: D-46) fue la **última** tarea del camino crítico: depende de que H, R y J estén mergeados. Decisión: se mergea ANTES del deploy final del viernes 13 a la noche; si se atrasa, se redespliega el sábado (en Easypanel es un clic).
 
 Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 → C-10 → C-12 / C-11 → C-13`, apoyada en `C-08`. C-06 (estante y estética) no está en el camino crítico: es acotable o recortable si falta tiempo.
 
@@ -256,7 +256,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/09_decisiones_y_supuestos.md` D-25 (alcance del estante) y `design-system/README.md`
 
 ### [C-07] `limpieza-datos-persistencia`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho y **archivado** (`openspec/changes/archive/`, specs sincronizadas); PR por abrir con «Closes #11». Se borraron `datos.js` y `persistencia.js` y sus `<script>`; ningún test los cubría
 - **Dueño**: B (Belén) · **Ej.**: cierre del front · **ÚLTIMA tarea del camino crítico** · **se mergea ANTES del deploy final del vie 13 a la noche** (D-23); si se atrasa, se redespliega el sábado (un clic en Easypanel)
 - **Scope**:
   - Borrar `frontend/public/js/datos.js` y `frontend/public/js/persistencia.js`.
@@ -390,7 +390,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
 | C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
 | C-06b | `tema-secciones` | B | transversal | `[x]` hecha y archivada (revisión 10 aprobada); PR por abrir | C-06 | BAJO |
-| C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
+| C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[x]` hecha (12/11), archivada | C-09, C-08 | ALTO |

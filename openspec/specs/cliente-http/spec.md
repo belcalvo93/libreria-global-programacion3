@@ -23,7 +23,7 @@ El frontend SHALL exponer un objeto global `window.Api` con las operaciones `get
 
 #### Scenario: Orden de carga
 - **WHEN** se inspeccionan las etiquetas `<script>` de `index.html`
-- **THEN** la primera es `js/api.js` y le siguen `datos.js`, `persistencia.js`, `catalogo.js`, `altas.js` y `ventas.js`
+- **THEN** la primera es `js/api.js` y le siguen `catalogo.js`, `altas.js`, `ventas.js` y `estante.js`, sin `datos.js` ni `persistencia.js`
 
 ### Requirement: URL bajo la base /api
 El cliente SHALL construir la URL anteponiendo la base `/api` a la ruta recibida, sin agregar ni quitar barras; la ruta se escribe como en FastAPI (barra final en colecciones, sin barra en recursos con id).
