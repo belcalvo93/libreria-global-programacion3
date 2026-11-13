@@ -146,20 +146,50 @@
     if (els.mensajeSinResultados) { els.mensajeSinResultados.hidden = true; }
   }
 
+  var TEXTO_BUSCAR = "Buscar en el catálogo";
+  var TEXTO_BUSCANDO = "Buscando…";
+
+  // Lógica pura: qué estado deben tener los controles según haya o no una petición en vuelo.
+  function estadoControlesCarga(cargando, offset, hayMasPaginas) {
+    return {
+      buscarDeshabilitado: cargando,
+      textoBuscar: cargando ? TEXTO_BUSCANDO : TEXTO_BUSCAR,
+      anteriorDeshabilitado: cargando || offset <= 0,
+      siguienteDeshabilitado: cargando || !hayMasPaginas,
+      ocupado: cargando
+    };
+  }
+
+  function aplicarEstadoCarga(els, cargando) {
+    var e = estadoControlesCarga(cargando, estado.offset, ultimoHayMas);
+    if (els.btnBuscar) {
+      els.btnBuscar.disabled = e.buscarDeshabilitado;
+      els.btnBuscar.textContent = e.textoBuscar;
+    }
+    if (els.btnAnterior) {
+      els.btnAnterior.disabled = e.anteriorDeshabilitado;
+    }
+    if (els.btnSiguiente) {
+      els.btnSiguiente.disabled = e.siguienteDeshabilitado;
+    }
+    var contenedor = els.tabla && els.tabla.parentNode;
+    if (contenedor) {
+      if (e.ocupado) {
+        contenedor.setAttribute("aria-busy", "true");
+        contenedor.classList.add("is-cargando");
+      } else {
+        contenedor.removeAttribute("aria-busy");
+        contenedor.classList.remove("is-cargando");
+      }
+    }
+  }
+
   function actualizarPaginacion(els, cargando) {
     var paginaActual = Math.floor(estado.offset / estado.limite) + 1;
     if (els.paginaSalida) {
       els.paginaSalida.textContent = "Página " + paginaActual;
     }
-    if (els.btnBuscar) {
-      els.btnBuscar.disabled = cargando;
-    }
-    if (els.btnAnterior) {
-      els.btnAnterior.disabled = cargando || estado.offset <= 0;
-    }
-    if (els.btnSiguiente) {
-      els.btnSiguiente.disabled = cargando || !ultimoHayMas;
-    }
+    aplicarEstadoCarga(els, cargando);
   }
 
   function aplicarResultadoListado(els, lista, consulta) {
@@ -434,7 +464,9 @@
       hayMas: hayMas,
       resolverOrigenDetalle: resolverOrigenDetalle,
       enfocarOrigenDetalle: enfocarOrigenDetalle,
-      cerrarDetalle: cerrarDetalle
+      cerrarDetalle: cerrarDetalle,
+      estadoControlesCarga: estadoControlesCarga,
+      aplicarEstadoCarga: aplicarEstadoCarga
     };
   }
 })();

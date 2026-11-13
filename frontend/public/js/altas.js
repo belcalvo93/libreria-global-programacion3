@@ -112,6 +112,100 @@
     return "";
   }
 
+  // ---- Errores por campo (rev. 14) ----
+  // Devuelven {idDelControl: mensaje} en el orden del formulario; vacío si todo es válido.
+  function erroresLibroPorCampo(datos) {
+    var d = datos || {};
+    var errores = {};
+    if (limpiarTexto(d.titulo) === "") {
+      errores["libro-titulo"] = "Escribí el título.";
+    }
+    if (limpiarTexto(d.isbn) === "") {
+      errores["libro-isbn"] = "El ISBN es obligatorio.";
+    }
+    if (!esPrecioValido(d.precio)) {
+      errores["libro-precio"] = "El precio tiene que ser mayor a 0.";
+    }
+    if (!esEnteroNoNegativo(d.stock)) {
+      errores["libro-stock"] = "El stock tiene que ser un número entero desde 0.";
+    }
+    if (!esEnteroPositivo(d.editorialId)) {
+      errores["libro-editorial"] = "Elegí una editorial.";
+    }
+    if (!Array.isArray(d.autorias) || d.autorias.length === 0) {
+      errores["autor-id-buscar"] = "Agregá al menos un autor.";
+    } else if (d.autorias.some(function (item) {
+      return !item || !esEnteroPositivo(item.autor_id) ||
+        ROLES_AUTORIA.indexOf(item.rol) === -1 || !esEnteroPositivo(item.orden);
+    })) {
+      errores["autor-id-buscar"] = "Revisá los datos de las autorías cargadas.";
+    }
+    return errores;
+  }
+
+  function erroresClientePorCampo(datos) {
+    var d = datos || {};
+    var errores = {};
+    if (limpiarTexto(d.nombre) === "") {
+      errores["cliente-nombre"] = "Escribí el nombre.";
+    }
+    var email = limpiarTexto(d.email);
+    if (email === "") {
+      errores["cliente-email"] = "El email es obligatorio.";
+    } else if (!esEmailValido(email)) {
+      errores["cliente-email"] = "El email no tiene un formato válido.";
+    }
+    return errores;
+  }
+
+  // Un 409 de la API es un duplicado: ISBN en libros, email en clientes.
+  function campoDeConflicto(error, tipo) {
+    if (!error || error.status !== 409) {
+      return null;
+    }
+    return {
+      campoId: tipo === "libro" ? "libro-isbn" : "cliente-email",
+      mensaje: error.message || "Ese valor ya existe."
+    };
+  }
+
+  function mostrarErrorCampo(control, mensaje, ancla, doc) {
+    if (!control) {
+      return;
+    }
+    var d = doc || document;
+    var idMensaje = control.id + "-error";
+    var p = d.getElementById(idMensaje);
+    if (!p) {
+      p = d.createElement("p");
+      p.id = idMensaje;
+      p.className = "mensaje-campo";
+      var referencia = ancla || control;
+      if (referencia.parentNode) {
+        referencia.parentNode.insertBefore(p, referencia.nextSibling);
+      }
+    }
+    p.textContent = mensaje;
+    p.hidden = false;
+    p.removeAttribute("hidden");
+    control.setAttribute("aria-invalid", "true");
+    control.setAttribute("aria-describedby", idMensaje);
+  }
+
+  function limpiarErrorCampo(control, doc) {
+    if (!control) {
+      return;
+    }
+    var d = doc || document;
+    var p = d.getElementById(control.id + "-error");
+    if (p) {
+      p.hidden = true;
+      p.setAttribute("hidden", "");
+    }
+    control.removeAttribute("aria-invalid");
+    control.removeAttribute("aria-describedby");
+  }
+
   function armarCuerpoLibro(datos) {
     var generoTexto = limpiarTexto(datos.generoId);
     return {
@@ -257,6 +351,47 @@
     var clienteResultadoId = document.getElementById("cliente-resultado-id");
     var clienteResultadoNombre = document.getElementById("cliente-resultado-nombre");
     var clienteResultadoEmail = document.getElementById("cliente-resultado-email");
+
+    var IDS_CAMPOS_LIBRO = ["libro-titulo", "libro-isbn", "libro-precio", "libro-stock", "libro-editorial", "autor-id-buscar"];
+    var IDS_CAMPOS_CLIENTE = ["cliente-nombre", "cliente-email"];
+
+    function erroresDeConflicto(conflicto) {
+      var errores = {};
+      errores[conflicto.campoId] = conflicto.mensaje;
+      return errores;
+    }
+
+    // Muestra cada mensaje bajo su control y lleva el foco al primero inválido.
+    function mostrarErroresCampos(errores) {
+      var primero = null;
+      Object.keys(errores).forEach(function (id) {
+        var control = document.getElementById(id);
+        if (!control) {
+          return;
+        }
+        // El mensaje de autorías va después de la tabla de autorías, no del input de búsqueda.
+        var ancla = id === "autor-id-buscar" && tablaAutorias ? tablaAutorias.parentNode : null;
+        mostrarErrorCampo(control, errores[id], ancla);
+        if (!primero) {
+          primero = control;
+        }
+      });
+      if (primero) {
+        primero.focus();
+      }
+    }
+
+    function limpiarErroresLibro() {
+      IDS_CAMPOS_LIBRO.forEach(function (id) {
+        limpiarErrorCampo(document.getElementById(id));
+      });
+    }
+
+    function limpiarErroresCliente() {
+      IDS_CAMPOS_CLIENTE.forEach(function (id) {
+        limpiarErrorCampo(document.getElementById(id));
+      });
+    }
 
     function poblarSelects(editoriales, generos) {
       if (editorialSelect) {
@@ -415,6 +550,7 @@
       ocultarElemento(autorErrorMsg);
       ocultarElemento(libroErrorMsg);
       ocultarElemento(libroOkMsg);
+      limpiarErrorCampo(autorIdInput);
       renderAutorias();
     }
 
@@ -438,8 +574,10 @@
         autorias: autorias
       };
       var detalle = validarLibroFormulario(datosFormulario);
+      limpiarErroresLibro();
       if (detalle !== "") {
         mostrarError(libroErrorMsg, detalle);
+        mostrarErroresCampos(erroresLibroPorCampo(datosFormulario));
         return;
       }
 
@@ -486,6 +624,10 @@
           libroErrorMsg,
           error && error.message ? error.message : "No se pudo agregar el libro."
         );
+        var conflictoLibro = campoDeConflicto(error, "libro");
+        if (conflictoLibro) {
+          mostrarErroresCampos(erroresDeConflicto(conflictoLibro));
+        }
       } finally {
         if (btnGuardarLibro) {
           btnGuardarLibro.disabled = false;
@@ -506,8 +648,10 @@
         email: clienteEmailInput.value
       };
       var detalle = validarClienteFormulario(datosCliente);
+      limpiarErroresCliente();
       if (detalle !== "") {
         mostrarError(clienteErrorMsg, detalle);
+        mostrarErroresCampos(erroresClientePorCampo(datosCliente));
         return;
       }
 
@@ -539,6 +683,10 @@
           clienteErrorMsg,
           error && error.message ? error.message : "No se pudo agregar el cliente."
         );
+        var conflictoCliente = campoDeConflicto(error, "cliente");
+        if (conflictoCliente) {
+          mostrarErroresCampos(erroresDeConflicto(conflictoCliente));
+        }
       } finally {
         if (btnGuardarCliente) {
           btnGuardarCliente.disabled = false;
@@ -585,6 +733,7 @@
 
     if (autorIdInput) {
       autorIdInput.addEventListener("input", function () {
+        limpiarErrorCampo(autorIdInput);
         autorSeleccionado = null;
         ocultarElemento(autorEncontradoMsg);
         ocultarElemento(autorErrorMsg);
@@ -633,6 +782,7 @@
       if (campo) {
         var tipoEvento = campo.tagName === "SELECT" ? "change" : "input";
         campo.addEventListener(tipoEvento, function () {
+          limpiarErrorCampo(campo);
           ocultarElemento(libroErrorMsg);
           ocultarElemento(libroOkMsg);
         });
@@ -642,6 +792,7 @@
     [clienteNombreInput, clienteEmailInput].forEach(function (campo) {
       if (campo) {
         campo.addEventListener("input", function () {
+          limpiarErrorCampo(campo);
           ocultarElemento(clienteErrorMsg);
           ocultarElemento(clienteOkMsg);
         });
@@ -676,6 +827,11 @@
       validarAutoria: validarAutoria,
       validarLibroFormulario: validarLibroFormulario,
       validarClienteFormulario: validarClienteFormulario,
+      erroresLibroPorCampo: erroresLibroPorCampo,
+      erroresClientePorCampo: erroresClientePorCampo,
+      campoDeConflicto: campoDeConflicto,
+      mostrarErrorCampo: mostrarErrorCampo,
+      limpiarErrorCampo: limpiarErrorCampo,
       armarCuerpoLibro: armarCuerpoLibro,
       armarCuerpoCliente: armarCuerpoCliente,
       formatearPrecio: formatearPrecio,
