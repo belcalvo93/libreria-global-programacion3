@@ -43,7 +43,7 @@ C-09 cors-backend [x] (E) ── sin dependencias de código ──────�
  │                                                              ▼
  └────────────────────────────────────────── C-10 apilibreria-desde-monorepo [x] (E)   [necesita C-09 y el dominio de C-08]
                                                                 │
-                              C-08 + C-10 ──────────────────────┼── C-12 deploy-md (B)
+                              C-08 + C-10 ──────────────────────┼── C-12 deploy-md [x] (B)
                               C-03,C-04,C-05 + C-08 + C-10 ─────┴── C-11 evidencia-casos-g (todos, junta E)
                                                                          │
                                           C-11 + C-12 ───────────────── C-13 zip-entrega (E)
@@ -79,7 +79,7 @@ GATE 4: C-08 ✓ (dominio del front) + C-09 ✓ (CORS)
   → C-10 apilibreria-desde-monorepo          [E]
 
 GATE 5: C-08 ✓ + C-10 ✓ (vie 13 noche → sáb 14)
-  → C-12 deploy-md                           [B]
+  → C-12 deploy-md [x]                      [B]
   → C-11 evidencia-casos-g                   [H: G-01 · R: G-02, G-03 · J: G-04, G-05, G-06 · B: G-07 imagen · E: G-07 deploy y recolección]
 
 GATE 6: C-11 ✓ + C-12 ✓
@@ -355,7 +355,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 ## FASE 4 — Evidencia y entrega
 
 ### [C-12] `deploy-md`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecha (rama `docs/c-12-deploy-readme`)
 - **Dueño**: B (Belén) · **Ej.**: 5 · US-5.4
 - **Scope**:
   - `DEPLOY.md` en la **raíz** del repo (distinto de `backend/DEPLOY.md`, que puede reutilizarse como base).
@@ -425,7 +425,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[x]` hecha (12/11), archivada | C-09, C-08 | ALTO |
 | C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[ ]` | C-03, C-04, C-05, C-08, C-10 | BAJO |
-| C-12 | `deploy-md` | B | 5 | `[ ]` | C-08, C-10 | BAJO |
+| C-12 | `deploy-md` | B | 5 | `[x]` hecha (rama `docs/c-12-deploy-readme`) | C-08, C-10 | BAJO |
 | C-13 | `zip-entrega` | E | 5 | `[ ]` | C-11, C-12 | MEDIO |
 
 **Totales**: 13 changes en 4 fases · 6 gates de paralelismo (GATE 0 a GATE 6, con 2 forks) · camino crítico de 5 changes terminando en C-07.
