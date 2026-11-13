@@ -14,3 +14,12 @@
 ## Risks
 
 `backdrop-filter` puede costar rendimiento en equipos lentos: es mejora progresiva.
+
+## Segunda pasada: Ventas e Historial
+
+- **D7 Clases nuevas** (sección 15c del CSS): `.btn--secundario`, `.btn--compacto`, `.btn--quitar`, `.btn--confirmar`, `.venta-cliente`, `.venta-fila` (+ `__precio`, `__etiqueta`), `.paginacion`, `.form--precio`, `.texto-apoyo`. Anulan el viejo «renglón de venta» (`.form__grupo:has(output)`) con más especificidad.
+- **D8 Sin subtotal en borrador**: la fila queda Libro | Cantidad | Precio | quitar. El subtotal y el total NO se calculan en el front (regla dura, D-08): se ven en «Venta confirmada» con los importes de la API.
+- **D9 Quitar libro (ajuste)**: botón de solo ícono, sin texto visible. Zona táctil 44x44; círculo de 28 px (`::before`, borde rojo apagado) y cruz ✕ con dos gradientes rotados (`::after`). `aria-label="Quitar libro N"` y `title="Quitar libro"`. Hover y foco: fondo rojo tenue y cruz más intensa; foco dorado; transición solo con `no-preference`. Escritorio: al final de la fila, centrado con selector y cantidad; móvil: arriba a la derecha de la tarjeta del libro.
+- **D10 Ver detalle**: texto visible «Ver detalle», `aria-label="Ver detalle de la venta N"`.
+- **D11 Jerga**: «renglón» → «libro»/«fila» en etiquetas y mensajes; los ids (`venta-quitar-N`, `venta-libro-N`) y el campo `renglones` de la API no cambian.
+- **D12 Paginación**: `order` pone Anterior · Página N · Siguiente en una línea; deshabilitado con borde punteado y texto apagado.

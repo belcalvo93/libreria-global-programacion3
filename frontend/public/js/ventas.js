@@ -24,7 +24,7 @@
     return /^\d+$/.test(limpio) && Number(limpio) > 0;
   }
 
-  // Devuelve el número del renglón (1, 2, ...) que ya tiene ese libro, o 0.
+  // Devuelve el número de la fila (1, 2, ...) que ya tiene ese libro, o 0.
   function renglonConLibro(renglones, libroId, indiceIgnorado) {
     for (var i = 0; i < renglones.length; i++) {
       if (i !== indiceIgnorado && String(renglones[i].libroId) === String(libroId)) {
@@ -34,27 +34,27 @@
     return 0;
   }
 
-  // Reglas del Ej. 3 antes de enviar: cliente, al menos un renglón, cantidades
-  // enteras positivas y un renglón por libro. Devuelve "" si el borrador está bien.
+  // Reglas del Ej. 3 antes de enviar: cliente, al menos un libro, cantidades
+  // enteras positivas y una fila por libro. Devuelve "" si el borrador está bien.
   function validarBorrador(clienteTexto, renglones) {
     if (!enteroPositivo(clienteTexto)) {
       return "Ingresá el ID del cliente (un número entero mayor que cero).";
     }
     if (!Array.isArray(renglones) || renglones.length === 0) {
-      return "Agregá al menos un renglón.";
+      return "Agregá al menos un libro.";
     }
     for (var i = 0; i < renglones.length; i++) {
       var numero = i + 1;
       if (!enteroPositivo(renglones[i].libroId)) {
-        return "Elegí el libro del renglón " + numero + ".";
+        return "Elegí el libro " + numero + ".";
       }
       if (!enteroPositivo(renglones[i].cantidad)) {
-        return "La cantidad del renglón " + numero + " tiene que ser un número entero mayor que cero.";
+        return "La cantidad del libro " + numero + " tiene que ser un número entero mayor que cero.";
       }
       var repetido = renglonConLibro(renglones, renglones[i].libroId, i);
       if (repetido > 0 && repetido < numero) {
-        return "El libro del renglón " + numero + " ya está en el renglón " + repetido +
-          ". Un mismo libro no puede aparecer en dos renglones.";
+        return "El libro " + numero + " ya está en la fila " + repetido +
+          ". Un mismo libro no puede aparecer en dos filas.";
       }
     }
     return "";
@@ -117,6 +117,11 @@
     return limpio;
   }
 
+  // Nombre accesible del botón de quitar (no hay texto visible).
+  function textoQuitar(numero) {
+    return "Quitar libro " + numero;
+  }
+
   function textoOpcionLibro(libro) {
     return libro.titulo + " — $" + formatearImporte(libro.precio) + " (stock " + libro.stock + ")";
   }
@@ -124,7 +129,7 @@
   // ---------- Estado en memoria ----------
 
   var libros = [];
-  // Cada renglón: { libroId: "3", cantidad: "2" }. Se guardan como texto tal cual
+  // Cada fila (libro): { libroId: "3", cantidad: "2" }. Se guardan como texto tal cual
   // los escribe la persona y se validan al confirmar.
   var renglones = [];
   var nodosRenglones = [];
@@ -264,17 +269,17 @@
     }
   }
 
-  // ---------- Renglones del borrador ----------
+  // ---------- Libros (filas) del borrador ----------
 
   function crearRenglon(indice) {
     var numero = indice + 1;
     var renglon = renglones[indice];
     var grupo = document.createElement("div");
-    grupo.className = "form__grupo";
+    grupo.className = "form__grupo venta-fila";
 
     var labelLibro = document.createElement("label");
     labelLibro.htmlFor = "venta-libro-" + numero;
-    labelLibro.textContent = "Libro del renglón " + numero;
+    labelLibro.textContent = "Libro " + numero;
     var select = document.createElement("select");
     select.id = "venta-libro-" + numero;
     select.name = select.id;
@@ -287,8 +292,8 @@
     select.addEventListener("change", function () {
       var repetido = renglonConLibro(renglones, select.value, indice);
       if (select.value !== "" && repetido > 0) {
-        mostrarMensaje("mensaje-error-venta", "Ese libro ya está en el renglón " + repetido +
-          ". Cambiá la cantidad de ese renglón en lugar de repetirlo.");
+        mostrarMensaje("mensaje-error-venta", "Ese libro ya está en la fila " + repetido +
+          ". Cambiá la cantidad de esa fila en lugar de repetirlo.");
         select.value = renglon.libroId;
         return;
       }
@@ -299,7 +304,7 @@
 
     var labelCantidad = document.createElement("label");
     labelCantidad.htmlFor = "venta-cantidad-" + numero;
-    labelCantidad.textContent = "Cantidad del renglón " + numero;
+    labelCantidad.textContent = "Cantidad del libro " + numero;
     var cantidad = document.createElement("input");
     cantidad.type = "number";
     cantidad.id = "venta-cantidad-" + numero;
@@ -319,14 +324,21 @@
     precio.output.id = "venta-precio-" + numero;
     precio.output.setAttribute("for", select.id);
     precio.output.textContent = textoPrecioCatalogo(renglon.libroId);
-    precio.p.appendChild(document.createTextNode("Precio actual del catálogo: "));
+    precio.p.className = "venta-fila__precio";
+    var etiquetaPrecio = document.createElement("span");
+    etiquetaPrecio.className = "venta-fila__etiqueta";
+    etiquetaPrecio.textContent = "Precio";
+    precio.p.appendChild(etiquetaPrecio);
     precio.p.appendChild(precio.output);
 
     var quitar = document.createElement("button");
     quitar.type = "button";
     quitar.id = "venta-quitar-" + numero;
-    quitar.className = "btn btn--peligro";
-    quitar.textContent = "Quitar renglón " + numero;
+    quitar.className = "btn btn--quitar";
+    // Botón de solo ícono: la cruz ✕ la dibuja el CSS; el nombre es aria-label y
+    // title muestra el tooltip del navegador.
+    quitar.setAttribute("aria-label", textoQuitar(numero));
+    quitar.title = "Quitar libro";
     quitar.addEventListener("click", function () {
       quitarRenglon(indice);
     });
@@ -345,7 +357,7 @@
     return libro ? formatearImporte(libro.precio) : "—";
   }
 
-  // Los renglones van como hijos directos del form, antes de «Agregar renglón».
+  // Las filas van como hijos directos del form, antes de «Agregar otro libro».
   function renderRenglones() {
     var form = el("form-venta");
     var botonAgregar = el("venta-agregar");
@@ -483,8 +495,9 @@
       var celda = document.createElement("td");
       var boton = document.createElement("button");
       boton.type = "button";
-      boton.className = "btn";
-      boton.textContent = "Ver detalle de la venta " + venta.id;
+      boton.className = "btn btn--secundario btn--compacto";
+      boton.textContent = "Ver detalle";
+      boton.setAttribute("aria-label", "Ver detalle de la venta " + venta.id);
       boton.addEventListener("click", function () {
         cargarDetalle(venta.id, boton);
       });
@@ -708,7 +721,8 @@
       textoCliente: textoCliente,
       hayMas: hayMas,
       validarPrecio: validarPrecio,
-      textoOpcionLibro: textoOpcionLibro
+      textoOpcionLibro: textoOpcionLibro,
+      textoQuitar: textoQuitar
     };
   }
 })();
