@@ -2,7 +2,7 @@
 
 Mode: system-only
 Revision: 16
-Approval: pending
+Approval: approved (Belén, 2026-11-13)
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
 > - La revisión 1 (tema claro del parcial) la aprobó la usuaria el 2026-11-10.
@@ -16,13 +16,12 @@ Approval: pending
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
-> - La revisión 16 (2026-11-13, C-06h `detalles-finales`, rama `feat/c-06h-detalles`) **pendiente de aprobación de Belén**. No cambia paleta, tipografía ni imágenes:
+> - La revisión 16 (2026-11-13, C-06h `detalles-finales`, rama `feat/c-06h-detalles`) **aprobada por Belén el 2026-11-13**; es la revisión vigente. No cambia paleta, tipografía ni imágenes:
 >   - **favicon de la luna**: `favicon.ico` (16/32/48 px), `favicon-32.png` y `apple-touch-icon.png` (180 px, sobre azul noche) derivados de `luna.webp`, y `<meta name="theme-color" content="#0e1128">` (el azul de `--magia-franja` / `--color-fondo`; `#0a0e28` no existe entre las variables `--magia-*`);
 >   - **«Saltar al contenido»** (`.saltar`): primer enlace del `<body>`, fuera de pantalla hasta el foco; con foco entra arriba a la izquierda sobre el nav (`z-index` 200), compacto (texto 0.85 rem, padding 0.35 × 0.75 rem, borde de 1.5 px, al menos 36 px de alto), fondo azul noche al 95 %, borde y texto `--color-primario`, foco `--color-foco`. Lleva a `#catalogo` (`tabindex="-1"`, contorno dorado solo con teclado);
 >   - **fundido de la música**: sube de 0 a 0.3 en 1.5 s y baja en 0.6 s antes de pausar (no es visual, se anota por la experiencia);
 >   - **pie**: `padding-bottom` + 4 rem para que el botón de música no tape el texto del pie (verificado a 320 px: 28 px libres).
->   Mientras la 16 está pendiente, la 15 (C-06g) también sigue pendiente.
-> - La revisión 15 (2026-11-13, C-06g `musica-fondo`, rama `feat/c-06g-musica`) **pendiente de aprobación de Belén**. No cambia paleta, tipografía ni imágenes:
+> - La revisión 15 (2026-11-13, C-06g `musica-fondo`, rama `feat/c-06g-musica`) **aprobada por Belén el 2026-11-13** (junto con la 16, que la reemplaza). No cambia paleta, tipografía ni imágenes:
 >   - **botón de música** (`.boton-musica`, sección 15e del CSS): círculo de 44x44 px fijo abajo a la derecha (lejos del nav, la luna y el gato), cristal nocturno (`--magia-franja` con desenfoque, respaldo opaco sin `backdrop-filter`), borde dorado apagado que pasa a `--color-primario` en hover y mientras suena, halo `--magia-brillo` sonando, ícono 🔊/🔇 teñido de dorado con `filter` (los emojis traen colores propios) y foco de 3 px `--color-foco`. Solo su transición de borde y brillo vive en `no-preference`;
 >   - **cola del gato en dos tramos**: la misma `gato.webp` en tres recortes (cuerpo, base de la cola del 65 al 85 % y punta del 83 al 100 %, articulada en 18 % 84 %). En calma la punta repite el vaivén de la base con 0.4 s de retraso (onda) y cada tanto se enrosca; con el cursor a menos de 1.2 altos del gato da golpecitos (`punta-golpe`, 1.6 s) y a menos de 0.4 toda la cola se agita (`cola-latigo`, 1.2 s). Vuelve a la calma al terminar el ciclo, sin saltos. Con «reducir movimiento» queda quieta.
 > - La revisión 14 (2026-11-13, rama `feat/pulido-visual`, propuesta de Elías) ajusta el **equilibrio visual** sin cambiar paleta, tipografía, imágenes ni comportamiento:

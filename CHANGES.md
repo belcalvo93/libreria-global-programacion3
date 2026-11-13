@@ -212,11 +212,11 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
 ### [C-06h] `detalles-finales`
-- **Estado**: `[x]` hecho y **archivado**; revisión 16 del design system **pendiente de aprobación de Belén**. Rama `feat/c-06h-detalles`, PR a `main`. No reordena los demás changes.
+- **Estado**: `[x]` hecho y **archivado**; revisión 16 del design system aprobada por Belén el 2026-11-13. Rama `feat/c-06h-detalles`, PR a `main`. No reordena los demás changes.
 - **Dueño**: B · **Scope**: favicon derivado de la luna (`favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`) y `theme-color`, nginx con cache para los íconos; enlace «Saltar al contenido» a `#catalogo` (WCAG 2.4.1); fundido de volumen de la música (`musica.js`, `siguienteVolumen` y `pasoPorCuadro` con tests); margen al pie para el botón flotante. No toca `estante.js` ni archivos de Hernán, Bruno y Joaquín. Decisión D-54.
 
 ### [C-06g] `musica-fondo`
-- **Estado**: `[x]` hecho y **archivado**; revisión 15 del design system **pendiente de aprobación de Belén**. Rama `feat/c-06g-musica`, PR a `main`. No reordena los demás changes.
+- **Estado**: `[x]` hecho y **archivado**; revisión 15 del design system aprobada por Belén el 2026-11-13 (junto con la 16). Rama `feat/c-06g-musica`, PR a `main`. No reordena los demás changes.
 - **Dueño**: B · **Scope**: música de fondo opcional (`audio/ambiente.mp3`, «Midnight in the Gatoteca») que arranca con la primera interacción, botón `#boton-musica` accesible, pausa con la pestaña oculta y `location /audio/` en nginx (`js/musica.js`, nuevo); cola del gato en dos tramos que ondula y reacciona al cursor cercano (`estante.js`). Decisiones D-52 y D-53.
 
 ### [C-06f] `pulido-visual`
@@ -418,8 +418,8 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha y archivada (revisión 12 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06c | BAJO |
 | C-06e | `paginas-tapa-estrella` | B | transversal | `[x]` hecha y archivada (revisión 13 aprobada el 2026-11-13; páginas con imagen descartadas, D-51); va en la rama `feat/c-07-limpieza` | C-06d | BAJO |
 | C-06f | `pulido-visual` | E | transversal | `[x]` hecha y archivada (retroactivo; revisión 14 aprobada por Belén el 2026-11-13); PR de `feat/pulido-visual` | C-07 | BAJO |
-| C-06g | `musica-fondo` | B | transversal | `[x]` hecha y archivada (revisión 15 pendiente de aprobación); PR de `feat/c-06g-musica` | C-06f | BAJO |
-| C-06h | `detalles-finales` | B | transversal | `[x]` hecha y archivada (revisión 16 pendiente de aprobación); PR de `feat/c-06h-detalles` | C-06g | BAJO |
+| C-06g | `musica-fondo` | B | transversal | `[x]` hecha y archivada (revisión 15 aprobada el 2026-11-13); PR de `feat/c-06g-musica` | C-06f | BAJO |
+| C-06h | `detalles-finales` | B | transversal | `[x]` hecha y archivada (revisión 16 aprobada el 2026-11-13); PR de `feat/c-06h-detalles` | C-06g | BAJO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
