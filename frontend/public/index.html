@@ -4,9 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gatoteca Lunar</title>
+  <meta name="theme-color" content="#0e1128">
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a class="saltar" href="#catalogo">Saltar al contenido</a>
   <div class="portada">
     <header id="inicio">
       <img class="luna" src="img/luna.webp" width="380" height="380" alt="" aria-hidden="true" decoding="async">
@@ -45,7 +50,7 @@
     </section>
   </div>
   <main>
-    <section id="catalogo" class="card">
+    <section id="catalogo" class="card" tabindex="-1">
       <h2>Catálogo</h2>
       <form id="form-catalogo" class="form" role="search" novalidate>
         <div class="form__grupo">
