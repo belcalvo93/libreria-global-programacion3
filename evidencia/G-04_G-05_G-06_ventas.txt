@@ -1,0 +1,172 @@
+G-04 · Venta · G-05 · Precio histórico · G-06 · Rechazo — C-05 / C-11
+Responsable: Joaquín Moran
+URL pública probada: https://grupo2-elias-frontend.ugpvou.easypanel.host/
+Commit en main al ejecutar la prueba: d6909fe
+Sin valores de variables ni credenciales privadas. Clientes y libros de los datos de ejemplo.
+
+Navegador: Chrome con F12 -> Network, filtro Fetch/XHR y «Keep log» activado para conservar
+las peticiones al recargar la página.
+
+== Archivos de evidencia asociados (en evidencia/)
+- G-04_1_cliente_e_historial_previo.png  (Cliente 2 encontrado por ID; el historial tiene 2 ventas antes de la prueba)
+- G-04_2_borrador_dos_libros.png         (Borrador con Rayuela x2 y El Aleph x1, con el precio del catálogo como referencia)
+- G-04_3_venta_confirmada_201.png        («Venta 3 confirmada» con los importes de la respuesta y POST ventas/ 201 en Network)
+- G-04_4_post_201_headers.png            (Headers del POST: método POST, /api/ventas/, 201 Created)
+- G-04_5_post_201_respuesta.png          (Respuesta JSON del 201)
+- G-04_6_detalle_tras_recargar.png       (Después de F5, detalle de la venta 3 desde el historial y GET 3 -> 200)
+- G-04_7_get_detalle_respuesta.png       (Respuesta JSON de GET /api/ventas/3)
+- G-05_1_patch_payload.png               (PATCH libros/1 con payload {precio: 26000}; el detalle sigue en 25000.00)
+- G-05_2_patch_headers.png               (Headers del PATCH: /api/libros/1, 200 OK)
+- G-05_3_detalle_conserva_importes.png   (GET /api/ventas/3 pedido de nuevo después del PATCH: Rayuela sigue a 25000.00)
+- G-06_1_409_cliente_inexistente.png     (Cliente 999: mensaje «El cliente indicado no existe» y borrador intacto)
+- G-06_2_409_headers.png                 (Headers del POST rechazado: 409 Conflict)
+- G-06_3_409_respuesta.png               (Respuesta JSON del 409)
+- G-06_4_422_headers.png                 (POST con el mismo libro en dos renglones: 422 Unprocessable Content)
+- G-06_5_422_respuesta.png               (Respuesta JSON del 422)
+- G-06_6_historial_sin_cambios.png       (Después de F5, el historial sigue con 3 ventas)
+
+================================================================================
+CASO G-04: VENTA VÁLIDA CON DOS RENGLONES Y DETALLE DESPUÉS DE RECARGAR
+================================================================================
+
+== 1. Cliente por ID (G-04_1_cliente_e_historial_previo.png)
+Pasos:
+1. Abrir la URL pública y ubicarse en la sección «Ventas».
+2. Escribir «2» en «ID del cliente» y pulsar «Buscar cliente».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/clientes/2
+- Código de estado: 200 OK
+
+Resultado observado en la UI:
+- Debajo del campo aparece «Cliente: Tomás Ríos (tomas@example.com)».
+- El historial muestra 2 ventas antes de la prueba: la 1 (Lucía Fernández, 50000.00) y la 2 (Tomás Ríos, 77000.00).
+
+== 2. Armado del borrador (G-04_2_borrador_dos_libros.png)
+Pasos:
+1. Libro 1: «Rayuela — $25000.00 (stock 12)», cantidad 2.
+2. Pulsar «+ Agregar otro libro». Libro 2: «El Aleph — $19500.00 (stock 6)», cantidad 1.
+
+Resultado observado en la UI:
+- Cada fila muestra el «Precio del catálogo» (25000.00 y 19500.00) solo como referencia.
+- El borrador no muestra subtotales ni total: los importes de la venta salen de la respuesta de la API.
+- Todavía no hay ninguna petición POST: el borrador vive solo en memoria.
+
+== 3. Confirmación de la venta (G-04_3, G-04_4 y G-04_5)
+Pasos:
+1. Pulsar «Confirmar venta».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: POST
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/ventas/
+- Cuerpo que arma ventas.js (solo cliente y renglones, sin precios ni total):
+  {"cliente_id":2,"renglones":[{"libro_id":1,"cantidad":2},{"libro_id":3,"cantidad":1}]}
+- Código de estado: 201 Created (Server: nginx/1.30.6)
+- Respuesta JSON:
+  {"id":3,"fecha":"2026-11-13T21:36:53.363875Z","total":"69500.00","cliente":{"id":2,"nombre":"Tomás Ríos","email":"tomas@example.com"},"renglones":[{"libro_id":1,"titulo":"Rayuela","cantidad":2,"precio_unitario":"25000.00","subtotal":"50000.00"},{"libro_id":3,"titulo":"El Aleph","cantidad":1,"precio_unitario":"19500.00","subtotal":"19500.00"}]}
+- Después del 201, el front pide GET /api/ventas/?limit=10&offset=0 -> 200 para refrescar el historial.
+
+Resultado observado en la UI:
+- Mensaje verde «✓ Venta 3 confirmada. Total: 69500.00.».
+- Recuadro «Venta confirmada»: Venta 3, cliente Tomás Ríos, Rayuela 2 x 25000.00 = 50000.00,
+  El Aleph 1 x 19500.00 = 19500.00 y Total 69500.00. Son los valores de la respuesta, no recalculados.
+- El formulario vuelve a un renglón vacío y el campo del cliente queda limpio.
+
+== 4. Detalle después de recargar la página (G-04_6 y G-04_7)
+Pasos:
+1. Recargar con F5.
+2. En «Historial», pulsar «Ver detalle» en la venta 3.
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/ventas/3
+- Código de estado: 200 OK
+- Respuesta JSON: la misma venta que devolvió el 201 (id 3, total "69500.00", mismos renglones e importes).
+
+Resultado observado en la UI:
+- El historial muestra 3 ventas; la 3 es de Tomás Ríos por 69500.00.
+- «Detalle de la venta»: Venta 3, Tomás Ríos (tomas@example.com), Rayuela 2 / 25000.00 / 50000.00,
+  El Aleph 1 / 19500.00 / 19500.00, Total 69500.00. Coincide con la respuesta del 201.
+
+================================================================================
+CASO G-05: CAMBIO DE PRECIO Y CONSERVACIÓN DEL PRECIO HISTÓRICO
+================================================================================
+
+== 1. Cambio del precio de Rayuela (G-05_1 y G-05_2)
+Pasos:
+1. Con el detalle de la venta 3 abierto, ir a «Cambiar el precio de un libro».
+2. Libro: «Rayuela», Nuevo precio: 26000. Pulsar «Guardar precio».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: PATCH
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/1
+- Payload enviado (solo el precio): {"precio":26000}
+- Código de estado: 200 OK
+
+Resultado observado en la UI:
+- Mensaje verde «✓ Nuevo precio de «Rayuela»: 26000.00. Las ventas ya registradas conservan sus importes.».
+- El selector del libro ahora muestra «Rayuela — $26000.00 (stock 12)».
+
+== 2. La venta anterior conserva sus importes (G-05_3_detalle_conserva_importes.png)
+Después del PATCH, el front vuelve a pedir a la API el detalle que estaba abierto.
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/ventas/3
+- Código de estado: 200 OK
+- Respuesta JSON: Rayuela con "precio_unitario":"25000.00" y "subtotal":"50000.00", y "total":"69500.00".
+
+Resultado observado en la UI:
+- El detalle de la venta 3 sigue mostrando Rayuela a 25000.00, subtotal 50000.00 y Total 69500.00,
+  aunque el libro ahora cuesta 26000.00: la venta guarda el precio del momento en que se hizo (RN-06).
+
+================================================================================
+CASO G-06: RECHAZOS (409 Y 422) SIN CAMBIOS EN EL HISTORIAL
+================================================================================
+Antes de los rechazos, el historial tiene 3 ventas (la última, la 3 de G-04).
+
+== 1. Cliente inexistente -> 409 (G-06_1, G-06_2 y G-06_3)
+Pasos:
+1. En «Ventas», escribir «999» en «ID del cliente» (sin buscarlo).
+2. Libro 1: «Ficciones», cantidad 1. Pulsar «Confirmar venta».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: POST
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/ventas/
+- Código de estado: 409 Conflict
+- Respuesta JSON:
+  {"detail":"El cliente indicado no existe"}
+
+Resultado observado en la UI:
+- Mensaje de error en rojo «⚠ El cliente indicado no existe» (el texto del servidor).
+- El borrador queda intacto: el ID 999 y la fila con Ficciones x1 siguen cargados, y el botón
+  «Confirmar venta» vuelve a estar habilitado.
+
+== 2. El mismo libro en dos renglones -> 422 (G-06_4 y G-06_5)
+La interfaz no deja elegir el mismo libro en dos filas («un renglón por libro»), así que el cuerpo
+repetido se envía desde F12 -> Console con el mismo cliente de la API que usa la página:
+  await Api.post("/ventas/", {cliente_id: 1, renglones: [{libro_id: 1, cantidad: 1}, {libro_id: 1, cantidad: 2}]})
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: POST
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/ventas/
+- Código de estado: 422 Unprocessable Content
+- Respuesta JSON:
+  {"detail":[{"type":"value_error","loc":["body","renglones"],"msg":"Value error, Un mismo libro no puede aparecer en dos renglones","input":[{"libro_id":1,"cantidad":1},{"libro_id":1,"cantidad":2}],"ctx":{"error":{}}}]}
+
+Resultado observado en la consola:
+- ApiError con status 422 y mensaje «renglones: Value error, Un mismo libro no puede aparecer en dos renglones».
+
+== 3. El historial no cambió (G-06_6_historial_sin_cambios.png)
+Pasos:
+1. Recargar con F5 y ubicarse en «Historial».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/ventas/?limit=10&offset=0
+- Código de estado: 200 OK
+
+Resultado observado en la UI:
+- El historial sigue con las mismas 3 ventas: 1 (Lucía Fernández, 50000.00), 2 (Tomás Ríos, 77000.00)
+  y 3 (Tomás Ríos, 69500.00). Ni el 409 ni el 422 agregaron ventas.
