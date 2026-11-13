@@ -394,6 +394,9 @@ nav a[aria-current="location"]::before {
 
 footer {
   padding: var(--esp-5) var(--esp-4);
+  /* C-06h: 4 rem extra abajo (botón de música de 44 px a 1 rem del borde, más
+     aire) para que el botón flotante nunca tape el texto del pie. */
+  padding-bottom: calc(var(--esp-5) + 4rem);
   background: var(--magia-superficie);
   border-top: 1px solid var(--color-borde);
   text-align: center;
