@@ -404,6 +404,45 @@ footer p {
   color: var(--color-texto-suave);
 }
 
+/* C-06h: «Saltar al contenido» (WCAG 2.4.1). Primer enlace del body, fuera de
+   pantalla hasta recibir foco (no `display: none`: tiene que poder enfocarse).
+   Con foco entra arriba a la izquierda, sobre la franja del nav (z-index 100). */
+.saltar {
+  position: fixed;
+  top: var(--esp-2);
+  left: var(--esp-2);
+  z-index: 200;
+  padding: var(--esp-2) var(--esp-4);
+  border: 1px solid var(--color-primario);
+  border-radius: var(--radio);
+  background: rgba(10, 14, 40, 0.95);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.45);
+  color: var(--color-primario);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(calc(-100% - var(--esp-4)));
+}
+
+.saltar:focus {
+  transform: none;
+}
+
+.saltar:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 3px;
+}
+
+/* Destino del salto: con teclado muestra el foco dorado alrededor del catálogo;
+   con mouse (foco programático sin :focus-visible) no dibuja contorno. */
+#catalogo:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 4px;
+}
+
+#catalogo:focus:not(:focus-visible) {
+  outline: none;
+}
+
 
 /* ==========================================================================
    5. Contenido principal (main) y tarjetas (.card)
@@ -2141,6 +2180,11 @@ p:has(> #detalle-venta-total) {
   nav a:hover,
   nav a:focus-visible {
     transform: translateY(4px);
+  }
+
+  /* C-06h: el enlace «Saltar al contenido» baja suave al recibir foco. */
+  .saltar {
+    transition: transform var(--mov-duracion) var(--mov-curva);
   }
 
   /* C-06g: el botón de música solo anima su borde y brillo con movimiento permitido. */
