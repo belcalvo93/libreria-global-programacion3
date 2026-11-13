@@ -1898,6 +1898,61 @@ p:has(> #detalle-venta-total) {
 
 
 /* ==========================================================================
+   15e. Botón de música (C-06g)
+   Fijo abajo a la derecha: arriba están la luna y el nav, y el gato vive en la
+   estantería. Cristal nocturno con borde e ícono dorados, 44x44 px.
+   ========================================================================== */
+.boton-musica {
+  position: fixed;
+  right: max(var(--esp-4), env(safe-area-inset-right));
+  bottom: max(var(--esp-4), env(safe-area-inset-bottom));
+  z-index: 90; /* debajo de la franja del nav (100) */
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--color-borde);
+  border-radius: 50%;
+  background: rgba(10, 14, 40, 0.9); /* alternativa sin backdrop-filter */
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.45);
+  color: var(--color-primario);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@supports ((backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))) {
+  .boton-musica {
+    background: var(--magia-franja);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+}
+
+.boton-musica:hover,
+.boton-musica[aria-pressed="true"] {
+  border-color: var(--color-primario);
+}
+
+/* Sonando: un halo dorado suave, como la luna. */
+.boton-musica[aria-pressed="true"] {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.45), 0 0 0.75rem var(--magia-brillo);
+}
+
+.boton-musica:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 3px;
+}
+
+/* Los emojis 🔊/🔇 traen sus propios colores (blanco y azul en Windows): el
+   filtro los pasa a un dorado cálido acorde al borde. */
+.boton-musica__icono {
+  pointer-events: none;
+  filter: grayscale(1) sepia(1) saturate(2.6) brightness(1.08);
+}
+
+/* ==========================================================================
    16. Movimiento (design.md D4)
    TODA `animation` y `transition` vive solo aquí, dentro de `no-preference`:
    con «reducir movimiento» nada se anima, los libros no giran ni se mueven y
@@ -2014,6 +2069,11 @@ p:has(> #detalle-venta-total) {
   nav a:hover,
   nav a:focus-visible {
     transform: translateY(4px);
+  }
+
+  /* C-06g: el botón de música solo anima su borde y brillo con movimiento permitido. */
+  .boton-musica {
+    transition: border-color var(--mov-duracion) var(--mov-curva), box-shadow var(--mov-duracion) var(--mov-curva);
   }
 
   @keyframes aparecer {
