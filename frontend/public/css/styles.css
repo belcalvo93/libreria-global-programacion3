@@ -1089,15 +1089,48 @@ main > .card {
   border-radius: inherit;
 }
 
-/* Tope: borde de páginas con la imagen paginas-forma.webp (paralelogramo de hojas
-   con borde ondulado, fondo transparente). Misma posición y tamaño que antes. */
+/* Tope: canto de hojas con `paginas-forma.webp` (paralelogramo con borde ondulado).
+   Ensamblado al lomo: la esquina izquierda de la imagen toca la esquina superior
+   izquierda del lomo y su borde inferior queda 3 px METIDO detrás del lomo (se
+   dibuja 1 px más atrás en Z), sin hueco. Ancho = el del lomo + 3 px que
+   «retroceden» en perspectiva a la derecha, nada a la izquierda. Todo en % y
+   variables: sirve para lomos de cualquier ancho. */
 .libro__tope {
-  bottom: calc(100% - 0.2rem); /* apoya el canto sobre el borde superior del lomo */
+  bottom: calc(100% - 3px); /* 3 px por detrás del borde superior del lomo */
   left: 0;
-  inline-size: 100%;
+  inline-size: calc(100% + 3px);
   block-size: auto;
-  aspect-ratio: 496 / 158; /* proporción de paginas-forma.webp: se ajusta al ancho del libro */
+  aspect-ratio: 496 / 158; /* proporción de paginas-forma.webp */
   background: url("../img/paginas-forma.webp") 0 0 / 100% 100% no-repeat;
+  transform: translateZ(-1px); /* el lomo queda por encima de las hojas */
+}
+
+/* Relleno entre el borde inferior ondulado de la imagen (que sube hacia la
+   derecha) y el borde superior del lomo: el canto es un bloque de hojas con su
+   cara lateral, no una placa flotante. */
+.libro__tope::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #e1c291, #d9b787 60%, #cd9e6e);
+  clip-path: polygon(30% 100%, 100% 23%, 100% 100%);
+}
+
+/* Labio de cuero: franja fina más oscura sobre el borde superior del lomo, con
+   las esquinas superiores levemente redondeadas, que «monta» sobre las hojas. */
+.libro > .libro__lomo::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  border-radius: 3px 3px 0 0;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.38)),
+    var(--lomo-color);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 /* Estado «sin movimiento» (siempre): solo cambian el brillo y el borde. El
