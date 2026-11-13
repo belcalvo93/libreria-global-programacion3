@@ -900,20 +900,20 @@ main > .card {
   z-index: 2; /* el libro que sale queda por encima de sus vecinos */
 }
 
-/* Título del libro (hover o foco): texto suelto, sin fondo, borde ni pastilla, a
-   la derecha del gato y justo debajo de «Estantería». Vive en la escena (no
-   dentro del gabinete), así que nunca tapa libros ni mueble: ocupa el hueco de
-   cielo entre el encabezado y el borde superior del gabinete (alto = 0,7 del
-   gato) y se estira hacia la derecha, donde solo hay cielo. En pantallas
-   angostas el ancho se limita para que no se salga del viewport. */
+/* Título del libro (hover o foco): texto suelto, sin fondo, borde ni pastilla. Va a
+   la derecha del gato (~1 rem de separación), con su borde inferior 0,4 rem por
+   encima del borde superior del gabinete (donde el gato está sentado), así que
+   queda cerca de la estantería sin tocarla. Crece hacia ARRIBA (translateY(-100%)),
+   nunca hacia los libros, y su ancho llega como máximo hasta el borde derecho de
+   la pantalla. Vive en la escena (no dentro del gabinete). */
 .estante__etiqueta {
-  --etiqueta-izq: calc(var(--gato-ancho) * 0.8 + var(--esp-3));
+  --etiqueta-izq: calc(var(--gato-ancho) * 0.8 + 1rem);
   position: absolute;
-  top: 1.9rem;
+  top: calc(var(--gato-alto) * 0.7 - 0.4rem); /* el gabinete empieza en 0,7 del alto del gato */
   left: var(--etiqueta-izq);
   z-index: 2;
   inline-size: max-content;
-  max-inline-size: min(22rem, calc(50vw + 50% - var(--etiqueta-izq) - 1rem));
+  max-inline-size: min(32rem, calc(50vw + 50% - var(--etiqueta-izq) - 1rem));
   margin: 0;
   padding: 0;
   border: 0;
@@ -927,6 +927,7 @@ main > .card {
   text-align: left;
   text-shadow: 0 0 0.6rem rgba(232, 196, 106, 0.55), 0 1px 3px rgba(4, 5, 9, 0.9);
   overflow-wrap: break-word;
+  transform: translateY(-100%);
   pointer-events: none;
 }
 
@@ -1171,6 +1172,15 @@ main > .card {
 @media (max-width: 24rem) {
   :root {
     --alto-max: 36dvh;
+  }
+}
+
+/* 320 px: el hueco entre «Estantería» y el gabinete es de ~50 px; con letra de
+   0,8 rem un título de 85 caracteres (3 líneas) entra sin tocar el encabezado. */
+@media (max-width: 24rem) {
+  .estante__etiqueta {
+    font-size: 0.8rem;
+    line-height: 1.2;
   }
 }
 
