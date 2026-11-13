@@ -18,7 +18,7 @@ Approval: pending
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
 > - La revisión 16 (2026-11-13, C-06h `detalles-finales`, rama `feat/c-06h-detalles`) **pendiente de aprobación de Belén**. No cambia paleta, tipografía ni imágenes:
 >   - **favicon de la luna**: `favicon.ico` (16/32/48 px), `favicon-32.png` y `apple-touch-icon.png` (180 px, sobre azul noche) derivados de `luna.webp`, y `<meta name="theme-color" content="#0e1128">` (el azul de `--magia-franja` / `--color-fondo`; `#0a0e28` no existe entre las variables `--magia-*`);
->   - **«Saltar al contenido»** (`.saltar`): primer enlace del `<body>`, fuera de pantalla hasta el foco; con foco entra arriba a la izquierda sobre el nav (`z-index` 200), fondo azul noche al 95 %, borde y texto `--color-primario`, foco `--color-foco`. Lleva a `#catalogo` (`tabindex="-1"`, contorno dorado solo con teclado);
+>   - **«Saltar al contenido»** (`.saltar`): primer enlace del `<body>`, fuera de pantalla hasta el foco; con foco entra arriba a la izquierda sobre el nav (`z-index` 200), compacto (texto 0.85 rem, padding 0.35 × 0.75 rem, borde de 1.5 px, al menos 36 px de alto), fondo azul noche al 95 %, borde y texto `--color-primario`, foco `--color-foco`. Lleva a `#catalogo` (`tabindex="-1"`, contorno dorado solo con teclado);
 >   - **fundido de la música**: sube de 0 a 0.3 en 1.5 s y baja en 0.6 s antes de pausar (no es visual, se anota por la experiencia);
 >   - **pie**: `padding-bottom` + 4 rem para que el botón de música no tape el texto del pie (verificado a 320 px: 28 px libres).
 >   Mientras la 16 está pendiente, la 15 (C-06g) también sigue pendiente.
