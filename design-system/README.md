@@ -1,7 +1,7 @@
 # Design system — Gatoteca Lunar
 
 Mode: system-only
-Revision: 11
+Revision: 12
 Approval: pending
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
@@ -16,6 +16,7 @@ Approval: pending
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
+> - La revisión 12 (2026-11-13, change `lomos-cuero-titulo-gato`, C-06d) pone **lomos de cuero gastado** (textura `lomo-cuero.webp` teñida con el color de cada libro) y muestra el **título del libro junto al gato**, sin fondo, en lugar de la pastilla sobre el gabinete. **Pendiente de aprobación**, junto con la 11 (se aprueban juntas); la última aprobada sigue siendo la 10.
 > - La revisión 11 (2026-11-13, change `pulido-diseno-ux`, C-06c) cambia la marca a **Gatoteca Lunar**, agrega el **lema** bajo el título, ordena el formulario «Libros» en 3 bloques y suma inclinación y sombra a los libros de la estantería al hover o foco. **Pendiente de aprobación** (la da Belén después de verla); hasta entonces la última aprobada es la 10.
 > - La revisión 10 (2026-11-12, change `tema-secciones`) recupera la **estrella fugaz** de la cabecera y pasa las secciones de abajo (Catálogo, Libros, Clientes, Ventas, Historial) a «**cristal nocturno**»: tarjetas azul noche translúcidas con borde dorado tenue, títulos con línea y ✦, formularios en grilla, botones primario/secundario, tablas y mensajes coherentes. No toca la portada ni la estantería. Una segunda pasada (Ventas e Historial) agrega botones secundario/compacto/fantasma, fila de libro, cliente por ID y paginación centrada. **Aprobada por Belén Calvo el 2026-11-12; reemplaza a la 9.**
 > - La revisión 9 fue la anterior aprobada (2026-11-12, por Belén Calvo). Las revisiones 3 a 8 fueron iteraciones intermedias que nunca se aprobaron y quedan reemplazadas por la 9; la última aprobada antes era la 2. La 9 **reemplaza a la 8**: el cielo pasa de estrellas hechas con CSS a la imagen `fondo-noche.webp` con un velo azul noche.
@@ -58,6 +59,7 @@ Approval: pending
 |---|---|---|---|
 | `frontend/public/img/gato.webp` | 364x960, WebP transparente (alto y angosto; ya mira arriba a la derecha) | gato sentado arriba a la izquierda del gabinete, de alto `clamp(110px, 22dvh, 200px)`, mirando a la luna | TBD (autoría y licencia no registradas) |
 | `frontend/public/img/fondo-noche.webp` | 1920x1072, WebP (88 KB), cielo nocturno azul con estrellas y nebulosa | fondo de TODA la página, en `body::before` fijo (`cover`, centrado) con un velo azul noche encima (0.55 arriba, 0.7 abajo) | TBD (autoría y licencia no registradas) |
+| `frontend/public/img/lomo-cuero.webp` | 120x512, WebP en escala de grises (luminosidad media ~62 %), cuero con vetas y desgaste. **Origen: recorte de una imagen propia generada con Gemini por Belén Calvo.** | textura de los lomos (`.libro__lomo`), teñida con `--lomo-color` por `background-blend-mode: overlay` y oscurecida con una capa negra al 32 % para el contraste AA del título |
 | `frontend/public/img/luna.webp` | 380x380, WebP transparente (halo propio, sin estrellas alrededor) | luna de ~120 px (`clamp(4rem, 12dvh, 7.5rem)`), completa, arriba a la derecha de la cabecera y detrás del contenido; se oculta por debajo de 24rem | TBD (autoría y licencia no registradas) |
 
 - Ambas van con `<img>` de `width`/`height` fijos, `alt=""`, `aria-hidden="true"` y `decoding="async"`. El tamaño mostrado lo define el CSS.
