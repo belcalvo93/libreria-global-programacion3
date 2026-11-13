@@ -227,7 +227,7 @@ header {
 
 @media (max-width: 24rem) {
   :root {
-    --alto-cabecera: 7rem; /* sin luna */
+    --alto-cabecera: 5.75rem; /* sin luna: título + lema en 2 líneas */
     --alto-nav: 7.5rem;       /* a 320 px los marcapáginas pueden envolver en dos filas */
   }
 
@@ -897,27 +897,33 @@ main > .card {
   z-index: 2; /* el libro que sale queda por encima de sus vecinos */
 }
 
-/* Etiqueta única con el título completo: arriba y al centro del gabinete,
-   fuera del scroll, sobre las puntas de los libros. */
+/* Título del libro (hover o foco): texto suelto, sin fondo, borde ni pastilla, a
+   la derecha del gato y justo debajo de «Estantería». Vive en la escena (no
+   dentro del gabinete), así que nunca tapa libros ni mueble: ocupa el hueco de
+   cielo entre el encabezado y el borde superior del gabinete (alto = 0,7 del
+   gato) y se estira hacia la derecha, donde solo hay cielo. En pantallas
+   angostas el ancho se limita para que no se salga del viewport. */
 .estante__etiqueta {
+  --etiqueta-izq: calc(var(--gato-ancho) * 0.8 + var(--esp-3));
   position: absolute;
-  top: 0.9rem;
-  inset-inline: 0;
-  z-index: 10;
+  top: 1.9rem;
+  left: var(--etiqueta-izq);
+  z-index: 2;
   inline-size: max-content;
-  max-inline-size: calc(100% - 1.5rem);
-  margin-inline: auto;
-  padding: 0.3rem 0.9rem;
-  border: 1px solid var(--magia-dorado-oscuro);
-  border-radius: var(--radio);
-  background: rgba(14, 17, 40, 0.94);
+  max-inline-size: min(22rem, calc(50vw + 50% - var(--etiqueta-izq) - 1rem));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
   color: #f6dc8f;
-  font-family: var(--fuente-titulo);
-  font-size: 1.05rem;
+  font-family: var(--fuente-encabezados);
+  font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.3;
-  text-align: center;
-  overflow-wrap: anywhere;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-align: left;
+  text-shadow: 0 0 0.6rem rgba(232, 196, 106, 0.55), 0 1px 3px rgba(4, 5, 9, 0.9);
+  overflow-wrap: break-word;
   pointer-events: none;
 }
 
@@ -1112,6 +1118,13 @@ main > .card {
 @media (max-width: 48rem) {
   :root {
     --alto-max: 40dvh;
+  }
+}
+
+/* 320 px de ancho: lomos algo más bajos para que la escena entre en 320x568. */
+@media (max-width: 24rem) {
+  :root {
+    --alto-max: 36dvh;
   }
 }
 
