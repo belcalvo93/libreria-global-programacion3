@@ -14,6 +14,16 @@ server {
         try_files $uri =404;
     }
 
+    # Música de fondo (C-06g): mismo cache que las imágenes. nginx responde los
+    # pedidos Range (206) de archivos estáticos por defecto; el navegador los usa
+    # para el loop y para buscar dentro del audio.
+    location /audio/ {
+        types { audio/mpeg mp3; }
+        expires 30d;
+        add_header Cache-Control "public";
+        try_files $uri =404;
+    }
+
     location /api/ {
         proxy_pass http://${API_UPSTREAM}/;
     }
