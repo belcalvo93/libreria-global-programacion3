@@ -1725,16 +1725,33 @@ p:has(> #detalle-venta-total) {
     transition: transform 350ms var(--mov-curva), transform-origin 350ms var(--mov-curva);
   }
 
-  /* El libro sale al frente, sube 14 px y gira mostrando su tapa. */
+  .libro__lomo,
+  .libro__tapa {
+    transition: box-shadow 350ms var(--mov-curva), border-color 350ms var(--mov-curva);
+  }
+
+  /* El libro sale al frente, sube 14 px, gira mostrando su tapa y se inclina
+     apenas (rotateZ), con una sombra más marcada. No cambia su tamaño ni el
+     layout: solo transform y box-shadow. */
   .libro:focus-visible {
-    transform: translateY(-14px) translateZ(1rem) rotateY(-32deg);
+    transform: translateY(-14px) translateZ(1rem) rotateY(-32deg) rotateZ(-1.5deg);
     transform-origin: 50% 50% calc(var(--libro-prof) / -2); /* gira sobre el centro del libro */
+  }
+
+  .libro:focus-visible .libro__lomo,
+  .libro:focus-visible .libro__tapa {
+    box-shadow: 0 1rem 1.4rem rgba(0, 0, 0, 0.6), 0 0 0.9rem var(--magia-brillo), 0 0 0.3rem var(--magia-brillo);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .libro:hover {
-      transform: translateY(-14px) translateZ(1rem) rotateY(-32deg);
+      transform: translateY(-14px) translateZ(1rem) rotateY(-32deg) rotateZ(-1.5deg);
       transform-origin: 50% 50% calc(var(--libro-prof) / -2);
+    }
+
+    .libro:hover .libro__lomo,
+    .libro:hover .libro__tapa {
+      box-shadow: 0 1rem 1.4rem rgba(0, 0, 0, 0.6), 0 0 0.9rem var(--magia-brillo), 0 0 0.3rem var(--magia-brillo);
     }
   }
 
