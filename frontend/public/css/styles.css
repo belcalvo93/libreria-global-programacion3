@@ -1093,48 +1093,15 @@ main > .card {
   border-radius: inherit;
 }
 
-/* Tope: canto de hojas con `paginas-forma.webp` (paralelogramo con borde ondulado).
-   Ensamblado al lomo: la esquina izquierda de la imagen toca la esquina superior
-   izquierda del lomo y su borde inferior queda 3 px METIDO detrás del lomo (se
-   dibuja 1 px más atrás en Z), sin hueco. Ancho = el del lomo + 3 px que
-   «retroceden» en perspectiva a la derecha, nada a la izquierda. Todo en % y
-   variables: sirve para lomos de cualquier ancho. */
+/* Tope: borde de páginas crema con líneas finas casi verticales, inclinadas hacia la
+   derecha arriba como «/» (asoma por la perspectiva). */
 .libro__tope {
-  bottom: calc(100% - 3px); /* 3 px por detrás del borde superior del lomo */
+  top: calc((var(--lomo-alto) - var(--libro-prof)) / 2);
   left: 0;
-  inline-size: calc(100% + 3px);
-  block-size: auto;
-  aspect-ratio: 496 / 158; /* proporción de paginas-forma.webp */
-  background: url("../img/paginas-forma.webp") 0 0 / 100% 100% no-repeat;
-  transform: translateZ(-1px); /* el lomo queda por encima de las hojas */
-}
-
-/* Relleno entre el borde inferior ondulado de la imagen (que sube hacia la
-   derecha) y el borde superior del lomo: el canto es un bloque de hojas con su
-   cara lateral, no una placa flotante. */
-.libro__tope::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, #e1c291, #d9b787 60%, #cd9e6e);
-  clip-path: polygon(30% 100%, 100% 23%, 100% 100%);
-}
-
-/* Labio de cuero: franja fina más oscura sobre el borde superior del lomo, con
-   las esquinas superiores levemente redondeadas, que «monta» sobre las hojas. */
-.libro > .libro__lomo::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: 0;
-  right: 0;
-  height: 5px;
-  border-radius: 3px 3px 0 0;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.38)),
-    var(--lomo-color);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
-  pointer-events: none;
+  inline-size: 100%;
+  block-size: var(--libro-prof);
+  background: repeating-linear-gradient(95deg, #f3e7c0 0 2px, #cdbb86 2px 3px); /* casi vertical, inclinada como «/» */
+  transform: translateZ(calc(var(--libro-prof) / -2)) rotateX(90deg) translateZ(calc(var(--lomo-alto) / 2));
 }
 
 /* Estado «sin movimiento» (siempre): solo cambian el brillo y el borde. El
