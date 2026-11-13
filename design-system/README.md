@@ -1,4 +1,4 @@
-# Design system — Librería Página Viva
+# Design system — Gatoteca Lunar
 
 Mode: system-only
 Revision: 10
@@ -191,7 +191,7 @@ Agregados de las revisiones 2 a 6 (C-06):
 
 ## Decisiones abiertas (TBD)
 
-- Nombre de marca final: (TBD). El parcial usa «Librería Página Viva» y C-06 lo mantiene.
+- Nombre de marca final: **Gatoteca Lunar** (decidido en C-06c, D-47; ya no es TBD). Reemplaza al nombre provisional del parcial.
 - Logo: (TBD). No hay logo de marca. `gato.webp` y `luna.webp` son decorativas y su origen (autoría y licencia) es TBD: no se inventa autoría.
 - Modo claro alternativo: no se hace. La revisión 2 es solo oscura.
 - ~~Movimiento/animaciones y `prefers-reduced-motion`~~: resuelto en la revisión 2 (regla 9).

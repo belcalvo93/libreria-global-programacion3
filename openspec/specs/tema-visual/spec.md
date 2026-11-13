@@ -13,7 +13,7 @@ La portada (cabecera, navegación y estantería) SHALL verse como una sola escen
 - **THEN** el cielo estrellado se ve sin cortes detrás de la estantería y la estantería no tiene tarjeta
 
 ### Requirement: Título que vuelve al inicio
-El título «Librería Página Viva» SHALL ser un enlace a `#inicio`, con el mismo aspecto de hoy (sin subrayado ni color de enlace) y foco visible. El principio de la portada MUST tener el id `inicio`.
+El título «Gatoteca Lunar» SHALL ser un enlace a `#inicio`, con el mismo aspecto de hoy (sin subrayado ni color de enlace) y foco visible. El principio de la portada MUST tener el id `inicio`.
 
 #### Scenario: Volver al inicio
 - **GIVEN** la página desplazada a una sección de abajo
@@ -54,7 +54,7 @@ El título principal, los encabezados `h2` y `h3` y las etiquetas de navegación
 - **THEN** no hay pedidos de archivos de fuente ni a otros dominios
 
 ### Requirement: Título principal dorado
-El título «Librería Página Viva» SHALL verse en Georgia de peso normal (no negrita), de tamaño `clamp(1.6rem, 3.5vw, 2.25rem)`, en dorado claro con un resplandor tenue (`text-shadow`). MUST NOT llevar contorno ni borde en las letras. Su contraste contra el cielo MUST ser de al menos 4.5:1.
+El título «Gatoteca Lunar» SHALL verse en Georgia de peso normal (no negrita), de tamaño `clamp(1.6rem, 3.5vw, 2.25rem)`, en dorado claro con un resplandor tenue (`text-shadow`). MUST NOT llevar contorno ni borde en las letras. Su contraste contra el cielo MUST ser de al menos 4.5:1.
 
 #### Scenario: Título nítido
 - **WHEN** se ve la página a 390 px y a 1366 px

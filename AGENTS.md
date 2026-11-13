@@ -1,4 +1,4 @@
-# Librería Página Viva (Global de Programación III) — Instrucciones para Agentes
+# Gatoteca Lunar (Global de Programación III) — Instrucciones para Agentes
 
 > Lo PRIMERO que todo agente lee al entrar al repo. Generado desde `knowledge-base/` y `CHANGES.md`.
 > `CLAUDE.md` solo importa este archivo (`@AGENTS.md`): editar únicamente acá.

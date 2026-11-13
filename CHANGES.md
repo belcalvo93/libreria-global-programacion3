@@ -1,6 +1,6 @@
 # CHANGES — Secuencia de Implementación
 
-> Índice canónico de todos los changes del proyecto **Librería Página Viva** (Global de Programación III, Grupo 2 «git push and pray»).
+> Índice canónico de todos los changes del proyecto **Gatoteca Lunar** (Global de Programación III, Grupo 2 «git push and pray»).
 > Cada change es atómico: una persona lo implementa en una sesión y lo cierra con su propio PR.
 > **Leer este archivo antes de ejecutar cualquier `/opsx:propose`.**
 
@@ -232,7 +232,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
     - Portada real opcional (`img/portadas/<isbn>`) solo para los ISBN de una lista en `estante.js` (hoy vacía) y solo al salir el libro.
     - Muestra estados de carga, vacío y error.
   - **Gato y luna**: imágenes `img/gato.webp` (364x960, arriba a la izquierda del gabinete, mirando a la luna) y `img/luna.webp` (380x380, decorativas, `alt=""`, `aria-hidden`). El gato se sienta sobre el mueble y su resplandor respira; el gato (110 a 140 px) se sienta sobre el borde superior derecho del mueble y la luna (90 a 120 px) está entera arriba a la derecha, detrás del contenido y sin pisar la navegación. Origen de las imágenes: TBD.
-  - **Nav**: el mismo `<nav>`, ahora una franja fija con **marcapáginas colgantes** de una varilla dorada (la activa, dorada y más larga), y `aria-current="location"` por clic, hash o scroll. El título «Librería Página Viva» es un enlace que vuelve al inicio (`#inicio`).
+  - **Nav**: el mismo `<nav>`, ahora una franja fija con **marcapáginas colgantes** de una varilla dorada (la activa, dorada y más larga), y `aria-current="location"` por clic, hash o scroll. El título «Gatoteca Lunar» es un enlace que vuelve al inicio (`#inicio`).
   - **Escena continua**: la estantería no tiene tarjeta; el cielo estrellado se ve de borde a borde detrás de toda la portada.
   - **Movimiento**: todo se declara solo con `prefers-reduced-motion: no-preference`. Responsive de 320 a 1280 px. Sin recursos remotos.
   - **Archivos**:

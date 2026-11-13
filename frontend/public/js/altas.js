@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Librería Página Viva — Alta de libros y clientes (Global, Ejercicio 2)
+   Gatoteca Lunar — Alta de libros y clientes (Global, Ejercicio 2)
    Consume editoriales, géneros, autores, libros y clientes a través de window.Api.
    Inserción solo como texto (textContent, nunca como HTML).
    ========================================================================== */

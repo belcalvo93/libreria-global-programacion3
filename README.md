@@ -1,4 +1,4 @@
-# Librería Página Viva · Global de Programación III
+# Gatoteca Lunar · Global de Programación III
 
 Librería web integrada: el frontend del primer parcial (HTML, CSS y JavaScript nativos) conectado a la API del TP (FastAPI + PostgreSQL, capítulos 1 a 4) y desplegado en Easypanel.
 

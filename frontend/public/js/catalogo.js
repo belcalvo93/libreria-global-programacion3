@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Librería Página Viva — Catálogo desde la API (Global, Ejercicio 1)
+   Gatoteca Lunar — Catálogo desde la API (Global, Ejercicio 1)
    Consume GET /libros/ y GET /libros/{id} a través de window.Api.
    Inserción solo como texto (textContent, nunca como HTML).
    ========================================================================== */

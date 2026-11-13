@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Librería Página Viva — Ventas e historial desde la API (Global, Ejercicio 3)
+   Gatoteca Lunar — Ventas e historial desde la API (Global, Ejercicio 3)
    - Cliente por ID (GET /clientes/{id}) y libros del catálogo (GET /libros/).
    - El borrador de la venta vive solo en memoria (sin localStorage).
    - POST /ventas/ con cliente_id y renglones [{libro_id, cantidad}], nada más.
