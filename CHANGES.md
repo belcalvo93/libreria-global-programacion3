@@ -211,6 +211,10 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/05_reglas_de_negocio.md` (RN-06 precio histórico)
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
+### [C-06b] `tema-secciones`
+- **Estado**: `[x]` hecho y **archivado** (revisión 10 aprobada el 2026-11-12; specs sincronizadas en `openspec/specs/tema-visual/`); PR por abrir. Ajuste posterior: las rayitas del borde de páginas de los libros van inclinadas como «/» (D-45). No reordena ni renumera los demás changes.
+- **Dueño**: B · **Scope**: estrella fugaz recuperada en la cabecera y secciones de abajo en «cristal nocturno». Solo `frontend/public/css/styles.css`; sin `.js` ni cambios en `index.html`. Decisión D-43. Segunda pasada (Ventas e Historial; también `ventas.js`, `ventas.test.js` y clases en `index.html`): D-44.
+
 ### [C-06] `estante-estetica`
 - **Estado**: `[x]` hecho y **archivado** el 2026-11-12 (`openspec/changes/archive/2026-11-12-estante-estetica/`; specs sincronizadas en `openspec/specs/estante-libros/`, `navegacion-principal/` y `tema-visual/`). Design system **revisión 9 aprobada por Belén Calvo el 2026-11-12**. **Falta abrir el PR** de `feat/estante-estetica` a `main` (con aviso a Hernán, Bruno y Joaquín del cambio visual global; revisión de otro integrante y merge común). Seguimiento manual abierto: tarea 5.4 (lector de pantalla NVDA o Narrador), que no se automatiza
 - **Dueño**: B (Belén) · **Ej.**: transversal (sin puntaje propio en la consigna según la KB)
@@ -385,6 +389,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[ ]` | C-02 (blanda C-03) | MEDIO |
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
 | C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
+| C-06b | `tema-secciones` | B | transversal | `[x]` hecha y archivada (revisión 10 aprobada); PR por abrir | C-06 | BAJO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |

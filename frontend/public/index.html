@@ -252,14 +252,14 @@
     <section id="ventas" class="card">
       <h2>Ventas</h2>
       <form id="form-venta" class="form" novalidate>
-        <div class="form__grupo">
+        <div class="form__grupo venta-cliente">
           <label for="venta-cliente-id">ID del cliente</label>
           <input type="number" id="venta-cliente-id" name="venta-cliente-id" min="1" step="1" inputmode="numeric" placeholder="Por ejemplo, 1">
-          <button id="venta-buscar-cliente" class="btn" type="button">Buscar cliente</button>
+          <button id="venta-buscar-cliente" class="btn btn--secundario" type="button">Buscar cliente</button>
           <p>Cliente: <output id="venta-cliente-nombre" for="venta-cliente-id" aria-live="polite">Sin buscar</output></p>
         </div>
-        <button id="venta-agregar" class="btn" type="button">Agregar renglón</button>
-        <button id="venta-confirmar" class="btn" type="submit">Confirmar venta</button>
+        <button id="venta-agregar" class="btn btn--secundario" type="button">+ Agregar otro libro</button>
+        <button id="venta-confirmar" class="btn btn--confirmar" type="submit">Confirmar venta</button>
       </form>
       <p id="mensaje-venta-libros" class="mensaje" role="status" hidden>Cargando libros del catálogo...</p>
       <p id="mensaje-error-venta" class="mensaje mensaje--error" role="alert" hidden></p>
@@ -306,10 +306,10 @@
       </div>
       <p id="mensaje-historial-vacia" class="mensaje" hidden>No hay ventas registradas.</p>
       <p id="mensaje-historial-fin" class="mensaje" hidden>No hay más ventas.</p>
-      <div class="form__grupo" role="group" aria-label="Paginación del historial">
+      <div class="form__grupo paginacion" role="group" aria-label="Paginación del historial">
         <span id="historial-pagina" aria-live="polite">Página 1</span>
-        <button id="historial-anterior" class="btn" type="button" disabled>Anterior</button>
-        <button id="historial-siguiente" class="btn" type="button" disabled>Siguiente</button>
+        <button id="historial-anterior" class="btn btn--secundario btn--compacto" type="button" disabled>Anterior</button>
+        <button id="historial-siguiente" class="btn btn--secundario btn--compacto" type="button" disabled>Siguiente</button>
       </div>
       <article id="historial-detalle" class="card" aria-labelledby="historial-detalle-titulo" hidden>
         <h3 id="historial-detalle-titulo" tabindex="-1">Detalle de la venta</h3>
@@ -334,11 +334,11 @@
           </div>
           <p><strong>Total:</strong> <span id="detalle-venta-total"></span></p>
         </div>
-        <button id="historial-detalle-cerrar" class="btn" type="button">Cerrar detalle</button>
+        <button id="historial-detalle-cerrar" class="btn btn--secundario btn--compacto" type="button">Cerrar detalle</button>
       </article>
       <h3 id="precio-titulo">Cambiar el precio de un libro</h3>
-      <p>Las ventas ya registradas conservan el precio que tenían al venderse.</p>
-      <form id="form-precio" class="form" aria-labelledby="precio-titulo" novalidate>
+      <p class="texto-apoyo">Las ventas ya registradas conservan el precio que tenían al venderse.</p>
+      <form id="form-precio" class="form form--precio" aria-labelledby="precio-titulo" novalidate>
         <div class="form__grupo">
           <label for="precio-libro">Libro</label>
           <select id="precio-libro" name="precio-libro">

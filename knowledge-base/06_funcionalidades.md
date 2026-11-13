@@ -54,7 +54,7 @@ Organizadas por ejercicio de la consigna (épica), con dueño y casos asociados.
   - componentes en tema oscuro con contraste AA;
   - todo se apaga con `prefers-reduced-motion`.
 
-  Los valores están en `design-system/README.md` (revisión 9, **aprobada** por Belén Calvo el 2026-11-12; C-06 archivado, falta el PR).
+  Los valores están en `design-system/README.md` (revisión 10, **aprobada**; reemplaza a la 9 por Belén Calvo el 2026-11-12; C-06 archivado, falta el PR).
 - La tabla del catálogo de Hernán se mantiene; el estante no la reemplaza. Se hace después de C-03 mergeado.
 
 ## Tarea final — Limpieza · Belén

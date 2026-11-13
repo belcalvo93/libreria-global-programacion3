@@ -1,7 +1,7 @@
 # Design system — Librería Página Viva
 
 Mode: system-only
-Revision: 9
+Revision: 10
 Approval: approved (2026-11-12, by Belén Calvo)
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
@@ -16,7 +16,8 @@ Approval: approved (2026-11-12, by Belén Calvo)
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
-> - **La revisión 9 es la vigente y está aprobada** (2026-11-12, por Belén Calvo). Las revisiones 3 a 8 fueron iteraciones intermedias que nunca se aprobaron y quedan reemplazadas por la 9; la última aprobada antes era la 2. La 9 **reemplaza a la 8**: el cielo pasa de estrellas hechas con CSS a la imagen `fondo-noche.webp` con un velo azul noche.
+> - La revisión 10 (2026-11-12, change `tema-secciones`) recupera la **estrella fugaz** de la cabecera y pasa las secciones de abajo (Catálogo, Libros, Clientes, Ventas, Historial) a «**cristal nocturno**»: tarjetas azul noche translúcidas con borde dorado tenue, títulos con línea y ✦, formularios en grilla, botones primario/secundario, tablas y mensajes coherentes. No toca la portada ni la estantería. Una segunda pasada (Ventas e Historial) agrega botones secundario/compacto/fantasma, fila de libro, cliente por ID y paginación centrada. **Aprobada por Belén Calvo el 2026-11-12; reemplaza a la 9.**
+> - La revisión 9 fue la anterior aprobada (2026-11-12, por Belén Calvo). Las revisiones 3 a 8 fueron iteraciones intermedias que nunca se aprobaron y quedan reemplazadas por la 9; la última aprobada antes era la 2. La 9 **reemplaza a la 8**: el cielo pasa de estrellas hechas con CSS a la imagen `fondo-noche.webp` con un velo azul noche.
 > - La revisión 8 (2026-11-12) **reemplazó a la 7** (que no se aprobó) con tres cambios: la estantería **sin tarjeta** (el cielo estrellado continuo detrás de toda la portada), la navegación con **marcapáginas colgantes** de una varilla dorada y una **navegación fija** con el título como enlace al inicio. **Pendiente de aprobación.**
 > - La revisión 7 (2026-11-12) **reemplazó a la 6** (que no se aprobó) con dos ajustes: el gato queda **por detrás del gabinete** (cola tapada por el marco y patas a ras del borde) y los libros tienen **proporciones de libro real** (lomo de 14 a 18 % del alto y tapa de 60 a 65 %). **Pendiente de aprobación.**
 > - La revisión 6 (2026-11-12) fue un rediseño de la estantería hecho con criterio de diseño gráfico y UX/UI, que **reemplaza a la 5** (y a la 4 y la 3):

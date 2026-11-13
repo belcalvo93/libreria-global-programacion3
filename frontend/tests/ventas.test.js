@@ -21,33 +21,33 @@ test("enteroPositivo acepta solo enteros mayores que cero escritos como dígitos
   });
 });
 
-test("validarBorrador exige el ID del cliente y al menos un renglón", function () {
+test("validarBorrador exige el ID del cliente y al menos un libro", function () {
   assert.match(ventas.validarBorrador("", [{ libroId: "1", cantidad: "1" }]), /ID del cliente/);
   assert.match(ventas.validarBorrador("0", [{ libroId: "1", cantidad: "1" }]), /ID del cliente/);
-  assert.equal(ventas.validarBorrador("2", []), "Agregá al menos un renglón.");
+  assert.equal(ventas.validarBorrador("2", []), "Agregá al menos un libro.");
 });
 
-test("validarBorrador exige libro elegido y cantidad entera positiva en cada renglón", function () {
-  assert.equal(ventas.validarBorrador("2", [{ libroId: "", cantidad: "1" }]), "Elegí el libro del renglón 1.");
+test("validarBorrador exige libro elegido y cantidad entera positiva en cada fila", function () {
+  assert.equal(ventas.validarBorrador("2", [{ libroId: "", cantidad: "1" }]), "Elegí qué libro va en la fila 1.");
   assert.match(ventas.validarBorrador("2", [{ libroId: "1", cantidad: "1" }, { libroId: "3", cantidad: "0" }]),
-    /cantidad del renglón 2/);
-  assert.match(ventas.validarBorrador("2", [{ libroId: "1", cantidad: "1.5" }]), /cantidad del renglón 1/);
+    /cantidad del libro 2/);
+  assert.match(ventas.validarBorrador("2", [{ libroId: "1", cantidad: "1.5" }]), /cantidad del libro 1/);
 });
 
-test("validarBorrador rechaza el mismo libro en dos renglones (un renglón por libro)", function () {
+test("validarBorrador rechaza el mismo libro en dos filas (una fila por libro)", function () {
   var mensaje = ventas.validarBorrador("2", [
     { libroId: "1", cantidad: "1" },
     { libroId: "3", cantidad: "1" },
     { libroId: "1", cantidad: "2" }
   ]);
-  assert.equal(mensaje, "El libro del renglón 3 ya está en el renglón 1. Un mismo libro no puede aparecer en dos renglones.");
+  assert.equal(mensaje, "El libro 3 ya está en la fila 1. Un mismo libro no puede aparecer en dos filas.");
 });
 
-test("validarBorrador devuelve vacío con un borrador válido de dos renglones", function () {
+test("validarBorrador devuelve vacío con un borrador válido de dos libros", function () {
   assert.equal(ventas.validarBorrador("2", [{ libroId: "1", cantidad: "2" }, { libroId: "4", cantidad: "1" }]), "");
 });
 
-test("renglonConLibro devuelve el número del renglón que ya tiene el libro", function () {
+test("renglonConLibro devuelve el número de la fila que ya tiene el libro", function () {
   var renglones = [{ libroId: "1" }, { libroId: "4" }];
   assert.equal(ventas.renglonConLibro(renglones, "4", -1), 2);
   assert.equal(ventas.renglonConLibro(renglones, 4, -1), 2);
@@ -105,4 +105,22 @@ test("validarPrecio acepta mayores que cero con hasta dos decimales", function (
 
 test("textoOpcionLibro muestra título, precio de catálogo y stock", function () {
   assert.equal(ventas.textoOpcionLibro({ id: 1, titulo: "Rayuela", precio: "25000.00", stock: 12 }), "Rayuela — $25000.00 (stock 12)");
+});
+
+test("la jerga «renglón» ya no aparece en ningún mensaje de validación", function () {
+  var mensajes = [
+    ventas.validarBorrador("2", []),
+    ventas.validarBorrador("2", [{ libroId: "", cantidad: "1" }]),
+    ventas.validarBorrador("2", [{ libroId: "1", cantidad: "0" }]),
+    ventas.validarBorrador("2", [{ libroId: "1", cantidad: "1" }, { libroId: "1", cantidad: "1" }])
+  ];
+  mensajes.forEach(function (mensaje) {
+    assert.notEqual(mensaje, "");
+    assert.doesNotMatch(mensaje, /rengl[oó]n/i, mensaje);
+  });
+});
+
+test("textoQuitar da el nombre accesible del botón de solo ícono", function () {
+  assert.equal(ventas.textoQuitar(1), "Quitar libro 1");
+  assert.equal(ventas.textoQuitar(3), "Quitar libro 3");
 });
