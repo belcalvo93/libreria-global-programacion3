@@ -14,8 +14,10 @@ Integrantes: Belén Calvo · Elías Tello · Hernán González · Bruno Fiouchet
 | **URL pública del frontend** | https://grupo2-elias-frontend.ugpvou.easypanel.host/ (HTTPS) |
 | **Chequeo de salud integrado** | https://grupo2-elias-frontend.ugpvou.easypanel.host/api/health/ready |
 | **Respuesta esperada** | Código HTTP `200 OK` con JSON `{"estado":"listo","base":"ok"}` |
-| **Revisión desplegada** | Commit `4af13ed` de la rama `main` |
-| **Fecha de despliegue** | 2026-11-13 |
+| **Revisión desplegada (Frontend)** | Commit `4af13ed` de la rama `main` (desplegado el 2026-11-13) |
+| **Revisión desplegada (Backend)** | Commit `391bb61` de la rama `main` (C-10, desplegado el 2026-11-12) |
+
+> **Nota sobre el backend:** Desde la implementación de C-10 (`391bb61`), el directorio `backend/` no ha sufrido modificaciones en `main`, por lo que el código en ejecución en EasyPanel es idéntico al de la rama principal.
 
 ---
 
@@ -38,8 +40,9 @@ El despliegue está configurado en un VPS administrado con EasyPanel bajo el pro
 - **Método de compilación:** Dockerfile (`backend/Dockerfile` basado en `python:3.12-alpine`).
 - **Puerto:** `8000` (proceso `uvicorn` escuchando en `0.0.0.0:8000`).
 - **Red y acceso:** Conectado a la red interna privada del proyecto EasyPanel. **Sin dominio público asignado** (se eliminó el dominio público tras la verificación de C-10 para aislar la API; todas las peticiones externas acceden a través del proxy inverso del frontend).
+- **Límites de recursos:** Sin límites especiales de CPU ni memoria configurados en el panel.
 - **Nombre de host interno:** `grupo2-elias_apilibreria:8000`.
-- **Responsable:** Elías Tello. Cualquier configuración adicional de red o límites de recursos en el panel queda a confirmar por Elías.
+- **Responsable:** Elías Tello.
 
 ### Servicio `dblibreria` (Base de datos PostgreSQL)
 - **Tipo:** Servicio PostgreSQL nativo en EasyPanel.
@@ -71,11 +74,10 @@ Solo se documentan los nombres y su propósito. Los valores reales y contraseña
   - En local (Docker Desktop): `host.docker.internal:8000`.
 
 ### Backend
-- **`DATABASE_URL`**: Cadena de conexión asíncrona a PostgreSQL (`postgresql+asyncpg://...`). En EasyPanel apunta a `grupo2-elias_dblibreria:5432`.
+Son únicamente tres variables (confirmado: no existen variables adicionales en producción):
+- **`DATABASE_URL`**: Cadena de conexión asíncrona a PostgreSQL (`postgresql+asyncpg://...`). En EasyPanel apunta al servicio interno `grupo2-elias_dblibreria:5432`.
 - **`SQL_ECHO`**: Booleano (`true`/`false`) para habilitar o silenciar la impresión de consultas SQL en los registros del contenedor.
 - **`CORS_ORIGINS`**: Orígenes autorizados en las cabeceras CORS de FastAPI. En producción: `https://grupo2-elias-frontend.ugpvou.easypanel.host`. En desarrollo local: `http://127.0.0.1:8080,http://localhost:8080`.
-
-Cualquier otra variable de entorno específica del entorno de producción queda a confirmar por Elías.
 
 ---
 
@@ -91,13 +93,15 @@ alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000
 Si la base de datos no está disponible o falla una migración, el comando se interrumpe y el contenedor no inicia, evitando operar con un esquema inconsistente.
 
 ### Carga inicial (Seed)
-Se ejecuta por única vez desde la **Consola** del servicio `apilibreria` en EasyPanel:
+La base de datos `dblibreria` ya contaba con los datos persistidos del despliegue anterior del TP. Al migrar el backend en C-10 **no fue necesario volver a correr el script de seed** y los datos se mantuvieron íntegros. No existen pasos adicionales de carga en producción.
+
+En caso de realizar una instalación en un entorno nuevo desde cero, los datos iniciales de prueba se cargan una única vez desde la consola del servicio con:
 
 ```bash
 python -m scripts.seed
 ```
 
-> **Advertencia:** El script de seed vacía las tablas antes de poblar los datos de prueba iniciales (libros, autores, clientes, géneros, editoriales). No debe ejecutarse durante actualizaciones rutinarias para no sobrescribir datos reales o ventas registradas. Pasos adicionales de carga: a confirmar por Elías.
+> **Advertencia:** El script de seed vacía las tablas antes de poblar. No debe ejecutarse sobre bases ya operativas para no sobrescribir datos de pruebas o ventas registradas.
 
 ---
 
@@ -158,3 +162,25 @@ docker run --rm --name libreria-frontend -p 127.0.0.1:8080:80 -e API_UPSTREAM=ho
 Abrir en el navegador:
 - Aplicación: `http://127.0.0.1:8080/`
 - Salud del sistema: `http://127.0.0.1:8080/api/health/ready`
+
+---
+
+## 8. Resultados de las comprobaciones (Evidencia)
+
+Comprobaciones ejecutadas y verificadas sobre el despliegue integrado en EasyPanel (respaldadas en `evidencia/G-07_*`):
+
+1. **Chequeo de salud integrado:**
+   - Petición: `GET https://grupo2-elias-frontend.ugpvou.easypanel.host/api/health/ready`
+   - Resultado: Código HTTP `200 OK` con cuerpo JSON `{"estado":"listo","base":"ok"}`.
+2. **Políticas de CORS:**
+   - Origen autorizado: Solicitudes enviando cabecera `Origin: https://grupo2-elias-frontend.ugpvou.easypanel.host` reciben la cabecera de respuesta `Access-Control-Allow-Origin: https://grupo2-elias-frontend.ugpvou.easypanel.host`.
+   - Origen no autorizado: Solicitudes con otro origen no reciben cabecera `Access-Control-Allow-Origin`.
+   - Solicitudes Preflight (HTTP OPTIONS): Responden `200 OK` con métodos `GET, POST, PATCH, OPTIONS` y sin cabecera de credenciales (`Access-Control-Allow-Credentials`).
+3. **Aislamiento del backend en red interna:**
+   - Al haberse eliminado el dominio público del servicio `apilibreria`, la URL anterior `https://grupo2-elias-apilibreria.ugpvou.easypanel.host/health/ready` responde `404 Not Found`.
+   - El frontend accede exclusivamente de forma interna a través del proxy inverso de Nginx (`http://grupo2-elias_apilibreria:8000/`).
+4. **Persistencia de datos tras redespliegue (Caso G-07):**
+   - Se verificó el estado de los datos consultando los endpoints a través del frontend antes y después de redesplegar el servicio `apilibreria`:
+     - Antes del redespliegue: 6 libros, 2 ventas (venta 1 por $50000.00 y venta 2 por $77000.00) y cliente 1 existente.
+     - Después del redespliegue: Se confirmaron exactamente los mismos 6 libros, las 2 ventas históricas y el cliente 1.
+   - Resultado: Persistencia confirmada y documentada en `evidencia/G-07_backend_c10.txt`.
