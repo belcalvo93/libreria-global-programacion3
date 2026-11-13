@@ -1,44 +1,156 @@
+/* ==========================================================================
+   Librería Página Viva — Alta de libros y clientes (Global, Ejercicio 2)
+   Consume editoriales, géneros, autores, libros y clientes a través de window.Api.
+   Inserción solo como texto (textContent, nunca como HTML).
+   ========================================================================== */
 (function () {
   "use strict";
 
-  var textoOriginalErrorLibro = "";
-  var textoOriginalErrorCliente = "";
+  var ROLES_AUTORIA = ["autor", "coautor", "traductor", "ilustrador"];
 
-  function buscarPorId(lista, id) {
-    for (var i = 0; i < lista.length; i++) {
-      if (lista[i].id === id) {
-        return lista[i];
+  function limpiarTexto(valor) {
+    return String(valor === undefined || valor === null ? "" : valor).trim();
+  }
+
+  function esEnteroPositivo(valor) {
+    var texto = limpiarTexto(valor);
+    return /^\d+$/.test(texto) && Number(texto) >= 1;
+  }
+
+  function esEnteroNoNegativo(valor) {
+    var texto = limpiarTexto(valor);
+    return /^\d+$/.test(texto) && Number.isSafeInteger(Number(texto)) && Number(texto) >= 0;
+  }
+
+  function esPrecioValido(valor) {
+    var texto = limpiarTexto(valor);
+    if (!/^\d+(\.\d{1,2})?$/.test(texto)) {
+      return false;
+    }
+    var digitos = texto.replace(".", "").replace(/^0+/, "");
+    return digitos.length <= 10 && Number.isFinite(Number(texto)) && Number(texto) > 0;
+  }
+
+  function esEmailValido(valor) {
+    var texto = limpiarTexto(valor);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(texto);
+  }
+
+  function validarAutoria(nueva, existentes) {
+    if (!nueva || !esEnteroPositivo(nueva.autor_id)) {
+      return "Buscá y seleccioná un autor válido antes de agregar.";
+    }
+    if (ROLES_AUTORIA.indexOf(nueva.rol) === -1) {
+      return "Elegí un rol de autoría válido.";
+    }
+    if (!esEnteroPositivo(nueva.orden)) {
+      return "El orden de la autoría debe ser un entero mayor o igual a 1.";
+    }
+    var idNuevo = Number(nueva.autor_id);
+    var lista = Array.isArray(existentes) ? existentes : [];
+    for (var i = 0; i < lista.length; i += 1) {
+      if (Number(lista[i].autor_id) === idNuevo) {
+        return "Ese autor ya está agregado en la lista.";
       }
     }
-    return null;
+    return "";
   }
 
-  function nombreEditorial(editorialId) {
-    var editorial = buscarPorId(DATOS.editoriales, editorialId);
-    return editorial ? editorial.nombre : "";
-  }
-
-  function nombreGenero(generoId) {
-    if (generoId === null || generoId === undefined) {
-      return "Sin clasificar";
+  function validarLibroFormulario(datos) {
+    if (!datos || limpiarTexto(datos.titulo) === "") {
+      return "El título es obligatorio.";
     }
-    var genero = buscarPorId(DATOS.generos, generoId);
-    return genero ? genero.nombre : "Sin clasificar";
+    if (limpiarTexto(datos.isbn) === "") {
+      return "El ISBN es obligatorio.";
+    }
+    if (!esPrecioValido(datos.precio)) {
+      return "El precio debe ser mayor que cero y tener hasta 2 decimales.";
+    }
+    if (!esEnteroNoNegativo(datos.stock)) {
+      return "El stock debe ser un número entero mayor o igual a cero.";
+    }
+    if (!esEnteroPositivo(datos.editorialId)) {
+      return "Seleccioná una editorial.";
+    }
+    if (!Array.isArray(datos.autorias) || datos.autorias.length === 0) {
+      return "Agregá al menos una autoría para el libro.";
+    }
+    for (var i = 0; i < datos.autorias.length; i += 1) {
+      var item = datos.autorias[i];
+      if (!item || !esEnteroPositivo(item.autor_id) || ROLES_AUTORIA.indexOf(item.rol) === -1 || !esEnteroPositivo(item.orden)) {
+        return "Revisá los datos de las autorías cargadas.";
+      }
+    }
+    return "";
   }
 
-  function nombresAutores(autorIds) {
-    var nombres = [];
-    (autorIds || []).forEach(function (autorId) {
-      var autor = buscarPorId(DATOS.autores, autorId);
-      if (autor) {
-        nombres.push(autor.nombre);
-      }
-    });
-    return nombres.join(", ");
+  function validarClienteFormulario(datos) {
+    if (!datos || limpiarTexto(datos.nombre) === "") {
+      return "El nombre completo es obligatorio.";
+    }
+    var email = limpiarTexto(datos.email);
+    if (email === "") {
+      return "El email es obligatorio.";
+    }
+    if (!esEmailValido(email)) {
+      return "El email no tiene un formato válido.";
+    }
+    return "";
+  }
+
+  function armarCuerpoLibro(datos) {
+    var generoTexto = limpiarTexto(datos.generoId);
+    return {
+      isbn: limpiarTexto(datos.isbn),
+      titulo: limpiarTexto(datos.titulo),
+      precio: Number(limpiarTexto(datos.precio)),
+      stock: Number(limpiarTexto(datos.stock)),
+      editorial_id: Number(limpiarTexto(datos.editorialId)),
+      genero_id: generoTexto === "" ? null : Number(generoTexto),
+      autores: (datos.autorias || []).map(function (item) {
+        return {
+          autor_id: Number(item.autor_id),
+          rol: item.rol,
+          orden: Number(item.orden)
+        };
+      })
+    };
+  }
+
+  function armarCuerpoCliente(datos) {
+    return {
+      nombre: limpiarTexto(datos.nombre),
+      email: limpiarTexto(datos.email)
+    };
   }
 
   function formatearPrecio(precio) {
-    return Number(precio).toFixed(2);
+    if (precio === null || precio === undefined || precio === "") {
+      return "";
+    }
+    var numero = Api.numero(precio);
+    return Number.isFinite(numero) ? numero.toFixed(2) : "";
+  }
+
+  function textoGenero(libro) {
+    if (!libro || !libro.genero || !libro.genero.nombre) {
+      return "Sin clasificar";
+    }
+    return String(libro.genero.nombre);
+  }
+
+  function formatearAutoresResumen(autores) {
+    if (!Array.isArray(autores) || autores.length === 0) {
+      return "";
+    }
+    return autores.slice().sort(function (a, b) {
+      return Number(a.orden) - Number(b.orden);
+    }).map(function (item) {
+      var nombre = item && item.autor && item.autor.nombre ? item.autor.nombre : "";
+      var rol = item && item.rol ? item.rol : "";
+      var orden = item && item.orden !== undefined && item.orden !== null ? String(item.orden) : "";
+      return nombre + " (" + rol + ", " + orden + ")";
+    }).join(", ");
   }
 
   function crearCelda(texto) {
@@ -55,312 +167,502 @@
     return tr;
   }
 
-  function generarSlug(texto) {
-    return String(texto)
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-
-  function slugUnico(lista, texto) {
-    var base = generarSlug(texto) || "registro";
-    var candidato = base;
-    var sufijo = 2;
-    var existe = true;
-    while (existe) {
-      existe = false;
-      for (var i = 0; i < lista.length; i++) {
-        if (lista[i].id === candidato) {
-          existe = true;
-          break;
-        }
-      }
-      if (existe) {
-        candidato = base + "-" + sufijo;
-        sufijo++;
-      }
-    }
-    return candidato;
-  }
-
-  function normalizarISBN(valor) {
-    return String(valor).replace(/[\s-]/g, "");
-  }
-
-  function normalizarEmail(valor) {
-    return String(valor).trim().toLowerCase();
-  }
-
-  function emailValido(valor) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
-  }
-
-  function validarLibro(libro) {
-    if (libro.titulo === "") {
-      return "El título es obligatorio.";
-    }
-    if (libro.isbn === "") {
-      return "El ISBN es obligatorio.";
-    }
-    var isbnNormalizado = normalizarISBN(libro.isbn);
-    for (var i = 0; i < DATOS.libros.length; i++) {
-      if (normalizarISBN(DATOS.libros[i].isbn) === isbnNormalizado) {
-        return "Ya existe un libro con ese ISBN.";
-      }
-    }
-    if (!isFinite(libro.precio) || libro.precio <= 0) {
-      return "El precio debe ser un número mayor que cero.";
-    }
-    if (!buscarPorId(DATOS.editoriales, libro.editorialId)) {
-      return "La editorial seleccionada no existe.";
-    }
-    if (libro.autorIds.length === 0) {
-      return "Seleccioná al menos un autor.";
-    }
-    for (var j = 0; j < libro.autorIds.length; j++) {
-      if (!buscarPorId(DATOS.autores, libro.autorIds[j])) {
-        return "Alguno de los autores seleccionados no existe.";
-      }
-    }
-    if (libro.generoId !== null && !buscarPorId(DATOS.generos, libro.generoId)) {
-      return "El género seleccionado no existe.";
-    }
-    return "";
-  }
-
-  function validarCliente(cliente) {
-    if (cliente.nombre === "") {
-      return "El nombre es obligatorio.";
-    }
-    if (cliente.email === "") {
-      return "El email es obligatorio.";
-    }
-    if (!emailValido(cliente.email)) {
-      return "El email no tiene un formato válido.";
-    }
-    var emailNormalizado = normalizarEmail(cliente.email);
-    for (var i = 0; i < DATOS.clientes.length; i++) {
-      if (normalizarEmail(DATOS.clientes[i].email) === emailNormalizado) {
-        return "Ya existe un cliente con ese email.";
-      }
-    }
-    return "";
-  }
-
-  function renderTablaLibros() {
-    var tabla = document.getElementById("tabla-libros");
-    var tbody = document.querySelector("#tabla-libros tbody");
-    var mensajeVacia = document.getElementById("mensaje-libros-vacia");
-    if (!tabla || !tbody || !mensajeVacia) {
-      return;
-    }
-    tbody.textContent = "";
-    DATOS.libros.forEach(function (libro) {
-      tbody.appendChild(
-        crearFila([
-          libro.titulo,
-          libro.isbn,
-          nombreEditorial(libro.editorialId),
-          nombreGenero(libro.generoId),
-          nombresAutores(libro.autorIds),
-          formatearPrecio(libro.precio)
-        ])
-      );
-    });
-    var tieneLibros = DATOS.libros.length > 0;
-    tabla.hidden = !tieneLibros;
-    mensajeVacia.hidden = tieneLibros;
-  }
-
-  function renderTablaClientes() {
-    var tabla = document.getElementById("tabla-clientes");
-    var tbody = document.querySelector("#tabla-clientes tbody");
-    var mensajeVacia = document.getElementById("mensaje-clientes-vacia");
-    if (!tabla || !tbody || !mensajeVacia) {
-      return;
-    }
-    tbody.textContent = "";
-    DATOS.clientes.forEach(function (cliente) {
-      tbody.appendChild(crearFila([cliente.nombre, cliente.email]));
-    });
-    var tieneClientes = DATOS.clientes.length > 0;
-    tabla.hidden = !tieneClientes;
-    mensajeVacia.hidden = tieneClientes;
-  }
-
   function agregarOpcion(select, valor, texto) {
-    if (!select) {
-      return;
-    }
-    for (var i = 0; i < select.options.length; i++) {
-      if (select.options[i].value === String(valor)) {
-        return;
-      }
-    }
     var option = document.createElement("option");
-    option.value = valor;
+    option.value = String(valor);
     option.textContent = texto;
     select.appendChild(option);
   }
 
-  // los selects de venta los arma js/ventas.js (Ej. 5)
-  function actualizarVenta() {
-    if (typeof window.actualizarSelectsVenta === "function") {
-      window.actualizarSelectsVenta();
-    }
-  }
-
-  function poblarSelect(select, items) {
-    if (!select) {
+  function mostrarError(elemento, texto) {
+    if (!elemento) {
       return;
     }
-    select.textContent = "";
-    items.forEach(function (item) {
-      agregarOpcion(select, item.id, item.nombre);
-    });
+    elemento.textContent = texto;
+    elemento.hidden = false;
+    elemento.removeAttribute("hidden");
   }
 
-  function poblarSelects() {
-    poblarSelect(document.getElementById("libro-editorial"), DATOS.editoriales);
-    var genero = document.getElementById("libro-genero");
-    poblarSelect(genero, DATOS.generos);
-    agregarOpcion(genero, "sin-clasificar", "Sin clasificar");
-    poblarSelect(document.getElementById("libro-autores"), DATOS.autores);
-  }
-
-  // Ejercicio 6: guarda en localStorage si js/persistencia.js está cargado.
-  function persistir() {
-    if (typeof window.guardarDatos === "function") {
-      window.guardarDatos();
+  function ocultarElemento(elemento) {
+    if (elemento) {
+      elemento.hidden = true;
+      elemento.setAttribute("hidden", "");
     }
   }
 
-  function mostrarMensaje(mensajeError, mensajeOk, detalle, textoOriginalError) {
-    if (detalle !== "") {
-      if (mensajeError) {
-        mensajeError.textContent = detalle;
-        mensajeError.hidden = false;
-      }
-      if (mensajeOk) {
-        mensajeOk.hidden = true;
-      }
-      return;
-    }
-    if (mensajeError) {
-      mensajeError.textContent = textoOriginalError;
-      mensajeError.hidden = true;
-    }
-    if (mensajeOk) {
-      mensajeOk.hidden = false;
+  function mostrarElemento(elemento) {
+    if (elemento) {
+      elemento.hidden = false;
+      elemento.removeAttribute("hidden");
     }
   }
 
-  function manejarAltaLibro(event) {
-    event.preventDefault();
-    var form = document.getElementById("form-libro");
+  function inicializarAltas() {
+    var autorSeleccionado = null;
+    var autorias = [];
+
+    var formLibro = document.getElementById("form-libro");
     var tituloInput = document.getElementById("libro-titulo");
     var isbnInput = document.getElementById("libro-isbn");
     var precioInput = document.getElementById("libro-precio");
+    var stockInput = document.getElementById("libro-stock");
     var editorialSelect = document.getElementById("libro-editorial");
     var generoSelect = document.getElementById("libro-genero");
-    var autoresSelect = document.getElementById("libro-autores");
-    var mensajeError = document.getElementById("mensaje-error-libro");
-    var mensajeOk = document.getElementById("mensaje-ok-libro");
-    if (
-      !form ||
-      !tituloInput ||
-      !isbnInput ||
-      !precioInput ||
-      !editorialSelect ||
-      !generoSelect ||
-      !autoresSelect
-    ) {
-      return;
-    }
-    var titulo = tituloInput.value.trim();
-    var isbn = isbnInput.value.trim();
-    var generoValor = generoSelect.value;
-    var autorIds = [];
-    for (var i = 0; i < autoresSelect.options.length; i++) {
-      if (autoresSelect.options[i].selected) {
-        autorIds.push(autoresSelect.options[i].value);
+    var autorIdInput = document.getElementById("autor-id-buscar");
+    var btnBuscarAutor = document.getElementById("autor-buscar");
+    var autorRolSelect = document.getElementById("autor-rol");
+    var autorOrdenInput = document.getElementById("autor-orden");
+    var btnAgregarAutoria = document.getElementById("autor-agregar");
+    var autorEncontradoMsg = document.getElementById("autor-encontrado");
+    var autorErrorMsg = document.getElementById("mensaje-error-autor");
+    var sinAutoriasMsg = document.getElementById("mensaje-libro-sin-autorias");
+    var tablaAutorias = document.getElementById("tabla-libro-autorias");
+    var tbodyAutorias = document.querySelector("#tabla-libro-autorias tbody");
+    var btnGuardarLibro = document.getElementById("libro-guardar");
+    var libroErrorMsg = document.getElementById("mensaje-error-libro");
+    var libroOkMsg = document.getElementById("mensaje-ok-libro");
+    var tablaLibros = document.getElementById("tabla-libros");
+    var tbodyLibros = document.querySelector("#tabla-libros tbody");
+    var librosVaciaMsg = document.getElementById("mensaje-libros-vacia");
+
+    var formCliente = document.getElementById("form-cliente");
+    var clienteNombreInput = document.getElementById("cliente-nombre");
+    var clienteEmailInput = document.getElementById("cliente-email");
+    var btnGuardarCliente = document.getElementById("cliente-guardar");
+    var clienteErrorMsg = document.getElementById("mensaje-error-cliente");
+    var clienteOkMsg = document.getElementById("mensaje-ok-cliente");
+    var tablaClientes = document.getElementById("tabla-clientes");
+    var tbodyClientes = document.querySelector("#tabla-clientes tbody");
+    var clientesVaciaMsg = document.getElementById("mensaje-clientes-vacia");
+
+    var formBuscarCliente = document.getElementById("form-buscar-cliente");
+    var clienteIdBuscarInput = document.getElementById("cliente-id-buscar");
+    var btnBuscarCliente = document.getElementById("cliente-buscar");
+    var buscarClienteErrorMsg = document.getElementById("mensaje-error-buscar-cliente");
+    var clienteResultadoPanel = document.getElementById("cliente-resultado");
+    var clienteResultadoId = document.getElementById("cliente-resultado-id");
+    var clienteResultadoNombre = document.getElementById("cliente-resultado-nombre");
+    var clienteResultadoEmail = document.getElementById("cliente-resultado-email");
+
+    function poblarSelects(editoriales, generos) {
+      if (editorialSelect) {
+        editorialSelect.textContent = "";
+        agregarOpcion(editorialSelect, "", "Elegí una editorial");
+        (Array.isArray(editoriales) ? editoriales : []).forEach(function (editorial) {
+          agregarOpcion(editorialSelect, editorial.id, editorial.nombre);
+        });
+      }
+      if (generoSelect) {
+        generoSelect.textContent = "";
+        agregarOpcion(generoSelect, "", "Sin clasificar");
+        (Array.isArray(generos) ? generos : []).forEach(function (genero) {
+          agregarOpcion(generoSelect, genero.id, genero.nombre);
+        });
       }
     }
-    var libro = {
-      titulo: titulo,
-      isbn: isbn,
-      precio: Number(precioInput.value),
-      editorialId: editorialSelect.value,
-      generoId: generoValor === "sin-clasificar" ? null : generoValor,
-      autorIds: autorIds
-    };
-    var detalle = validarLibro(libro);
-    if (detalle !== "") {
-      mostrarMensaje(mensajeError, mensajeOk, detalle, textoOriginalErrorLibro);
-      return;
-    }
-    libro.id = slugUnico(DATOS.libros, titulo);
-    DATOS.libros.push(libro);
-    persistir();
-    renderTablaLibros();
-    var filtro = document.getElementById("catalogo-busqueda");
-    if (typeof window.renderCatalogo === "function") {
-      window.renderCatalogo(filtro ? filtro.value : "");
-    }
-    actualizarVenta();
-    form.reset();
-    mostrarMensaje(mensajeError, mensajeOk, "", textoOriginalErrorLibro);
-  }
 
-  function manejarAltaCliente(event) {
-    event.preventDefault();
-    var form = document.getElementById("form-cliente");
-    var nombreInput = document.getElementById("cliente-nombre");
-    var emailInput = document.getElementById("cliente-email");
-    var mensajeError = document.getElementById("mensaje-error-cliente");
-    var mensajeOk = document.getElementById("mensaje-ok-cliente");
-    if (!form || !nombreInput || !emailInput) {
-      return;
+    async function cargarSelectsIniciales() {
+      if (!editorialSelect && !generoSelect) {
+        return;
+      }
+      try {
+        var respuestas = await Promise.all([
+          Api.get("/editoriales/", { limit: 100 }),
+          Api.get("/generos/", { limit: 100 })
+        ]);
+        poblarSelects(respuestas[0], respuestas[1]);
+      } catch (error) {
+        mostrarError(
+          libroErrorMsg,
+          error && error.message ? error.message : "No se pudieron cargar editoriales y géneros."
+        );
+      }
     }
-    var cliente = {
-      nombre: nombreInput.value.trim(),
-      email: emailInput.value.trim()
-    };
-    var detalle = validarCliente(cliente);
-    if (detalle !== "") {
-      mostrarMensaje(mensajeError, mensajeOk, detalle, textoOriginalErrorCliente);
-      return;
-    }
-    cliente.id = slugUnico(DATOS.clientes, cliente.nombre);
-    DATOS.clientes.push(cliente);
-    persistir();
-    renderTablaClientes();
-    actualizarVenta();
-    form.reset();
-    mostrarMensaje(mensajeError, mensajeOk, "", textoOriginalErrorCliente);
-  }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    var mensajeErrorLibro = document.getElementById("mensaje-error-libro");
-    var mensajeErrorCliente = document.getElementById("mensaje-error-cliente");
-    if (mensajeErrorLibro) {
-      textoOriginalErrorLibro = mensajeErrorLibro.textContent;
+    function renderAutorias() {
+      if (!tablaAutorias || !tbodyAutorias || !sinAutoriasMsg) {
+        return;
+      }
+      tbodyAutorias.textContent = "";
+      autorias.forEach(function (item, indice) {
+        var tr = document.createElement("tr");
+        tr.appendChild(crearCelda(item.nombre + " (ID " + item.autor_id + ")"));
+        tr.appendChild(crearCelda(item.rol));
+        tr.appendChild(crearCelda(String(item.orden)));
+
+        var tdAccion = document.createElement("td");
+        var btnQuitar = document.createElement("button");
+        btnQuitar.type = "button";
+        btnQuitar.className = "btn btn--peligro";
+        btnQuitar.textContent = "Quitar";
+        btnQuitar.setAttribute("aria-label", "Quitar a " + item.nombre);
+        btnQuitar.addEventListener("click", function () {
+          autorias.splice(indice, 1);
+          renderAutorias();
+          ocultarElemento(autorErrorMsg);
+          ocultarElemento(libroErrorMsg);
+          ocultarElemento(libroOkMsg);
+          if (autorIdInput) {
+            autorIdInput.focus();
+          }
+        });
+        tdAccion.appendChild(btnQuitar);
+        tr.appendChild(tdAccion);
+        tbodyAutorias.appendChild(tr);
+      });
+      if (autorias.length > 0) {
+        mostrarElemento(tablaAutorias);
+        ocultarElemento(sinAutoriasMsg);
+      } else {
+        ocultarElemento(tablaAutorias);
+        mostrarElemento(sinAutoriasMsg);
+      }
     }
-    if (mensajeErrorCliente) {
-      textoOriginalErrorCliente = mensajeErrorCliente.textContent;
+
+    async function buscarAutorPorId() {
+      if (!autorIdInput) {
+        return;
+      }
+      var idTexto = limpiarTexto(autorIdInput.value);
+      ocultarElemento(autorEncontradoMsg);
+      ocultarElemento(autorErrorMsg);
+      ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
+      autorSeleccionado = null;
+
+      if (!esEnteroPositivo(idTexto)) {
+        mostrarError(autorErrorMsg, "Ingresá un ID de autor válido (entero mayor o igual a 1).");
+        return;
+      }
+
+      if (btnBuscarAutor) {
+        btnBuscarAutor.disabled = true;
+      }
+      try {
+        var autor = await Api.get("/autores/" + encodeURIComponent(idTexto));
+        autorSeleccionado = autor;
+        if (autorEncontradoMsg) {
+          var detalleAutor = "Autor encontrado: " + autor.nombre;
+          if (autor.nacionalidad) {
+            detalleAutor += " (" + autor.nacionalidad + ")";
+          }
+          autorEncontradoMsg.textContent = detalleAutor;
+          mostrarElemento(autorEncontradoMsg);
+        }
+      } catch (error) {
+        autorSeleccionado = null;
+        mostrarError(
+          autorErrorMsg,
+          error && error.message ? error.message : "No se pudo buscar el autor."
+        );
+      } finally {
+        if (btnBuscarAutor) {
+          btnBuscarAutor.disabled = false;
+        }
+      }
     }
-    poblarSelects();
-    renderTablaLibros();
-    renderTablaClientes();
-    var formLibro = document.getElementById("form-libro");
-    var formCliente = document.getElementById("form-cliente");
+
+    function agregarAutoriaALista() {
+      ocultarElemento(autorErrorMsg);
+      ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
+      var idTexto = autorIdInput ? limpiarTexto(autorIdInput.value) : "";
+      if (!autorSeleccionado || Number(idTexto) !== Number(autorSeleccionado.id)) {
+        mostrarError(autorErrorMsg, "Buscá y confirmá el autor por su ID antes de agregarlo.");
+        return;
+      }
+      var rol = autorRolSelect ? autorRolSelect.value : "";
+      var ordenTexto = autorOrdenInput ? autorOrdenInput.value : "";
+      var errorAutoria = validarAutoria(
+        { autor_id: autorSeleccionado.id, rol: rol, orden: ordenTexto },
+        autorias
+      );
+      if (errorAutoria !== "") {
+        mostrarError(autorErrorMsg, errorAutoria);
+        return;
+      }
+      autorias.push({
+        autor_id: autorSeleccionado.id,
+        nombre: autorSeleccionado.nombre,
+        rol: rol,
+        orden: Number(limpiarTexto(ordenTexto))
+      });
+      autorSeleccionado = null;
+      if (autorIdInput) {
+        autorIdInput.value = "";
+      }
+      if (autorOrdenInput) {
+        autorOrdenInput.value = String(autorias.length + 1);
+      }
+      ocultarElemento(autorEncontradoMsg);
+      ocultarElemento(autorErrorMsg);
+      ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
+      renderAutorias();
+    }
+
+    async function manejarAltaLibro(event) {
+      event.preventDefault();
+      if (!formLibro || !tituloInput || !isbnInput || !precioInput || !stockInput || !editorialSelect || !generoSelect) {
+        return;
+      }
+      ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
+      ocultarElemento(autorErrorMsg);
+      ocultarElemento(autorEncontradoMsg);
+
+      var datosFormulario = {
+        titulo: tituloInput.value,
+        isbn: isbnInput.value,
+        precio: precioInput.value,
+        stock: stockInput.value,
+        editorialId: editorialSelect.value,
+        generoId: generoSelect.value,
+        autorias: autorias
+      };
+      var detalle = validarLibroFormulario(datosFormulario);
+      if (detalle !== "") {
+        mostrarError(libroErrorMsg, detalle);
+        return;
+      }
+
+      if (btnGuardarLibro) {
+        btnGuardarLibro.disabled = true;
+      }
+      try {
+        var libroCreado = await Api.post("/libros/", armarCuerpoLibro(datosFormulario));
+        if (tbodyLibros && tablaLibros) {
+          tbodyLibros.appendChild(
+            crearFila([
+              libroCreado.titulo || "",
+              libroCreado.isbn || "",
+              formatearPrecio(libroCreado.precio),
+              libroCreado.stock !== undefined && libroCreado.stock !== null ? String(libroCreado.stock) : "",
+              libroCreado.editorial && libroCreado.editorial.nombre ? libroCreado.editorial.nombre : "",
+              textoGenero(libroCreado),
+              formatearAutoresResumen(libroCreado.autores)
+            ])
+          );
+          mostrarElemento(tablaLibros);
+          ocultarElemento(librosVaciaMsg);
+        }
+        formLibro.reset();
+        autorias = [];
+        autorSeleccionado = null;
+        if (autorOrdenInput) {
+          autorOrdenInput.value = "1";
+        }
+        ocultarElemento(autorEncontradoMsg);
+        ocultarElemento(autorErrorMsg);
+        ocultarElemento(libroErrorMsg);
+        renderAutorias();
+        if (libroOkMsg) {
+          libroOkMsg.textContent =
+            "Libro agregado correctamente: " + libroCreado.titulo + " (ID " + libroCreado.id + ").";
+          mostrarElemento(libroOkMsg);
+        }
+        if (typeof window.renderCatalogo === "function") {
+          window.renderCatalogo();
+        }
+      } catch (error) {
+        mostrarError(
+          libroErrorMsg,
+          error && error.message ? error.message : "No se pudo agregar el libro."
+        );
+      } finally {
+        if (btnGuardarLibro) {
+          btnGuardarLibro.disabled = false;
+        }
+      }
+    }
+
+    async function manejarAltaCliente(event) {
+      event.preventDefault();
+      if (!formCliente || !clienteNombreInput || !clienteEmailInput) {
+        return;
+      }
+      ocultarElemento(clienteErrorMsg);
+      ocultarElemento(clienteOkMsg);
+
+      var datosCliente = {
+        nombre: clienteNombreInput.value,
+        email: clienteEmailInput.value
+      };
+      var detalle = validarClienteFormulario(datosCliente);
+      if (detalle !== "") {
+        mostrarError(clienteErrorMsg, detalle);
+        return;
+      }
+
+      if (btnGuardarCliente) {
+        btnGuardarCliente.disabled = true;
+      }
+      try {
+        var clienteCreado = await Api.post("/clientes/", armarCuerpoCliente(datosCliente));
+        if (tbodyClientes && tablaClientes) {
+          tbodyClientes.appendChild(
+            crearFila([
+              String(clienteCreado.id),
+              clienteCreado.nombre || "",
+              clienteCreado.email || ""
+            ])
+          );
+          mostrarElemento(tablaClientes);
+          ocultarElemento(clientesVaciaMsg);
+        }
+        formCliente.reset();
+        ocultarElemento(clienteErrorMsg);
+        if (clienteOkMsg) {
+          clienteOkMsg.textContent =
+            "Cliente agregado correctamente: " + clienteCreado.nombre + " (ID " + clienteCreado.id + ").";
+          mostrarElemento(clienteOkMsg);
+        }
+      } catch (error) {
+        mostrarError(
+          clienteErrorMsg,
+          error && error.message ? error.message : "No se pudo agregar el cliente."
+        );
+      } finally {
+        if (btnGuardarCliente) {
+          btnGuardarCliente.disabled = false;
+        }
+      }
+    }
+
+    async function manejarBuscarCliente(event) {
+      event.preventDefault();
+      if (!clienteIdBuscarInput) {
+        return;
+      }
+      var idTexto = limpiarTexto(clienteIdBuscarInput.value);
+      ocultarElemento(buscarClienteErrorMsg);
+      ocultarElemento(clienteResultadoPanel);
+
+      if (!esEnteroPositivo(idTexto)) {
+        mostrarError(buscarClienteErrorMsg, "Ingresá un ID de cliente válido (entero mayor o igual a 1).");
+        return;
+      }
+
+      if (btnBuscarCliente) {
+        btnBuscarCliente.disabled = true;
+      }
+      try {
+        var cliente = await Api.get("/clientes/" + encodeURIComponent(idTexto));
+        ocultarElemento(buscarClienteErrorMsg);
+        if (clienteResultadoId) { clienteResultadoId.textContent = String(cliente.id); }
+        if (clienteResultadoNombre) { clienteResultadoNombre.textContent = cliente.nombre || ""; }
+        if (clienteResultadoEmail) { clienteResultadoEmail.textContent = cliente.email || ""; }
+        if (clienteResultadoPanel) { mostrarElemento(clienteResultadoPanel); }
+      } catch (error) {
+        ocultarElemento(clienteResultadoPanel);
+        mostrarError(
+          buscarClienteErrorMsg,
+          error && error.message ? error.message : "No se pudo buscar el cliente."
+        );
+      } finally {
+        if (btnBuscarCliente) {
+          btnBuscarCliente.disabled = false;
+        }
+      }
+    }
+
+    if (autorIdInput) {
+      autorIdInput.addEventListener("input", function () {
+        autorSeleccionado = null;
+        ocultarElemento(autorEncontradoMsg);
+        ocultarElemento(autorErrorMsg);
+        ocultarElemento(libroErrorMsg);
+      });
+      autorIdInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          buscarAutorPorId();
+        }
+      });
+    }
+    if (autorRolSelect) {
+      autorRolSelect.addEventListener("change", function () {
+        ocultarElemento(autorErrorMsg);
+      });
+    }
+    if (autorOrdenInput) {
+      autorOrdenInput.addEventListener("input", function () {
+        ocultarElemento(autorErrorMsg);
+      });
+      autorOrdenInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          agregarAutoriaALista();
+        }
+      });
+    }
+    if (btnBuscarAutor) {
+      btnBuscarAutor.addEventListener("click", buscarAutorPorId);
+    }
+    if (btnAgregarAutoria) {
+      btnAgregarAutoria.addEventListener("click", agregarAutoriaALista);
+    }
     if (formLibro) {
       formLibro.addEventListener("submit", manejarAltaLibro);
     }
     if (formCliente) {
       formCliente.addEventListener("submit", manejarAltaCliente);
     }
-  });
+    if (formBuscarCliente) {
+      formBuscarCliente.addEventListener("submit", manejarBuscarCliente);
+    }
+
+    [tituloInput, isbnInput, precioInput, stockInput, editorialSelect, generoSelect].forEach(function (campo) {
+      if (campo) {
+        var tipoEvento = campo.tagName === "SELECT" ? "change" : "input";
+        campo.addEventListener(tipoEvento, function () {
+          ocultarElemento(libroErrorMsg);
+          ocultarElemento(libroOkMsg);
+        });
+      }
+    });
+
+    [clienteNombreInput, clienteEmailInput].forEach(function (campo) {
+      if (campo) {
+        campo.addEventListener("input", function () {
+          ocultarElemento(clienteErrorMsg);
+          ocultarElemento(clienteOkMsg);
+        });
+      }
+    });
+
+    if (clienteIdBuscarInput) {
+      clienteIdBuscarInput.addEventListener("input", function () {
+        ocultarElemento(buscarClienteErrorMsg);
+        ocultarElemento(clienteResultadoPanel);
+      });
+    }
+
+    renderAutorias();
+    cargarSelectsIniciales();
+  }
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("DOMContentLoaded", inicializarAltas);
+  }
+
+  // Exportación condicional solo para tests unitarios con `node --test`;
+  // en el navegador `module` no existe y este archivo sigue siendo un script clásico.
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = {
+      ROLES_AUTORIA: ROLES_AUTORIA,
+      esEnteroPositivo: esEnteroPositivo,
+      esEnteroNoNegativo: esEnteroNoNegativo,
+      esPrecioValido: esPrecioValido,
+      esEmailValido: esEmailValido,
+      validarAutoria: validarAutoria,
+      validarLibroFormulario: validarLibroFormulario,
+      validarClienteFormulario: validarClienteFormulario,
+      armarCuerpoLibro: armarCuerpoLibro,
+      armarCuerpoCliente: armarCuerpoCliente,
+      formatearPrecio: formatearPrecio,
+      textoGenero: textoGenero,
+      formatearAutoresResumen: formatearAutoresResumen
+    };
+  }
 })();

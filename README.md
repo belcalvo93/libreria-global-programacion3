@@ -57,6 +57,10 @@ Abrir http://127.0.0.1:8080 · Comprobar http://127.0.0.1:8080/api/health/ready 
 
 El front llama siempre a `/api/...` (por ejemplo `fetch("/api/libros/")`); nginx lo reenvía al backend sin el prefijo.
 
+## Uso del frontend: búsqueda por ID
+
+La API del backend no expone endpoints de listado para autores ni para clientes (`GET /autores/` y `GET /clientes/` no existen). Por eso, en las secciones **Libros** (autorías) y **Clientes**, tanto los autores como los clientes se buscan por su **ID** numérico (`GET /api/autores/{id}` y `GET /api/clientes/{id}`). Con los datos iniciales del seed hay autores del `1` al `5` y clientes del `1` al `3`.
+
 ## Reparto de tareas (propuesta)
 
 | Integrante | Tarea | Ejercicio |
