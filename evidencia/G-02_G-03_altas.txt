@@ -1,0 +1,165 @@
+G-02 · Alta de libros y G-03 · Alta de clientes desde la API — C-04 / C-11
+Fecha: 2026-11-13 · Responsable: Bruno Fiouchetta
+URL pública probada: https://grupo2-elias-frontend.ugpvou.easypanel.host/
+Commit en main al ejecutar la prueba: cdd414f
+Sin valores de variables ni credenciales privadas.
+
+== Archivos de evidencia asociados (en evidencia/)
+- G-02_1_alta_libro.png          (Alta de libro exitosa con autoría y género: Bestiario, ID 7)
+- G-02_2_detalle_libro.png        (Verificación en catálogo y detalle modal de Bestiario con autorías ordenadas)
+- G-02_3_conflicto_isbn_409.png   (Rechazo HTTP 409 Conflict al intentar reingresar el mismo ISBN)
+- G-03_1_alta_cliente.png        (Alta de cliente exitosa: Martín Fierro, ID 4)
+- G-03_2_busqueda_cliente_id.png (Búsqueda y recuperación exitosa del cliente por ID 4)
+- G-03_3_conflicto_email_409.png (Rechazo HTTP 409 Conflict al intentar reingresar el mismo email)
+
+================================================================================
+CASO G-02: ALTA DE LIBRO Y CONFLICTO POR ISBN REPETIDO
+================================================================================
+
+== 1. Alta de libro con stock, género y autoría (G-02_1_alta_libro.png)
+Pasos:
+1. Abrir https://grupo2-elias-frontend.ugpvou.easypanel.host/ y navegar a la sección «Libros».
+2. En el formulario «Agregar libro» (#form-libro), completar:
+   · Título: Bestiario
+   · ISBN: 978-950-00-0008-0
+   · Precio: 22000.00
+   · Stock: 7
+   · Editorial: Sudamericana (id 1)
+   · Género: Cuento (id 2)
+3. En el bloque de autorías:
+   · Escribir «1» en «Buscar autor por ID» y pulsar «Buscar autor».
+   · La interfaz confirma: «Autor encontrado: Julio Cortázar (Argentina)».
+   · Seleccionar rol «autor», orden «1» y pulsar «Agregar autoría».
+   · Se verifica que Julio Cortázar aparece en la tabla de autorías con rol autor y orden 1.
+4. Presionar el botón «Agregar libro» (#libro-guardar).
+
+Peticiones observadas en F12 -> Network (Fetch/XHR):
+- Búsqueda de autor:
+  · Método: GET
+  · URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/autores/1
+  · Código de estado: 200 OK
+  · Respuesta JSON:
+    {"id":1,"nombre":"Julio Cortázar","nacionalidad":"Argentina"}
+
+- Creación del libro:
+  · Método: POST
+  · URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/
+  · Payload enviado:
+    {"isbn":"978-950-00-0008-0","titulo":"Bestiario","precio":22000,"stock":7,"editorial_id":1,"genero_id":2,"autores":[{"autor_id":1,"rol":"autor","orden":1}]}
+  · Código de estado: 201 Created
+  · Respuesta JSON:
+    {"id":7,"isbn":"978-950-00-0008-0","titulo":"Bestiario","precio":"22000.00","stock":7,"editorial":{"id":1,"nombre":"Sudamericana","pais":"Argentina"},"genero":{"id":2,"nombre":"Cuento"},"autores":[{"autor":{"id":1,"nombre":"Julio Cortázar","nacionalidad":"Argentina"},"rol":"autor","orden":1}]}
+
+Resultado observado en la UI:
+- Aparece el mensaje de éxito en verde: «✓ Libro agregado correctamente: Bestiario (ID 7).».
+- El formulario se resetea y la tabla de autorías queda vacía y lista para una nueva carga.
+
+== 2. Verificación del libro en el catálogo (G-02_2_detalle_libro.png)
+Pasos:
+1. Dirigirse a la sección «Catálogo».
+2. Ubicar el libro recién creado «Bestiario» (ID 7, ISBN 978-950-00-0008-0, Editorial Sudamericana, Género Cuento).
+3. Presionar «Ver detalle».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/7
+- Código de estado: 200 OK
+- Respuesta JSON:
+  {"id":7,"isbn":"978-950-00-0008-0","titulo":"Bestiario","precio":"22000.00","stock":7,"editorial":{"id":1,"nombre":"Sudamericana","pais":"Argentina"},"genero":{"id":2,"nombre":"Cuento"},"autores":[{"autor":{"id":1,"nombre":"Julio Cortázar","nacionalidad":"Argentina"},"rol":"autor","orden":1}]}
+
+Resultado observado en la UI:
+- Se abre el modal «Detalle del libro» mostrando Título: Bestiario, ISBN: 978-950-00-0008-0, Precio: 22000.00, Stock: 7, Editorial: Sudamericana, Género: Cuento.
+- La tabla de autorías muestra correctamente a «Julio Cortázar» con rol «autor» y orden «1».
+- Se presiona «Cerrar detalle» y el foco regresa al botón de origen.
+
+== 3. Intento de alta duplicada con mismo ISBN (G-02_3_conflicto_isbn_409.png)
+Pasos:
+1. Regresar a «Libros» y completar el formulario ingresando el mismo ISBN «978-950-00-0008-0»:
+   · Título: Bestiario Duplicado
+   · ISBN: 978-950-00-0008-0
+   · Precio: 25000.00
+   · Stock: 3
+   · Editorial: Sudamericana (id 1)
+   · Género: Cuento (id 2)
+   · Autor: Julio Cortázar (id 1, rol autor, orden 1)
+2. Presionar el botón «Agregar libro».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: POST
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/
+- Código de estado: 409 Conflict
+- Respuesta JSON:
+  {"detail":"El ISBN ya existe o un autor figura dos veces en el libro"}
+
+Resultado observado en la UI:
+- El campo ISBN queda resaltado con borde de error y aria-invalid="true".
+- Se muestra el mensaje de error directamente bajo el campo y en el aviso de estado: «El ISBN ya existe o un autor figura dos veces en el libro».
+- No se inserta ningún registro duplicado en la base de datos.
+
+Resultado G-02: OK
+
+================================================================================
+CASO G-03: ALTA DE CLIENTE Y CONFLICTO POR EMAIL REPETIDO
+================================================================================
+
+== 1. Alta de cliente exitosa (G-03_1_alta_cliente.png)
+Pasos:
+1. Desplazarse a la sección «Clientes».
+2. En el formulario «Agregar cliente» (#form-cliente), ingresar:
+   · Nombre completo: Martín Fierro
+   · Email: martin@example.com
+3. Presionar «Agregar cliente» (#cliente-guardar).
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: POST
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/clientes/
+- Payload enviado:
+  {"nombre":"Martín Fierro","email":"martin@example.com"}
+- Código de estado: 201 Created
+- Respuesta JSON:
+  {"id":4,"nombre":"Martín Fierro","email":"martin@example.com","perfil":null}
+
+Resultado observado en la UI:
+- Se muestra el mensaje de éxito en verde: «✓ Cliente agregado correctamente: Martín Fierro (ID 4).».
+- El formulario se limpia automáticamente.
+- La tabla de clientes agregados en la sesión se actualiza mostrando «ID: 4 | Martín Fierro | martin@example.com».
+
+== 2. Búsqueda y recuperación del cliente por ID (G-03_2_busqueda_cliente_id.png)
+Pasos:
+1. En el formulario «Buscar cliente por ID» (#form-buscar-cliente), ingresar «4».
+2. Presionar el botón «Buscar cliente» (#cliente-buscar).
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/clientes/4
+- Código de estado: 200 OK
+- Respuesta JSON:
+  {"id":4,"nombre":"Martín Fierro","email":"martin@example.com","perfil":null}
+
+Resultado observado en la UI:
+- El contenedor #cliente-resultado se hace visible (sin atributo hidden).
+- Muestra los datos recuperados del servidor:
+  · ID: 4
+  · Nombre: Martín Fierro
+  · Email: martin@example.com
+
+== 3. Intento de alta duplicada con mismo email (G-03_3_conflicto_email_409.png)
+Pasos:
+1. En el formulario «Agregar cliente» (#form-cliente), ingresar otro nombre pero con el mismo email ya registrado:
+   · Nombre completo: Martín Duplicado
+   · Email: martin@example.com
+2. Presionar el botón «Agregar cliente».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: POST
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/clientes/
+- Código de estado: 409 Conflict
+- Respuesta JSON:
+  {"detail":"El email ya está en uso"}
+
+Resultado observado en la UI:
+- El campo Email queda marcado con aria-invalid="true" y estilo de error.
+- Se muestra el mensaje descriptivo debajo del input y en el aviso de estado: «El email ya está en uso».
+- No se produce duplicación de clientes en la base de datos.
+
+Resultado G-03: OK
