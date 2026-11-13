@@ -19,54 +19,46 @@ Al abrir la página, el estante SHALL pedir `GET /api/libros/` con `limit` 12 a 
 - **THEN** el estante muestra exactamente 12 libros
 
 ### Requirement: Inicio en una sola pantalla
-La cabecera, la navegación y la estantería completa (con el gato y la luna) SHALL verse enteras, sin scroll de página, en 1366x768, 1920x1080 y 390x844. Las medidas verticales del gabinete, los libros, el gato y la luna SHALL depender del alto de la ventana. Si hay más libros de los que entran a lo ancho, el scroll MUST ser solo el de la repisa. Las secciones Catálogo, Libros, Clientes, Ventas e Historial MUST seguir debajo y alcanzarse con las pestañas.
+Con los libros en una fila, la cabecera, el nav y la estantería completa (gato y luna incluidos) SHALL verse enteros, sin scroll de página, en 1366x768 y 1920x1080. La portada MUST tener alto mínimo, no fijo: con más filas crece hacia abajo, sin scroll horizontal. Las medidas verticales del mueble, los libros, el gato y la luna SHALL depender del alto de la ventana. Las secciones de abajo MUST seguir alcanzándose con las pestañas.
 
 #### Scenario: Escritorio
-- **WHEN** se abre la página a 1366x768 o a 1920x1080
-- **THEN** la cabecera, el nav y la estantería entran enteros y el borde inferior del bloque de inicio no pasa de la altura de la ventana
+- **WHEN** se abre la página a 1366x768 o a 1920x1080 con los 6 libros del seed
+- **THEN** la cabecera, el nav y la estantería entran enteros y el borde inferior del gabinete no pasa de la altura de la ventana
 
 #### Scenario: Móvil
 - **WHEN** se abre la página a 390x844
-- **THEN** el inicio entra entero y los libros que no entran a lo ancho se alcanzan desplazando solo la repisa
+- **THEN** los libros que no entran a lo ancho pasan a otra fila, la portada crece lo necesario y la página no tiene scroll horizontal
 
 #### Scenario: Las pestañas siguen funcionando
 - **WHEN** el usuario activa la pestaña «Ventas»
 - **THEN** la página va a la sección `#ventas`, que sigue debajo del inicio
 
-### Requirement: Repisa con scroll horizontal
-La repisa SHALL mostrar al menos 8 libros a la vez en escritorio (1280 px) y MUST permitir ver el resto con scroll horizontal suave cuando no entran todos, sin provocar scroll horizontal de la página. En pantallas angostas MUST mostrar menos libros y desplazarse igual.
-
-#### Scenario: Escritorio
-- **GIVEN** 12 libros y un ancho de 1280 px
-- **WHEN** se abre la página
-- **THEN** se ven al menos 8 libros, el resto se alcanza desplazando la repisa si no entra y la página no tiene scroll horizontal
-
-#### Scenario: Ancho mínimo
-- **WHEN** la página se ve a 320 px de ancho
-- **THEN** la repisa se desplaza horizontalmente y todos los libros pueden alcanzarse con scroll o con Tab
-
 ### Requirement: Gabinete compacto de madera
-La estantería SHALL dibujarse como un gabinete de madera oscura ajustado a los libros, sin aire arriba, abajo ni a los costados: marco de nogal con vetas sutiles hechas con gradientes CSS, fondo en sombra cálida con luz dorada tenue, una base con zócalo y sombra, y volumen (bisel, sombra proyectada). MUST NOT usar imágenes para el mueble.
+La estantería SHALL dibujarse como un mueble de nogal en 3D ajustado a los libros, con vetas en gradientes CSS: tapa superior que vuela sobre los costados (cara de arriba en perspectiva y canto con filo dorado), paredes laterales en sombra, fondo de tablas verticales, la cara superior de cada estante bajo los libros y una base con zócalo y sombra. MUST NOT usar imágenes para el mueble.
 
 #### Scenario: Mueble sin libros
 - **GIVEN** el estante vacío o con error
 - **WHEN** se abre la página
-- **THEN** el gabinete con su marco, su fondo y su base se ve igual, con el gato encima
+- **THEN** el gabinete con su tapa superior, su marco, su fondo y su base se ve igual, con el gato sentado encima
+
+#### Scenario: Volumen del mueble
+- **WHEN** se ve la portada a 1366x768
+- **THEN** se distinguen la tapa superior en perspectiva, las paredes laterales en sombra, el fondo de tablas y la cara superior de cada estante
 
 ### Requirement: Libros de lomo
-Cada libro SHALL mostrar su lomo hacia afuera, apoyado en la repisa y junto a los demás, con color tipo cuero, 2 o 3 bandas doradas y relieve sutil. El color SHALL salir de `id % 5` y el alto, del largo del título y del id. El grosor del lomo SHALL ser de 14 a 18 % de su alto y la tapa visible al rotar, de 60 a 65 %, con clases y sin estilos inline. Los títulos largos MUST ocupar lomos más gruesos y más altos y las alturas MUST ser desparejas.
+Cada libro SHALL mostrar su lomo hacia afuera, apoyado en la repisa, con color tipo cuero, 2 o 3 bandas doradas y relieve. El color SHALL salir de `id % 5` y el alto, del largo del título y del id. El ancho del lomo SHALL ser el de su título más un margen de cuero, con un mínimo proporcional al alto; la tapa al rotar mide 60 a 65 % del alto. Sin estilos inline. Los títulos largos MUST dar lomos más gruesos y altos, de alturas desparejas.
 
 #### Scenario: Variación estable
 - **WHEN** el estante muestra los libros con id 1 a 6
 - **THEN** los libros 1 y 6 comparten color, los libros 1 a 5 tienen los cinco colores distintos, y recargar la página da el mismo aspecto a cada libro
 
 #### Scenario: Proporciones de libro real
-- **WHEN** se mide cualquier libro de la estantería
-- **THEN** el grosor de su lomo es de 14 a 18 % de su alto y el ancho de su tapa, de 60 a 65 %
+- **WHEN** el estante muestra un título de una columna y «Antología de la literatura fantástica», que ocupa dos
+- **THEN** el lomo del primero mide unos 35 px y el del segundo unos 53 px, y el ancho de la tapa de cada uno es de 60 a 65 % de su alto
 
 #### Scenario: Libro levantado en el borde
-- **WHEN** el usuario enfoca el primero, el último o el libro más alto
-- **THEN** su tapa rotada no queda cortada por el borde de la repisa ni se sale del gabinete
+- **WHEN** el usuario enfoca el primero, el último o el libro más alto de una fila
+- **THEN** su tapa rotada, pegada al borde derecho del lomo, no queda cortada por el borde de la repisa ni se sale del gabinete
 
 #### Scenario: Títulos largos, lomos mayores
 - **WHEN** el estante muestra «Rayuela» y «Antología de la literatura fantástica»
@@ -81,7 +73,7 @@ Cada libro SHALL mostrar su lomo hacia afuera, apoyado en la repisa y junto a lo
 - **THEN** su lomo usa la primera variante de color y de tamaño, sin inclinación, y el estante no falla
 
 ### Requirement: Título en el lomo
-El título SHALL escribirse en vertical, de abajo hacia arriba, directamente sobre el cuero, sin óvalo, caja ni fondo, en blanco (#ffffff), con fuente del sistema, peso 600 a 700 y una sombra oscura muy sutil. MUST verse completo, sin puntos suspensivos ni recorte alguno (ni en CSS ni en JS), hasta 80 caracteres, partiéndose en columnas. Se inserta siempre como texto, nunca como HTML.
+El título SHALL escribirse en vertical, de abajo hacia arriba, estampado en oro (#ecd389) sobre el cuero, en Georgia de peso normal, con relieve de hierro en caliente y sin óvalo, etiqueta, filetes ni fondo. MUST tener contraste de al menos 4.5:1 también en el lomo mostaza y verse completo, sin «…» ni recortes (ni en CSS ni en JS), hasta 80 caracteres, partiéndose en columnas. Se inserta siempre como texto, nunca como HTML.
 
 #### Scenario: Título con marcado HTML
 - **WHEN** un título llega como `<b>Rayuela</b>`
@@ -97,7 +89,7 @@ El título SHALL escribirse en vertical, de abajo hacia arriba, directamente sob
 
 #### Scenario: Títulos reales
 - **WHEN** el estante muestra «Rayuela», «Respiración artificial», «La invención de Morel» y «Antología de la literatura fantástica»
-- **THEN** los cuatro se ven completos, en blanco y sobre el cuero, sin óvalo
+- **THEN** los cuatro se ven completos, en oro sobre el cuero, en Georgia y sin óvalo ni fondo
 
 ### Requirement: Tamaño de letra del título según su largo
 La letra del título SHALL elegirse según su largo (corto, medio, largo, muy largo) y MUST NOT bajar de 0.85 rem, salvo en títulos de más de 60 caracteres, donde el mínimo es 0.75 rem.
@@ -130,15 +122,15 @@ Con movimiento permitido, al pasar el cursor o al enfocar un libro con el teclad
 - **THEN** su tapa no queda cortada por el borde de la repisa
 
 ### Requirement: Etiqueta con el título completo
-Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto, sin fondo, en Georgia negrita dorada con resplandor, a la derecha del gato y a la altura del borde superior del gabinete, creciendo hacia arriba. MUST NOT superponerse a los libros, al gabinete ni a «Estantería», MUST caber en 320 px, no recibir foco ni clics y ocultarse al salir y para las tecnologías de asistencia. Se inserta como texto.
+Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto, sin fondo, en Georgia negrita dorada con resplandor, a la derecha del gato y a la altura del borde superior del gabinete (por encima de su tapa superior), creciendo hacia arriba. MUST NOT superponerse a los libros, al gabinete ni a «Estantería», MUST caber en 320 px, no recibir foco ni clics y ocultarse al salir y para las tecnologías de asistencia. Se inserta como texto.
 
 #### Scenario: Teclado
 - **WHEN** el usuario llega con Tab a un libro cuyo título es «Inventario de luces mínimas»
 - **THEN** se ve el título completo junto al gato, sobre el gabinete y sin tapar ningún libro, y se oculta al pasar al siguiente libro
 
 #### Scenario: Borde de la repisa
-- **GIVEN** la repisa desplazada hasta el extremo derecho
-- **WHEN** el usuario enfoca el último libro
+- **GIVEN** la repisa con libros en dos filas
+- **WHEN** el usuario enfoca el último libro de la segunda fila, junto al borde derecho
 - **THEN** el título se ve completo junto al gato, sin cortarse
 
 #### Scenario: Teléfono chico
@@ -192,25 +184,6 @@ El estante SHALL mostrar un mensaje de carga mientras espera la respuesta, un me
 - **WHEN** se abre la página
 - **THEN** se ve un mensaje de error con el texto del cliente HTTP (por ejemplo, «No se pudo conectar con el servidor. Revisá tu conexión.»), marcado como error también sin depender del color
 
-### Requirement: Gato decorativo como imagen
-La estantería SHALL mostrar un gato negro (`img/gato.webp`, 364x960) de alto `clamp(110px, 22vh, 200px)`, sentado arriba a la izquierda del gabinete, sin espejar y mirando hacia la luna. MUST quedar por detrás del gabinete, con las patas visibles sobre su borde superior y la cola tapada por el marco. Es decorativo (`alt` vacío y `aria-hidden="true"`) y MUST NOT tapar libros, etiqueta ni el encabezado «Estantería».
-
-#### Scenario: Cola detrás del marco
-- **WHEN** se mira el gato en cualquier tamaño de ventana
-- **THEN** la cola está tapada por el marco donde se superpone con el gabinete y solo asoma por fuera a la izquierda
-
-#### Scenario: Gato sobre el borde
-- **WHEN** se abre la página a 1366x768
-- **THEN** el gato se ve sentado arriba a la izquierda del gabinete, con las patas en su borde superior, sin solaparse con el encabezado «Estantería» ni con la navegación
-
-#### Scenario: Lector de pantalla
-- **WHEN** un lector de pantalla recorre la sección de la estantería
-- **THEN** no anuncia el gato ni la etiqueta de título
-
-#### Scenario: Ancho mínimo
-- **WHEN** la página se ve a 390 px de ancho
-- **THEN** el gato se ve completo y ningún libro ni etiqueta queda debajo de él
-
 ### Requirement: Lomos de cuero gastado
 Los lomos SHALL mostrar la textura `img/lomo-cuero.webp` teñida con el color de cada libro, conservando tapa de páginas, líneas doradas y sombra, sin cambiar tamaños ni layout. El título vertical MUST ser texto real con contraste AA.
 
@@ -226,19 +199,79 @@ Al salir hacia adelante, la tapa del libro SHALL mostrar cuero (`img/tapa-cuero.
 - **THEN** su tapa se ve de cuero del color del libro con la estrella dorada centrada
 
 ### Requirement: Título Estantería centrado
-El encabezado «Estantería» SHALL estar centrado horizontalmente sobre el gabinete, sin tapar al gato ni la luna, también en 320 px.
+El encabezado «Estantería» SHALL estar centrado horizontalmente sobre el gabinete, sin tapar al gato ni la luna, también en 320 px, y MUST tener el mismo tamaño que los títulos de las secciones de abajo (`clamp(1.4rem, 3vw, 1.75rem)`).
 
 #### Scenario: Centrado
 - **WHEN** se ve la portada a cualquier ancho
 - **THEN** el centro del texto «Estantería» coincide con el centro del gabinete
 
+#### Scenario: Mismo tamaño que las secciones
+- **WHEN** se comparan «Estantería» y «Catálogo» a 1366 px
+- **THEN** ambos títulos tienen el mismo tamaño de letra
+
 ### Requirement: Canto de páginas crema
-El canto de páginas de cada libro SHALL ser un bloque crema con líneas finas casi verticales, inclinadas como «/», dibujado como la cara superior 3D del libro entre el lomo y la tapa, con el ancho del lomo y la profundidad del libro. MUST NOT usar imágenes.
+La cara superior de cada libro SHALL dibujarse como la de un libro real visto desde arriba: a cada costado el canto de la tapa, del color del lomo oscurecido (marrón oscuro si el navegador no soporta la mezcla de colores), en el medio las hojas como líneas crema finas paralelas a las tapas y una sombra que las oscurece hacia el fondo. En reposo MUST asomar solo una franja fina sobre el lomo. MUST NOT usar imágenes.
 
 #### Scenario: Reposo
 - **WHEN** se ve la estantería
-- **THEN** cada libro muestra su canto crema con líneas sobre el lomo, sin hueco ni sobresalidas
+- **THEN** cada libro muestra sobre el lomo una franja fina con los cantos de las tapas y las hojas crema, sin hueco ni sobresalidas
 
 #### Scenario: Libro levantado
 - **WHEN** un libro recibe foco con Tab
-- **THEN** el canto crema une el lomo con la tapa de cuero
+- **THEN** se ve la tapa de cuero y, arriba, una franja fina de hojas que une el lomo con la tapa
+
+### Requirement: Repisa en varias filas
+La repisa SHALL medir lo justo para sus libros, hasta un máximo igual al ancho de las secciones de abajo, y los libros que no entran MUST pasar a otra fila, sin scroll horizontal de la repisa ni de la página. Todas las filas MUST medir lo mismo y cada una MUST tener su propia tabla de madera con canto dorado sobre la que se apoyan los libros. Se mantiene el límite de 12 libros.
+
+#### Scenario: Escritorio con el seed
+- **GIVEN** los 6 libros del seed
+- **WHEN** se abre la página a 1366x768
+- **THEN** los 6 libros se ven en una sola fila sobre su tabla y la repisa no se desplaza de costado
+
+#### Scenario: Muchos libros
+- **GIVEN** 24 libros en la repisa
+- **WHEN** se ve la página a 1366 px y a 390 px
+- **THEN** los libros se reparten en varias filas, cada una con su tabla, todos visibles sin desplazar la repisa y sin scroll horizontal de la página
+
+#### Scenario: Teclado entre filas
+- **WHEN** el usuario recorre los libros con Tab
+- **THEN** el foco pasa del último libro de una fila al primero de la siguiente y ningún libro queda fuera de la vista de costado
+
+### Requirement: Cola del gato animada
+Con movimiento permitido, la cola del gato SHALL moverse sola con un vaivén lento y, cada tanto, un coletazo corto, girando sobre su raíz sin que se vea la unión con el cuerpo. El gato MUST seguir siendo una sola imagen (`img/gato.webp`) usada en dos recortes, y con `prefers-reduced-motion: reduce` la cola MUST quedar quieta.
+
+#### Scenario: Movimiento permitido
+- **WHEN** se abre la página sin preferencia de movimiento reducido
+- **THEN** la cola se balancea y cada ~7.5 s da un coletazo, sin hueco visible entre la cola y el cuerpo
+
+#### Scenario: Reducir movimiento
+- **GIVEN** el sistema con `prefers-reduced-motion: reduce`
+- **WHEN** se abre la página
+- **THEN** el gato y su cola están quietos
+
+### Requirement: Gato atento a los libros
+Con movimiento permitido, el gato SHALL respirar de forma casi imperceptible y MUST inclinarse levemente hacia la estantería mientras un libro sale al frente con el mouse o con el teclado, volviendo a su postura al soltarlo. El gato MUST mostrar un borde fino de luz dorada del lado de la luna que despegue su silueta del cielo.
+
+#### Scenario: Libro enfocado
+- **WHEN** el usuario enfoca un libro con Tab
+- **THEN** el gato se inclina unos 5° hacia la estantería y vuelve al quitar el foco
+
+#### Scenario: Reducir movimiento
+- **GIVEN** el sistema con `prefers-reduced-motion: reduce`
+- **WHEN** el usuario enfoca un libro
+- **THEN** el gato no se inclina ni respira
+
+### Requirement: Gato sentado delante del mueble
+La estantería SHALL mostrar un gato negro hecho con la imagen `img/gato.webp` (364x960), de alto `clamp(120px, 26dvh, 240px)`, sentado arriba a la izquierda del gabinete, sin espejar y mirando hacia la luna. MUST quedar delante del mueble, sentado sobre la tapa superior, con la cola colgando por el frente. Es decorativo (contenedor con `aria-hidden="true"` e imagen con `alt` vacío) y MUST NOT tapar libros, etiqueta ni el encabezado «Estantería».
+
+#### Scenario: Gato sobre la tapa
+- **WHEN** se abre la página a 1366x768
+- **THEN** el gato se ve sentado sobre la tapa superior, arriba a la izquierda del gabinete, con la cola por delante del frente, sin solaparse con el encabezado «Estantería» ni con la navegación
+
+#### Scenario: Lector de pantalla
+- **WHEN** un lector de pantalla recorre la sección de la estantería
+- **THEN** no anuncia el gato ni la etiqueta de título
+
+#### Scenario: Ancho mínimo
+- **WHEN** la página se ve a 320 y a 390 px de ancho
+- **THEN** el gato se ve completo y ningún libro ni etiqueta queda debajo de él

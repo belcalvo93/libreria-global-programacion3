@@ -212,3 +212,133 @@ test("siguienteOrden rellena huecos y respeta órdenes escritos a mano", functio
   assert.equal(altas.siguienteOrden([{ orden: 1 }, { orden: 3 }]), 2);
   assert.equal(altas.siguienteOrden([{ orden: "1" }, { orden: "2" }]), 3);
 });
+
+// ---- Errores por campo (rev. 14) ----
+
+var libroValido = {
+  titulo: "Rayuela",
+  isbn: "9780000000001",
+  precio: "100.50",
+  stock: "3",
+  editorialId: "1",
+  generoId: "",
+  autorias: [{ autor_id: 1, rol: "autor", orden: 1 }]
+};
+
+test("erroresLibroPorCampo devuelve objeto vacío si todo es válido", function () {
+  assert.deepEqual(altas.erroresLibroPorCampo(libroValido), {});
+});
+
+test("erroresLibroPorCampo informa cada campo inválido con texto específico y en orden", function () {
+  var errores = altas.erroresLibroPorCampo({
+    titulo: " ", isbn: "", precio: "0", stock: "-1", editorialId: "", autorias: []
+  });
+  assert.deepEqual(errores, {
+    "libro-titulo": "Escribí el título.",
+    "libro-isbn": "El ISBN es obligatorio.",
+    "libro-precio": "El precio tiene que ser mayor a 0.",
+    "libro-stock": "El stock tiene que ser un número entero desde 0.",
+    "libro-editorial": "Elegí una editorial.",
+    "autor-id-buscar": "Agregá al menos un autor."
+  });
+  assert.equal(Object.keys(errores)[0], "libro-titulo");
+});
+
+test("erroresLibroPorCampo marca solo los campos malos y coincide con validarLibroFormulario", function () {
+  var malo = Object.assign({}, libroValido, { precio: "abc" });
+  assert.deepEqual(Object.keys(altas.erroresLibroPorCampo(malo)), ["libro-precio"]);
+  assert.notEqual(altas.validarLibroFormulario(malo), "");
+  var autoriaRota = Object.assign({}, libroValido, { autorias: [{ autor_id: 0, rol: "x", orden: 0 }] });
+  assert.deepEqual(Object.keys(altas.erroresLibroPorCampo(autoriaRota)), ["autor-id-buscar"]);
+  assert.equal(altas.erroresLibroPorCampo(autoriaRota)["autor-id-buscar"], "Revisá los datos de las autorías cargadas.");
+});
+
+test("erroresClientePorCampo valida nombre y email", function () {
+  assert.deepEqual(altas.erroresClientePorCampo({ nombre: "Ana", email: "a@b.com" }), {});
+  assert.deepEqual(altas.erroresClientePorCampo({ nombre: "", email: "" }), {
+    "cliente-nombre": "Escribí el nombre.",
+    "cliente-email": "El email es obligatorio."
+  });
+  assert.deepEqual(altas.erroresClientePorCampo({ nombre: "Ana", email: "nope" }), {
+    "cliente-email": "El email no tiene un formato válido."
+  });
+});
+
+test("campoDeConflicto mapea 409 al ISBN o al email, y nada para otros errores", function () {
+  var e409 = { status: 409, message: "Ya existe un libro con ese ISBN." };
+  assert.deepEqual(altas.campoDeConflicto(e409, "libro"), { campoId: "libro-isbn", mensaje: "Ya existe un libro con ese ISBN." });
+  assert.deepEqual(altas.campoDeConflicto({ status: 409, message: "Email repetido" }, "cliente"), { campoId: "cliente-email", mensaje: "Email repetido" });
+  assert.equal(altas.campoDeConflicto({ status: 500, message: "x" }, "libro"), null);
+  assert.equal(altas.campoDeConflicto(null, "cliente"), null);
+});
+
+function crearDocFalso() {
+  var creados = [];
+  function nuevoElemento(id) {
+    var attrs = {};
+    var el = {
+      id: id || "",
+      hidden: false,
+      textContent: "",
+      className: "",
+      parentNode: null,
+      nextSibling: null,
+      setAttribute: function (k, v) { attrs[k] = String(v); if (k === "hidden") { el.hidden = true; } },
+      removeAttribute: function (k) { delete attrs[k]; if (k === "hidden") { el.hidden = false; } },
+      getAttribute: function (k) { return k in attrs ? attrs[k] : null; }
+    };
+    return el;
+  }
+  var padre = {
+    hijos: [],
+    insertBefore: function (nuevo, ref) {
+      var i = ref ? padre.hijos.indexOf(ref) : padre.hijos.length;
+      padre.hijos.splice(i, 0, nuevo);
+      nuevo.parentNode = padre;
+    }
+  };
+  var control = nuevoElemento("libro-titulo");
+  control.parentNode = padre;
+  padre.hijos.push(control);
+  var doc = {
+    createElement: function () { var el = nuevoElemento(""); creados.push(el); return el; },
+    getElementById: function (id) {
+      if (id === control.id) { return control; }
+      return padre.hijos.filter(function (h) { return h.id === id; })[0] || null;
+    }
+  };
+  return { doc: doc, control: control, padre: padre, creados: creados };
+}
+
+test("mostrarErrorCampo crea una sola vez el mensaje, marca aria-invalid y lo vincula", function () {
+  var f = crearDocFalso();
+  altas.mostrarErrorCampo(f.control, "Escribí el título.", null, f.doc);
+  assert.equal(f.control.getAttribute("aria-invalid"), "true");
+  assert.equal(f.control.getAttribute("aria-describedby"), "libro-titulo-error");
+  var msg = f.padre.hijos[1];
+  assert.equal(msg.id, "libro-titulo-error");
+  assert.equal(msg.className, "mensaje-campo");
+  assert.equal(msg.textContent, "Escribí el título.");
+  assert.equal(msg.hidden, false);
+  altas.mostrarErrorCampo(f.control, "Otro texto.", null, f.doc);
+  assert.equal(f.padre.hijos.length, 2);
+  assert.equal(f.padre.hijos[1].textContent, "Otro texto.");
+});
+
+test("limpiarErrorCampo quita aria-invalid y oculta el mensaje; sin mensaje no falla", function () {
+  var f = crearDocFalso();
+  assert.doesNotThrow(function () { altas.limpiarErrorCampo(f.control, f.doc); });
+  altas.mostrarErrorCampo(f.control, "Escribí el título.", null, f.doc);
+  altas.limpiarErrorCampo(f.control, f.doc);
+  assert.equal(f.control.getAttribute("aria-invalid"), null);
+  assert.equal(f.control.getAttribute("aria-describedby"), null);
+  assert.equal(f.padre.hijos[1].hidden, true);
+});
+
+test("mostrarErrorCampo inserta después del ancla indicada", function () {
+  var f = crearDocFalso();
+  var ancla = { id: "ancla", parentNode: f.padre };
+  f.padre.hijos.push(ancla);
+  altas.mostrarErrorCampo(f.control, "x", ancla, f.doc);
+  assert.equal(f.padre.hijos.indexOf(ancla) + 1, f.padre.hijos.indexOf(f.doc.getElementById("libro-titulo-error")));
+});

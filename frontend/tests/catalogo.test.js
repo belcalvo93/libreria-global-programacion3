@@ -215,3 +215,83 @@ test("mostrarDetalleLibro conserva el botón de origen y cerrarDetalle le devuel
     globalThis.Api.get = apiGetAnterior;
   }
 });
+
+// ---- Estado de carga del buscador (rev. 14) ----
+
+function crearClassListFalso() {
+  var set = {};
+  return {
+    add: function (c) { set[c] = true; },
+    remove: function (c) { delete set[c]; },
+    contains: function (c) { return set[c] === true; }
+  };
+}
+
+function crearElementosFalsos() {
+  var attrs = {};
+  var contenedor = {
+    classList: crearClassListFalso(),
+    setAttribute: function (k, v) { attrs[k] = String(v); },
+    removeAttribute: function (k) { delete attrs[k]; },
+    getAttribute: function (k) { return k in attrs ? attrs[k] : null; }
+  };
+  return {
+    btnBuscar: { disabled: false, textContent: "Buscar en el catálogo" },
+    btnAnterior: { disabled: true },
+    btnSiguiente: { disabled: true },
+    paginaSalida: { textContent: "" },
+    tabla: { parentNode: contenedor },
+    contenedor: contenedor
+  };
+}
+
+test("estadoControlesCarga durante la carga deshabilita todo y pide aria-busy", function () {
+  var e = catalogo.estadoControlesCarga(true, 5, true);
+  assert.equal(e.buscarDeshabilitado, true);
+  assert.equal(e.textoBuscar, "Buscando…");
+  assert.equal(e.anteriorDeshabilitado, true);
+  assert.equal(e.siguienteDeshabilitado, true);
+  assert.equal(e.ocupado, true);
+});
+
+test("estadoControlesCarga en reposo respeta offset y hayMas", function () {
+  var a = catalogo.estadoControlesCarga(false, 5, true);
+  assert.equal(a.buscarDeshabilitado, false);
+  assert.equal(a.textoBuscar, "Buscar en el catálogo");
+  assert.equal(a.anteriorDeshabilitado, false);
+  assert.equal(a.siguienteDeshabilitado, false);
+  assert.equal(a.ocupado, false);
+  var b = catalogo.estadoControlesCarga(false, 0, false);
+  assert.equal(b.anteriorDeshabilitado, true);
+  assert.equal(b.siguienteDeshabilitado, true);
+});
+
+test("aplicarEstadoCarga marca el contenedor y cambia el texto del botón", function () {
+  var els = crearElementosFalsos();
+  catalogo.aplicarEstadoCarga(els, true);
+  assert.equal(els.btnBuscar.disabled, true);
+  assert.equal(els.btnBuscar.textContent, "Buscando…");
+  assert.equal(els.btnAnterior.disabled, true);
+  assert.equal(els.btnSiguiente.disabled, true);
+  assert.equal(els.contenedor.getAttribute("aria-busy"), "true");
+  assert.equal(els.contenedor.classList.contains("is-cargando"), true);
+});
+
+test("aplicarEstadoCarga al terminar restaura texto, aria-busy y clase", function () {
+  var els = crearElementosFalsos();
+  catalogo.aplicarEstadoCarga(els, true);
+  catalogo.aplicarEstadoCarga(els, false);
+  assert.equal(els.btnBuscar.disabled, false);
+  assert.equal(els.btnBuscar.textContent, "Buscar en el catálogo");
+  assert.equal(els.contenedor.getAttribute("aria-busy"), null);
+  assert.equal(els.contenedor.classList.contains("is-cargando"), false);
+  assert.equal(els.btnAnterior.disabled, true);
+  assert.equal(els.btnSiguiente.disabled, true);
+});
+
+test("aplicarEstadoCarga tolera elementos ausentes", function () {
+  assert.doesNotThrow(function () {
+    catalogo.aplicarEstadoCarga({}, true);
+    catalogo.aplicarEstadoCarga({}, false);
+  });
+});

@@ -17,7 +17,7 @@ La navegación SHALL ser una región de navegación con nombre accesible «Naveg
 - **THEN** anuncia 5 enlaces dentro de la navegación «Navegación principal», no pestañas ni un menú
 
 ### Requirement: Marcapáginas colgantes
-Los enlaces SHALL verse como marcapáginas que cuelgan de una fina línea dorada en el borde superior de la franja: Georgia negrita, fondo borravino oscuro, texto dorado y borde inferior en V. MUST tener un alto total de al menos 44 px y vivir dentro de su propia franja, en el flujo normal, sin superponerse a la escena. En 390 px los cinco MUST caber en una fila sin cortarse.
+Los enlaces SHALL verse como marcapáginas que cuelgan de una fina línea dorada en el borde superior de la franja: Georgia negrita, fondo borravino oscuro, texto dorado y borde inferior en V. MUST tener un alto total de al menos 44 px y vivir dentro de su propia franja, en el flujo normal, sin superponerse a la escena. La franja MUST medir lo justo para el marcapáginas activo (3.75 rem en escritorio), sin una banda vacía debajo. En 390 px los cinco MUST caber en una fila sin cortarse.
 
 #### Scenario: Móvil
 - **WHEN** la página se ve a 390 px de ancho
@@ -25,7 +25,7 @@ Los enlaces SHALL verse como marcapáginas que cuelgan de una fina línea dorada
 
 #### Scenario: Sin solapes
 - **WHEN** se mide la punta más baja de cualquier marcapáginas, incluida la de la activa
-- **THEN** queda al menos 16 px por encima del borde inferior de la franja y de lo que sigue (título «Estantería», gato y gabinete)
+- **THEN** queda unos 8 px (0.5 rem) por encima del borde inferior de la franja y no toca lo que sigue (título «Estantería», gato y gabinete)
 
 ### Requirement: Hover y foco del marcapáginas
 Al pasar el cursor o enfocar un marcapáginas, MUST mostrar un borde dorado visible y, con movimiento permitido, bajar unos 4 px. El foco de teclado MUST mostrar además un contorno dorado separado, compatible con el recorte en V.

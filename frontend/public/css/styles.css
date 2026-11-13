@@ -89,10 +89,10 @@
 
   /* Pantalla de inicio: todo se mide contra el alto de la ventana (dvh) */
   --luna: clamp(4rem, 12dvh, 7.5rem);        /* ~120 px a 1000 px de alto */
-  --gato-alto: clamp(110px, 22dvh, 200px);   /* alto total del gato */
+  --gato-alto: clamp(120px, 26dvh, 240px);   /* alto total del gato (rev. 14: antes clamp(110px, 22dvh, 200px); se perdía contra el cielo) */
   --alto-cabecera: calc(var(--luna) + 1.2rem); /* alto fijo de la cabecera */
-  --alto-nav: 4.5rem;                        /* franja de nav: varilla + marcapáginas (activa más larga) + 1 rem de aire */
-  --alto-max: 46dvh;                         /* lomo más alto; el resto, una fracción */
+  --alto-nav: 3.75rem;                       /* franja de nav: varilla + marcapáginas (la activa cuelga 3.25 rem) + 0.5 rem de aire (rev. 14: sin banda vacía bajo los marcapáginas) */
+  --alto-max: 42dvh;                         /* lomo más alto; el resto, una fracción (rev. 14: 46 → 42dvh para que una fila con su tabla y el gato más grande entren en una pantalla) */
 
   /* Libro de lomo: profundidad (tapa) y grosor salen de su alto, por libro (ver `.libro`) */
 
@@ -220,8 +220,17 @@ header {
 
 @media (max-width: 48rem) {
   :root {
-    /* alto para título + lema en 2 o 3 líneas aunque la luna sea chica */
+    /* rev. 14: en móvil la luna es más chica (≈ 3 a 4 rem) para que el título y el
+       lema queden centrados en el eje de la página sin rozarla */
+    --luna: clamp(3rem, 11vw, 4rem);
+    /* alto para título + lema en 2 o 3 líneas */
     --alto-cabecera: max(calc(var(--luna) + 1.2rem), 7rem);
+  }
+
+  /* rev. 14: la cabecera reserva el ancho de la luna a AMBOS lados, así el bloque de
+     texto queda centrado en la pantalla y no se corre hacia la izquierda */
+  header {
+    padding-inline: calc(var(--luna) + 1rem);
   }
 }
 
@@ -232,7 +241,7 @@ header {
   }
 
   header {
-    padding-inline-end: var(--esp-4);
+    padding-inline: var(--esp-4); /* sin luna: el texto usa todo el ancho, centrado */
   }
 
   .luna {
@@ -729,6 +738,29 @@ output:focus-visible {
     grid-column: 1 / -1;
   }
 
+  /* rev. 14: buscador (form con role="search") en una sola fila de todo el ancho:
+     etiqueta arriba, campo ancho y botón a su lado. Antes ocupaba solo la columna
+     izquierda y dejaba la derecha vacía. Se selecciona por estructura, sin id. */
+  .form[role="search"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .form[role="search"] > .form__grupo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    column-gap: var(--esp-3);
+  }
+
+  .form[role="search"] > .form__grupo > label {
+    grid-column: 1 / -1;
+  }
+
+  .form[role="search"] > .form__grupo > .btn {
+    width: auto;
+    padding-inline: var(--esp-6);
+  }
+
   /* Renglón de venta en varias columnas: label+select, label+cantidad,
      los dos <output> y el botón de quitar alineado a la derecha. */
   .form .form__grupo:has(output) {
@@ -760,8 +792,10 @@ output:focus-visible {
    borde detrás de cabecera, nav y estantería. Alto = 100dvh − cabecera − nav. */
 .portada > .estante {
   box-sizing: border-box;
-  height: calc(100vh - var(--alto-cabecera) - var(--alto-nav)); /* alternativa */
-  height: calc(100dvh - var(--alto-cabecera) - var(--alto-nav));
+  /* rev. 14: mínimo (no fijo): con una fila de libros la portada sigue entrando en
+     una pantalla; con dos o más filas crece y se baja con el scroll de la página */
+  min-height: calc(100vh - var(--alto-cabecera) - var(--alto-nav)); /* alternativa */
+  min-height: calc(100dvh - var(--alto-cabecera) - var(--alto-nav));
   justify-content: center;
   align-items: center;
   gap: var(--esp-2);
@@ -787,13 +821,24 @@ main > .card {
    ========================================================================== */
 .estante {
   --gato-ancho: calc(var(--gato-alto) * 0.379); /* 364x960 */
+  /* rev. 14: cada fila de la repisa mide lo mismo: lugar para el libro más alto
+     (lomo + canto de páginas), aire para que el libro salga al hover y la tabla
+     de madera sobre la que se apoyan los libros */
+  --tabla-grosor: 0.7rem;
+  /* rev. 14: tapa superior del mueble (cara de arriba + canto) y cuánto vuela
+     sobre los costados; el gato se sienta sobre ella */
+  --corona-alto: 1.25rem;
+  --corona-vuelo: 0.5rem;
+  --fila-alto: calc(max(9rem, var(--alto-max)) * 1.12 + var(--tabla-grosor));
 }
 
 /* Escena: título, gato y gabinete. Se ajusta al ancho del gabinete. */
 .estante__escena {
   position: relative;
   inline-size: fit-content;
-  max-inline-size: 100%;
+  /* rev. 14: nunca más ancha que las secciones de abajo (Clientes, Catálogo…:
+     68.75rem de main menos su padding); si los libros no entran, pasan a otra fila */
+  max-inline-size: min(100%, calc(68.75rem - 2 * var(--esp-5)));
   min-inline-size: 0;
 }
 
@@ -803,7 +848,10 @@ main > .card {
      lados que el que ocupa el gato mantiene el texto centrado sin pisarlo. */
   padding: 0 calc(var(--gato-ancho) * 0.8 + var(--esp-3));
   border-bottom: 0; /* sin línea: el gato no la cruza */
-  line-height: 1.5rem;
+  /* rev. 14: mismo tamaño que los títulos de las secciones (Catálogo, Libros…):
+     antes heredaba el de las tarjetas (20 px) y era el título más chico de la página */
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  line-height: 1.2;
   text-align: center;
 }
 
@@ -815,19 +863,50 @@ main > .card {
   position: absolute;
   top: calc(var(--gato-alto) * -0.01); /* la base de las patas (70.8 % del alto) queda a ras del borde del marco */
   left: calc(var(--gato-ancho) * -0.2);
-  z-index: 0; /* detrás del gabinete (z-index 1), delante del cielo */
+  /* rev. 14: DELANTE del mueble (antes z-index 0, detrás): se sienta sobre la
+     tapa superior y la cola le cuelga por el frente, como un gato de verdad */
+  z-index: 2;
   inline-size: var(--gato-ancho);
   block-size: var(--gato-alto);
   pointer-events: none;
   user-select: none;
-  filter: brightness(1.3) drop-shadow(0 0.3rem 0.3rem rgba(0, 0, 0, 0.55)) drop-shadow(0.3rem -0.2rem 0.5rem rgba(243, 231, 192, 0.2));
+  /* rev. 14: «luz de luna» en el borde: un contorno dorado fino del lado de la luna
+     (arriba a la derecha) despega la silueta negra del cielo azul noche */
+  filter: brightness(1.3) drop-shadow(1px -1px 0 rgba(246, 220, 143, 0.55)) drop-shadow(0 0.3rem 0.3rem rgba(0, 0, 0, 0.55)) drop-shadow(0.3rem -0.2rem 0.5rem rgba(243, 231, 192, 0.2));
+  transform-origin: 50% 70%; /* gira y respira sobre las patas, que están en el borde del gabinete */
+  display: block; /* rev. 14: contenedor del cuerpo y la cola */
+}
+
+/* rev. 14: la misma imagen se usa dos veces, recortada: el cuerpo (img) y la cola
+   (span con la imagen de fondo), para que la cola se mueva sola. Los recortes se
+   superponen en la raíz de la cola (franja del 65 al 68 % del alto) y así no se ve
+   la unión al girar. Medidas tomadas de la silueta de gato.webp: el cuerpo y las
+   patas terminan cerca del 72 %; la cola nace a la izquierda (x < 30 %) y baja. */
+.gato__cuerpo,
+.gato__cola {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.gato__cuerpo {
+  clip-path: polygon(0 0, 100% 0, 100% 72.5%, 32% 72.5%, 30% 68%, 0 68%);
+}
+
+.gato__cola {
+  background: url("../img/gato.webp") 0 0 / 100% 100% no-repeat;
+  clip-path: polygon(0 65%, 30% 65%, 32% 72.5%, 100% 72.5%, 100% 100%, 0 100%);
+  transform-origin: 14% 68%; /* raíz de la cola */
 }
 
 /* Gabinete compacto de nogal: se ajusta a los libros, sin aire alrededor. */
 .estante__mueble {
   position: relative;
   z-index: 1;
-  margin-top: calc(var(--gato-alto) * 0.7 - 1.5rem); /* las patas del gato en el borde */
+  /* las patas del gato quedan sobre la cara superior de la tapa (rev. 14: se suma
+     el 60 % del alto de la tapa, que sobresale por encima del mueble) */
+  margin-top: calc(var(--gato-alto) * 0.7 - 1.5rem + var(--corona-alto) * 0.6);
   padding: 0.5rem 0.5rem 0;
   border-radius: 0.35rem 0.35rem 0.2rem 0.2rem;
   background:
@@ -840,6 +919,30 @@ main > .card {
     inset 2px 0 0 rgba(255, 214, 140, 0.1),
     inset -2px 0 0 rgba(0, 0, 0, 0.35),
     0 1rem 1.25rem -0.5rem rgba(0, 0, 0, 0.7);
+}
+
+/* rev. 14: TAPA SUPERIOR con volumen, donde se sienta el gato. Una tabla que
+   vuela un poco sobre los costados: arriba su cara superior vista en perspectiva
+   (trapecio: el borde del fondo es más corto), con la veta a lo largo y la luz de
+   la luna que llega desde la derecha; abajo el canto frontal, más oscuro, con un
+   filo dorado. Todo con gradientes y clip-path, sin imágenes. */
+.estante__mueble::before {
+  content: "";
+  position: absolute;
+  right: calc(var(--corona-vuelo) * -1);
+  bottom: 100%;
+  left: calc(var(--corona-vuelo) * -1);
+  block-size: var(--corona-alto);
+  clip-path: polygon(2.5% 0, 97.5% 0, 100% 58%, 100% 100%, 0 100%, 0 58%);
+  background:
+    /* filo dorado entre la cara superior y el canto */
+    linear-gradient(to bottom, transparent 58%, rgba(232, 196, 106, 0.6) 58% calc(58% + 1px), transparent calc(58% + 1px)),
+    /* luz de luna sobre la cara superior (más clara a la derecha) */
+    linear-gradient(to right, transparent 30%, rgba(255, 230, 170, 0.16)) 0 0 / 100% 58% no-repeat,
+    /* veta de la cara superior, a lo largo de la tabla */
+    repeating-linear-gradient(179deg, rgba(0, 0, 0, 0.16) 0 1px, transparent 1px 4px) 0 0 / 100% 58% no-repeat,
+    /* cara superior (clara: le da la luz) y canto frontal (en sombra) */
+    linear-gradient(to bottom, #6e4a27 0, #5c3c1f 58%, var(--nogal) 58%, var(--nogal-oscuro) 100%);
 }
 
 /* Base con zócalo y reflejo dorado en el canto de la repisa. */
@@ -855,24 +958,42 @@ main > .card {
   box-shadow: inset 0 2px 0 rgba(232, 196, 106, 0.55), 0 0.3rem 0 -0.1rem var(--nogal-oscuro);
 }
 
-/* Fondo del estante (único contenedor con scroll): sombra cálida y luz dorada
-   tenue desde arriba. Sin scrollbar visible: se desplaza con toque, rueda o Tab. */
+/* Fondo del estante: sombra cálida y luz dorada tenue desde arriba.
+   rev. 14: ya no se desplaza de costado. Los libros que no entran en el ancho
+   pasan a otra fila (flex-wrap), y cada fila tiene su propia tabla de madera:
+   un fondo que se repite cada `--fila-alto` (todas las filas miden lo mismo). */
 .estante__repisa {
   display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   align-items: flex-end;
   gap: 0;
   min-width: 0;
   min-height: clamp(9rem, 30dvh, 14rem);
   margin: 0;
-  padding: calc(var(--alto-max) * 0.13) calc(var(--alto-max) * 0.22) 0; /* arriba: libro elevado y tope; costados: la tapa rotada del primero y del último */
+  padding: 0 calc(var(--alto-max) * 0.22); /* costados: la tapa rotada del primero y del último de cada fila; arriba, el aire lo da cada fila */
   list-style: none;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  scroll-snap-type: x proximity;
-  scroll-padding-inline: calc(var(--alto-max) * 0.22); /* el ajuste respeta el espacio de la tapa rotada */
+  overflow: visible;
   background:
+    /* tabla de cada fila: canto de nogal con filo dorado y, encima, su cara
+       superior vista en perspectiva (más clara y que se pierde hacia el fondo):
+       sobre ella se apoyan los libros (rev. 14) */
+    linear-gradient(to top,
+      var(--nogal-oscuro) 0,
+      var(--nogal) calc(var(--tabla-grosor) - 3px),
+      rgba(232, 196, 106, 0.55) calc(var(--tabla-grosor) - 3px),
+      rgba(232, 196, 106, 0.55) calc(var(--tabla-grosor) - 1px),
+      rgba(110, 74, 39, 0.95) calc(var(--tabla-grosor) - 1px),
+      rgba(70, 45, 22, 0.6) calc(var(--tabla-grosor) + 0.55rem),
+      transparent calc(var(--tabla-grosor) + 0.55rem)) 0 0 / 100% var(--fila-alto) repeat-y,
+    /* sombra que la tabla de arriba proyecta sobre la fila de abajo */
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.45), transparent 1.2rem) 0 0 / 100% var(--fila-alto) repeat-y,
+    /* paredes laterales del interior, en sombra: el hueco se lee profundo (rev. 14) */
+    linear-gradient(to right, rgba(0, 0, 0, 0.55), transparent 1.6rem),
+    linear-gradient(to left, rgba(0, 0, 0, 0.4), transparent 1.3rem),
     radial-gradient(ellipse 70% 60% at 50% 0, rgba(232, 196, 106, 0.22), transparent 70%),
+    /* fondo armado con tablas verticales de madera (rev. 14) */
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.28) 0 1px, rgba(255, 214, 140, 0.04) 1px 2px, transparent 2px 3.75rem),
     linear-gradient(to bottom, #231409, var(--estante-fondo));
   box-shadow:
     inset 0 0 2rem rgba(30, 14, 4, 0.9),
@@ -880,19 +1001,21 @@ main > .card {
     inset 0 -0.5rem 0.5rem -0.3rem rgba(0, 0, 0, 0.55);
 }
 
-.estante__repisa::-webkit-scrollbar {
-  display: none;
-}
-
 .estante__repisa > li {
   position: relative;
   display: flex;
   flex: 0 0 auto;
   align-items: flex-end;
+  /* rev. 14: alto fijo de fila; el libro se apoya sobre la tabla de su fila */
+  box-sizing: border-box;
+  block-size: var(--fila-alto);
   padding-inline: 0.1rem;
+  padding-block-end: var(--tabla-grosor);
   perspective: 45rem;
-  perspective-origin: 50% -40%; /* se mira desde arriba: asoma el borde de páginas */
-  scroll-snap-align: start;
+  /* se mira apenas desde arriba: asoma una franja fina de la cara superior
+     (rev. 14: antes -40 %, que mostraba el canto como un bloque casi tan alto como
+     ancho, como si cada libro se viera desde muy arriba) */
+  perspective-origin: 50% -5%;
 }
 
 .estante__repisa > li:hover,
@@ -909,7 +1032,7 @@ main > .card {
 .estante__etiqueta {
   --etiqueta-izq: calc(var(--gato-ancho) * 0.8 + 1rem);
   position: absolute;
-  top: calc(var(--gato-alto) * 0.7 - 0.4rem); /* el gabinete empieza en 0,7 del alto del gato */
+  top: calc(var(--gato-alto) * 0.7 - 0.4rem - var(--corona-alto) * 0.4); /* por encima de la tapa superior (rev. 14) */
   left: var(--etiqueta-izq);
   z-index: 2;
   inline-size: max-content;
@@ -942,7 +1065,12 @@ main > .card {
   --libro-prof: calc(var(--lomo-alto) * var(--prof-ratio)); /* tapa: 60 a 65 % del alto */
   position: relative;
   display: block;
-  inline-size: var(--lomo-ancho);
+  /* rev. 14: el ancho lo da el título (el lomo va en el flujo, ver .libro__lomo):
+     un título corto hace un lomo angosto y uno de dos columnas, uno ancho. El
+     mínimo evita lomos de juguete con títulos de una palabra. Las clases
+     libro--w* quedan solo como ancho mínimo proporcional al alto. */
+  inline-size: auto;
+  min-inline-size: max(1.75rem, calc(var(--lomo-ancho) * 0.6));
   block-size: var(--lomo-alto);
   margin: 0;
   padding: 0;
@@ -1003,7 +1131,13 @@ main > .card {
 
 /* Lomo de cuero: bandas doradas (2 arriba y 1 abajo) y relieve lateral. */
 .libro > .libro__lomo {
-  inset: 0;
+  /* rev. 14: en el flujo (no absoluto) para que su ancho, el del título más un
+     margen de cuero a cada lado, sea el ancho del libro */
+  position: relative;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  padding-inline: 0.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1022,20 +1156,28 @@ main > .card {
   box-shadow: inset 0.2rem 0 0.25rem rgba(0, 0, 0, 0.4), inset -0.15rem 0 0.2rem rgba(0, 0, 0, 0.35), 0.1rem 0 0.25rem rgba(0, 0, 0, 0.5);
 }
 
-/* Título de abajo hacia arriba (vertical-rl girado 180°): blanco, sin fondo y
-   NUNCA recortado (sin ellipsis, sin nowrap, sin overflow hidden). Se parte en
-   columnas y, si hace falta, el lomo es más ancho. */
+/* Título de abajo hacia arriba (vertical-rl girado 180°), NUNCA recortado (sin
+   ellipsis, sin nowrap, sin overflow hidden). Se parte en columnas y, si hace
+   falta, el lomo es más ancho.
+   rev. 14: como en las encuadernaciones de cuero, el título se ESTAMPA en oro
+   directamente sobre el lomo (sin etiqueta ni fondo), en Georgia (--fuente-titulo)
+   de peso normal, solo, sin filetes ni marco. El relieve es el de un hierro en
+   caliente: sombra oscura arriba y un brillo apenas abajo (el texto está girado
+   180°, por eso los desplazamientos van invertidos). */
 .libro__titulo {
   display: block;
+  box-sizing: border-box;
   max-height: calc(var(--lomo-alto) - 2.4rem); /* físico: en vertical-rl el block-size es el ancho */
   margin-top: 0.3rem;
-  color: #ffffff;
-  font-family: system-ui, "Segoe UI", Arial, sans-serif;
+  padding: 0 0.1rem;
+  color: #ecd389;
+  font-family: var(--fuente-titulo);
   font-size: var(--lomo-letra);
-  font-weight: 700;
-  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
   overflow-wrap: anywhere;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75), 0 0 0.35rem rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7), 0 -1px 0 rgba(255, 236, 170, 0.18), 0 0 0.4rem rgba(0, 0, 0, 0.45);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
 }
@@ -1043,7 +1185,10 @@ main > .card {
 /* Tapa (cara derecha): asoma cuando el libro gira. Misma piel, marco y estrella. */
 .libro__tapa {
   top: 0;
-  left: calc((var(--lomo-ancho) - var(--libro-prof)) / 2);
+  /* rev. 14: pegada al borde derecho del lomo, sea cual sea su ancho, y girada
+     sobre ese borde hacia el fondo (antes se calculaba con el ancho fijo) */
+  left: 100%;
+  transform-origin: 0 50%;
   inline-size: var(--libro-prof);
   block-size: 100%;
   border: 2px solid var(--oro-lomo);
@@ -1059,7 +1204,7 @@ main > .card {
   background-position: center;
   background-repeat: no-repeat;
   background-blend-mode: normal, normal, overlay;
-  transform: translateZ(calc(var(--libro-prof) / -2)) rotateY(90deg) translateZ(calc(var(--lomo-ancho) / 2));
+  transform: rotateY(90deg);
 }
 
 .libro__tapa::before {
@@ -1093,14 +1238,26 @@ main > .card {
   border-radius: inherit;
 }
 
-/* Tope: borde de páginas crema con líneas finas casi verticales, inclinadas hacia la
-   derecha arriba como «/» (asoma por la perspectiva). */
+/* Tope: la cara de arriba del libro (asoma por la perspectiva).
+   rev. 14: se dibuja como un libro real visto desde arriba: a cada costado el
+   canto de la tapa, del color del lomo y más oscuro; en el medio las hojas, finas
+   líneas crema paralelas a las tapas; y una sombra que oscurece las hojas hacia el
+   fondo (están hundidas entre las tapas). Antes era un bloque crema con rayas
+   inclinadas, sin tapas, que no se leía como la parte de arriba de un libro. */
 .libro__tope {
   top: calc((var(--lomo-alto) - var(--libro-prof)) / 2);
   left: 0;
   inline-size: 100%;
   block-size: var(--libro-prof);
-  background: repeating-linear-gradient(95deg, #f3e7c0 0 2px, #cdbb86 2px 3px); /* casi vertical, inclinada como «/» */
+  /* respaldo sin color-mix(): tapas en marrón oscuro neutro */
+  background:
+    linear-gradient(to right, rgba(40, 22, 10, 0.85) 0 10%, transparent 10% 90%, rgba(40, 22, 10, 0.85) 90%),
+    linear-gradient(to bottom, rgba(40, 25, 10, 0.45), transparent 70%),
+    repeating-linear-gradient(90deg, #e9dcb4 0 1px, #cfbd8c 1px 2px);
+  background:
+    linear-gradient(to right, color-mix(in srgb, var(--lomo-color) 80%, black) 0 10%, transparent 10% 90%, color-mix(in srgb, var(--lomo-color) 80%, black) 90%),
+    linear-gradient(to bottom, rgba(40, 25, 10, 0.45), transparent 70%),
+    repeating-linear-gradient(90deg, #e9dcb4 0 1px, #cfbd8c 1px 2px);
   transform: translateZ(calc(var(--libro-prof) / -2)) rotateX(90deg) translateZ(calc(var(--lomo-alto) / 2));
 }
 
@@ -1218,7 +1375,7 @@ main > .card > h2::before {
 
 .form__grupo label {
   color: var(--color-texto);
-  font-size: var(--fs-sm);
+  font-size: 0.9375rem; /* rev. 14: 15 px (antes 14): se leen mejor sobre el cristal oscuro */
   letter-spacing: 0.02em;
 }
 
@@ -1280,7 +1437,7 @@ article .btn:active {
 
 .tabla .btn {
   width: auto;
-  min-height: 40px;
+  min-height: 44px; /* rev. 14: objetivo táctil de 44 px (antes 40) */
 }
 
 /* Tablas: cabecera dorada tenue, separadores finos, hover suave. */
@@ -1755,8 +1912,43 @@ p:has(> #detalle-venta-total) {
     animation: halo-luna 6s ease-in-out infinite alternate;
   }
 
+  /* rev. 14: además del resplandor, una respiración casi imperceptible (propiedad
+     `scale`, que no pisa al `rotate` de la reacción a los libros) */
   .gato {
-    animation: resplandor-gato 6s ease-in-out infinite alternate;
+    animation:
+      resplandor-gato 6s ease-in-out infinite alternate,
+      respira-gato 3.2s ease-in-out infinite alternate;
+    transition: rotate 450ms var(--mov-curva);
+  }
+
+  /* rev. 14: cuando un libro sale (mouse o teclado), el gato se inclina hacia la
+     estantería con curiosidad; vuelve solo al soltarlo */
+  .estante__escena:has(.libro:hover, .libro:focus-visible) .gato {
+    rotate: 5deg;
+  }
+
+  @keyframes respira-gato {
+    from { scale: 1 1; }
+    to { scale: 1.01 1.022; }
+  }
+
+  /* rev. 14: la cola se mueve sola mientras se ve la página: un vaivén lento y,
+     cada tanto, un coletazo corto, como un gato tranquilo pero atento. Gira sobre
+     su raíz (transform-origin de .gato__cola); con «reducir movimiento» queda quieta. */
+  .gato__cola {
+    animation: cola-gato 7.5s ease-in-out infinite;
+  }
+
+  @keyframes cola-gato {
+    0%   { transform: rotate(0deg); }
+    18%  { transform: rotate(6deg); }
+    34%  { transform: rotate(-3deg); }
+    50%  { transform: rotate(4deg); }
+    62%  { transform: rotate(0deg); }
+    74%  { transform: rotate(10deg); }  /* coletazo */
+    79%  { transform: rotate(-4deg); }
+    86%  { transform: rotate(2deg); }
+    100% { transform: rotate(0deg); }
   }
 
   .estante__repisa {
@@ -1843,7 +2035,150 @@ p:has(> #detalle-venta-total) {
   }
 
   @keyframes resplandor-gato {
-    from { filter: brightness(1.3) drop-shadow(0 0.3rem 0.3rem rgba(0, 0, 0, 0.55)) drop-shadow(0.3rem -0.2rem 0.4rem rgba(243, 231, 192, 0.12)); }
-    to { filter: brightness(1.3) drop-shadow(0 0.3rem 0.3rem rgba(0, 0, 0, 0.55)) drop-shadow(0.3rem -0.2rem 0.8rem rgba(243, 231, 192, 0.38)); }
+    from { filter: brightness(1.3) drop-shadow(1px -1px 0 rgba(246, 220, 143, 0.45)) drop-shadow(0 0.3rem 0.3rem rgba(0, 0, 0, 0.55)) drop-shadow(0.3rem -0.2rem 0.4rem rgba(243, 231, 192, 0.12)); }
+    to { filter: brightness(1.3) drop-shadow(1px -1px 0 rgba(246, 220, 143, 0.7)) drop-shadow(0 0.3rem 0.3rem rgba(0, 0, 0, 0.55)) drop-shadow(0.3rem -0.2rem 0.8rem rgba(243, 231, 192, 0.38)); }
   }
+}
+
+/* ==========================================================================
+   17. Interacción (rev. 14, feat/pulido-visual)
+   Estado de carga del catálogo y errores por campo en altas.
+   ========================================================================== */
+.tabla-contenedor.is-cargando {
+  opacity: 0.6;
+}
+
+.mensaje-campo {
+  margin: 0.25rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-error-texto);
+}
+
+.mensaje-campo::before {
+  content: "⚠ ";
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--color-error-borde);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tabla-contenedor {
+    transition: opacity var(--mov-duracion) var(--mov-curva);
+  }
+}
+
+
+/* ==========================================================================
+   18. Tablas como tarjetas en celular (rev. 14, feat/pulido-visual)
+   Por debajo de 48rem las tablas anchas (4 columnas o más) obligaban a
+   desplazar de costado (el catálogo medía 822 px en 306 de pantalla). Cada fila
+   pasa a ser una tarjeta: un renglón por dato, con su etiqueta a la izquierda
+   (el mismo texto del encabezado, generado con ::before) y el botón de la
+   última columna a todo el ancho. Solo CSS: el JS que arma las filas no cambia.
+   Desde 48rem las tablas se ven igual que antes.
+   ========================================================================== */
+@media (max-width: 47.99rem) {
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta),
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) :is(tbody, tr, td) {
+    display: block;
+    width: 100%;
+  }
+
+  /* El encabezado queda para lectores de pantalla (visualmente oculto). */
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* El contenedor ya no necesita scroll ni marco: el marco lo lleva cada tarjeta. */
+  .tabla-contenedor:has(> :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta)) {
+    overflow: visible;
+    border: 0;
+    background: none;
+  }
+
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) tbody {
+    display: grid;
+    gap: var(--esp-3);
+  }
+
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) tr {
+    box-sizing: border-box;
+    padding: var(--esp-3) var(--esp-4);
+    border: 1px solid rgba(232, 196, 106, 0.22);
+    border-radius: 12px;
+    background: rgba(14, 17, 40, 0.45);
+  }
+
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) td {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: var(--esp-3);
+    padding: var(--esp-1) 0;
+    border: 0;
+    text-align: start;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Anula la alineación a la derecha de las columnas numéricas (precio, stock,
+     total…): en la tarjeta, etiqueta y valor van alineados a la izquierda. Se usa
+     :nth-child(n) para igualar la especificidad de esas reglas y ganarles por orden. */
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) :is(th, td):nth-child(n) {
+    text-align: start;
+  }
+
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) td::before {
+    color: var(--color-texto-suave);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
+  /* El primer dato de cada tarjeta (título, número de venta o libro) hace de encabezado. */
+  :is(#tabla-catalogo, #tabla-libros, #tabla-historial, #tabla-venta-confirmada, #tabla-detalle-venta) td:first-child {
+    color: var(--color-primario);
+    font-weight: 700;
+  }
+
+  /* Última columna con botón (Detalle): sin etiqueta y el botón a todo el ancho. */
+  :is(#tabla-catalogo, #tabla-historial) td:last-child {
+    display: block;
+    padding-top: var(--esp-3);
+  }
+
+  :is(#tabla-catalogo, #tabla-historial) td:last-child .btn {
+    width: 100%;
+  }
+
+  /* Etiquetas: el mismo texto que el encabezado de cada columna. */
+  #tabla-catalogo td:nth-child(1)::before { content: "Título"; }
+  #tabla-catalogo td:nth-child(2)::before { content: "ISBN"; }
+  #tabla-catalogo td:nth-child(3)::before { content: "Precio"; }
+  #tabla-catalogo td:nth-child(4)::before { content: "Editorial"; }
+  #tabla-catalogo td:nth-child(5)::before { content: "Género"; }
+
+  #tabla-libros td:nth-child(1)::before { content: "Título"; }
+  #tabla-libros td:nth-child(2)::before { content: "ISBN"; }
+  #tabla-libros td:nth-child(3)::before { content: "Precio"; }
+  #tabla-libros td:nth-child(4)::before { content: "Stock"; }
+  #tabla-libros td:nth-child(5)::before { content: "Editorial"; }
+  #tabla-libros td:nth-child(6)::before { content: "Género"; }
+  #tabla-libros td:nth-child(7)::before { content: "Autores"; }
+
+  #tabla-historial td:nth-child(1)::before { content: "Venta"; }
+  #tabla-historial td:nth-child(2)::before { content: "Fecha"; }
+  #tabla-historial td:nth-child(3)::before { content: "Cliente"; }
+  #tabla-historial td:nth-child(4)::before { content: "Total"; }
+
+  :is(#tabla-venta-confirmada, #tabla-detalle-venta) td:nth-child(1)::before { content: "Libro"; }
+  :is(#tabla-venta-confirmada, #tabla-detalle-venta) td:nth-child(2)::before { content: "Cantidad"; }
+  :is(#tabla-venta-confirmada, #tabla-detalle-venta) td:nth-child(3)::before { content: "Precio unitario"; }
+  :is(#tabla-venta-confirmada, #tabla-detalle-venta) td:nth-child(4)::before { content: "Subtotal"; }
 }
