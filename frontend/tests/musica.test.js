@@ -95,3 +95,48 @@ test("el botón del HTML nace con la etiqueta fija y aria-pressed en false", fun
 test("VOLUMEN_INICIAL es bajo (0.3)", function () {
   assert.equal(musica.VOLUMEN_INICIAL, 0.3);
 });
+
+/* ----- Fundido de volumen (C-06h) ----- */
+
+test("siguienteVolumen sube un paso hacia el objetivo", function () {
+  assert.equal(musica.siguienteVolumen(0, 0.3, 0.05), 0.05);
+  assert.equal(musica.siguienteVolumen(0.1, 0.3, 0.05), 0.15);
+});
+
+test("siguienteVolumen baja un paso hacia el objetivo", function () {
+  assert.equal(musica.siguienteVolumen(0.3, 0, 0.1), 0.2);
+  assert.equal(musica.siguienteVolumen(0.25, 0, 0.05), 0.2);
+});
+
+test("siguienteVolumen no se pasa del objetivo", function () {
+  assert.equal(musica.siguienteVolumen(0.28, 0.3, 0.05), 0.3);
+  assert.equal(musica.siguienteVolumen(0.02, 0, 0.05), 0);
+  assert.equal(musica.siguienteVolumen(0.3, 0.3, 0.05), 0.3);
+});
+
+test("siguienteVolumen redondea a 3 decimales (sin restos de coma flotante)", function () {
+  assert.equal(musica.siguienteVolumen(0.1, 0.3, 0.2 / 3), 0.167);
+});
+
+test("siguienteVolumen con datos inválidos devuelve el objetivo", function () {
+  assert.equal(musica.siguienteVolumen(NaN, 0.3, 0.05), 0.3);
+  assert.equal(musica.siguienteVolumen(0.1, 0.3, 0), 0.3);
+  assert.equal(musica.siguienteVolumen(0.1, 0.3, -1), 0.3);
+});
+
+test("pasoPorCuadro reparte la diferencia en los cuadros de la duración", function () {
+  // 0 → 0.3 en 1500 ms a ~16.7 ms por cuadro: 90 cuadros
+  assert.equal(musica.pasoPorCuadro(0, 0.3, 1500, 1000 / 60), 0.3 / 90);
+  // 0.3 → 0 en 600 ms: 36 cuadros
+  assert.equal(musica.pasoPorCuadro(0.3, 0, 600, 1000 / 60), 0.3 / 36);
+});
+
+test("pasoPorCuadro con duración menor a un cuadro hace todo en un paso", function () {
+  assert.equal(musica.pasoPorCuadro(0, 0.3, 0, 1000 / 60), 0.3);
+  assert.equal(musica.pasoPorCuadro(0.2, 0.2, 600, 1000 / 60), 0);
+});
+
+test("las duraciones del fundido son 1.5 s al subir y 0.6 s al bajar", function () {
+  assert.equal(musica.FUNDIDO_SUBIDA_MS, 1500);
+  assert.equal(musica.FUNDIDO_BAJADA_MS, 600);
+});
