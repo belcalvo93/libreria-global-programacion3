@@ -1002,7 +1002,13 @@ main > .card {
   background-image:
     linear-gradient(to bottom, transparent 0.45rem, var(--oro-lomo) 0.45rem 0.6rem, transparent 0.6rem 0.85rem, var(--oro-lomo) 0.85rem 0.98rem, transparent 0.98rem),
     linear-gradient(to top, transparent 0.5rem, var(--oro-lomo) 0.5rem 0.65rem, transparent 0.65rem),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.1) 18%, transparent 45%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.5));
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.1) 18%, transparent 45%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.5)),
+    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)), /* oscurece el cuero: el título blanco llega a AA incluso en la mostaza */
+    url("../img/lomo-cuero.webp"); /* cuero gastado en grises (120x512), teñido con --lomo-color */
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: normal, normal, normal, normal, overlay;
   box-shadow: inset 0.2rem 0 0.25rem rgba(0, 0, 0, 0.4), inset -0.15rem 0 0.2rem rgba(0, 0, 0, 0.35), 0.1rem 0 0.25rem rgba(0, 0, 0, 0.5);
 }
 
@@ -1019,7 +1025,7 @@ main > .card {
   font-weight: 700;
   line-height: 1.2;
   overflow-wrap: anywhere;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75), 0 0 0.35rem rgba(0, 0, 0, 0.5);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
 }
