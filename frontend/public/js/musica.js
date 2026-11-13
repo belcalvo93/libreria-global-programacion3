@@ -23,8 +23,11 @@
     oculta: { boton: "silenciada", mostrar: "sonando", rechazo: "silenciada" }
   };
 
-  var VISTA_ENCENDIDA = { icono: "🔊", etiqueta: "Silenciar música", presionado: "true" };
-  var VISTA_APAGADA = { icono: "🔇", etiqueta: "Activar música", presionado: "false" };
+  // La etiqueta accesible es fija; el estado lo comunica solo aria-pressed
+  // (true = sonando). El title es un tooltip visual con la acción.
+  var ETIQUETA_BOTON = "Música de fondo";
+  var VISTA_ENCENDIDA = { icono: "🔊", titulo: "Silenciar música", presionado: "true" };
+  var VISTA_APAGADA = { icono: "🔇", titulo: "Activar música", presionado: "false" };
 
   /* ----- Capa pura ----- */
 
@@ -43,7 +46,7 @@
   // «oculta» se ve como encendida: la música solo está en pausa por la pestaña.
   function vistaBoton(estado) {
     var vista = estado === "sonando" || estado === "oculta" ? VISTA_ENCENDIDA : VISTA_APAGADA;
-    return { icono: vista.icono, etiqueta: vista.etiqueta, presionado: vista.presionado };
+    return { icono: vista.icono, titulo: vista.titulo, presionado: vista.presionado };
   }
 
   /* ----- Capa DOM ----- */
@@ -61,8 +64,8 @@
     function pintarBoton() {
       var vista = vistaBoton(estado);
       icono.textContent = vista.icono;
-      boton.setAttribute("aria-label", vista.etiqueta);
-      boton.setAttribute("title", vista.etiqueta);
+      boton.setAttribute("aria-label", ETIQUETA_BOTON);
+      boton.setAttribute("title", vista.titulo);
       boton.setAttribute("aria-pressed", vista.presionado);
     }
 
@@ -142,6 +145,7 @@
       siguienteEstado: siguienteEstado,
       estaSonando: estaSonando,
       vistaBoton: vistaBoton,
+      ETIQUETA_BOTON: ETIQUETA_BOTON,
       VOLUMEN_INICIAL: VOLUMEN_INICIAL
     };
   }

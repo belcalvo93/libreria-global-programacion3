@@ -64,18 +64,32 @@ test("estaSonando solo es verdadero mientras suena", function () {
   assert.equal(musica.estaSonando("espera"), false);
 });
 
-test("vistaBoton sonando: 🔊, «Silenciar música» y presionado", function () {
-  assert.deepEqual(musica.vistaBoton("sonando"), { icono: "🔊", etiqueta: "Silenciar música", presionado: "true" });
+test("vistaBoton sonando: 🔊, tooltip «Silenciar música» y presionado", function () {
+  assert.deepEqual(musica.vistaBoton("sonando"), { icono: "🔊", titulo: "Silenciar música", presionado: "true" });
 });
 
 test("vistaBoton oculta se ve igual que sonando (solo la pausó la pestaña)", function () {
   assert.deepEqual(musica.vistaBoton("oculta"), musica.vistaBoton("sonando"));
 });
 
-test("vistaBoton silenciada y en espera: 🔇, «Activar música» y no presionado", function () {
-  var apagado = { icono: "🔇", etiqueta: "Activar música", presionado: "false" };
+test("vistaBoton silenciada y en espera: 🔇, tooltip «Activar música» y no presionado", function () {
+  var apagado = { icono: "🔇", titulo: "Activar música", presionado: "false" };
   assert.deepEqual(musica.vistaBoton("silenciada"), apagado);
   assert.deepEqual(musica.vistaBoton("espera"), apagado);
+});
+
+test("la etiqueta accesible es fija: el estado lo comunica solo aria-pressed", function () {
+  assert.equal(musica.ETIQUETA_BOTON, "Música de fondo");
+  ["espera", "sonando", "silenciada", "oculta"].forEach(function (estado) {
+    assert.equal(Object.prototype.hasOwnProperty.call(musica.vistaBoton(estado), "etiqueta"), false);
+  });
+});
+
+test("el botón del HTML nace con la etiqueta fija y aria-pressed en false", function () {
+  var fs = require("node:fs");
+  var path = require("node:path");
+  var html = fs.readFileSync(path.join(__dirname, "../public/index.html"), "utf8");
+  assert.match(html, /<button id="boton-musica"[^>]*aria-pressed="false"[^>]*aria-label="Música de fondo"/);
 });
 
 test("VOLUMEN_INICIAL es bajo (0.3)", function () {

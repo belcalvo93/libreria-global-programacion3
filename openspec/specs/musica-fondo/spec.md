@@ -14,10 +14,10 @@ La página SHALL tener un `<audio id="musica-fondo">` con `/audio/ambiente.mp3`,
 
 #### Scenario: Reproducción bloqueada
 - **WHEN** el navegador rechaza `play()`
-- **THEN** el botón queda en «Activar música» y la página sigue funcionando
+- **THEN** el botón queda con `aria-pressed="false"` (🔇) y la página sigue funcionando
 
 ### Requirement: Botón de música accesible
-La página SHALL mostrar un `<button id="boton-musica" type="button">` fijo en la esquina inferior derecha, de 44x44 px, con foco visible, `aria-pressed` y `aria-label` «Silenciar música» (🔊) o «Activar música» (🔇). Pulsarlo MUST alternar entre reproducción y pausa. Si el usuario la silenció, una interacción posterior con la página MUST NOT reactivarla.
+La página SHALL mostrar un `<button id="boton-musica" type="button">` fijo en la esquina inferior derecha, de 44x44 px, con foco visible y `aria-label` fijo «Música de fondo»; el estado lo comunica solo `aria-pressed` (`true` sonando, `false` silenciada). El ícono 🔊/🔇 es decorativo (`aria-hidden`) y el `title` muestra la acción. Pulsarlo MUST alternar entre reproducción y pausa. Si el usuario la silenció, una interacción posterior con la página MUST NOT reactivarla.
 
 #### Scenario: Silenciar
 - **GIVEN** la música sonando
