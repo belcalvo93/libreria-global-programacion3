@@ -218,13 +218,6 @@ Los lomos SHALL mostrar la textura `img/lomo-cuero.webp` teñida con el color de
 - **WHEN** se ven libros de cuero, borravino, azul, verde y mostaza
 - **THEN** cada uno conserva su color y se nota la textura con vetas
 
-### Requirement: Canto de páginas con imagen
-El canto de páginas de cada libro SHALL dibujarse con `img/paginas-forma.webp`, ensamblado al lomo: su esquina izquierda coincide con la esquina superior izquierda del lomo, su borde inferior queda unos píxeles por detrás del lomo sin hueco, sobresale a lo sumo 6 px a la derecha y nada a la izquierda, con un labio de cuero fino sobre el borde del lomo. MUST usar porcentajes o variables (sirve para cualquier ancho de lomo) y no cambiar el tamaño ni el layout del libro.
-
-#### Scenario: Alineación
-- **WHEN** se ve la estantería
-- **THEN** el canto de páginas de cada libro empieza en el borde izquierdo de su lomo, sin hueco entre ambos, y sobresale como máximo 6 px a la derecha
-
 ### Requirement: Tapa de cuero y estrella dorada
 Al salir hacia adelante, la tapa del libro SHALL mostrar cuero (`img/tapa-cuero.webp`) teñido con el color del libro y una estrella dorada (`img/estrella-dorada.webp`) centrada, de ~26 % del ancho de la tapa y con un leve resplandor. La estrella MUST ser decorativa, sin texto accesible.
 
@@ -238,3 +231,14 @@ El encabezado «Estantería» SHALL estar centrado horizontalmente sobre el gabi
 #### Scenario: Centrado
 - **WHEN** se ve la portada a cualquier ancho
 - **THEN** el centro del texto «Estantería» coincide con el centro del gabinete
+
+### Requirement: Canto de páginas crema
+El canto de páginas de cada libro SHALL ser un bloque crema con líneas finas casi verticales, inclinadas como «/», dibujado como la cara superior 3D del libro entre el lomo y la tapa, con el ancho del lomo y la profundidad del libro. MUST NOT usar imágenes.
+
+#### Scenario: Reposo
+- **WHEN** se ve la estantería
+- **THEN** cada libro muestra su canto crema con líneas sobre el lomo, sin hueco ni sobresalidas
+
+#### Scenario: Libro levantado
+- **WHEN** un libro recibe foco con Tab
+- **THEN** el canto crema une el lomo con la tapa de cuero
