@@ -130,21 +130,25 @@ Con movimiento permitido, al pasar el cursor o al enfocar un libro con el teclad
 - **THEN** su tapa no queda cortada por el borde de la repisa
 
 ### Requirement: Etiqueta con el título completo
-Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar una etiqueta horizontal con el título completo, en Georgia negrita, anclada arriba y al centro del gabinete y fuera del scroll de la repisa. MUST verse igual con mouse y con teclado, no cortarse en los bordes, no tapar al gato, no recibir foco ni clics, y ocultarse al quitar el cursor o el foco y para las tecnologías de asistencia. Se inserta como texto.
+Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto, sin fondo, en Georgia negrita dorada con resplandor, a la derecha del gato y a la altura del borde superior del gabinete, creciendo hacia arriba. MUST NOT superponerse a los libros, al gabinete ni a «Estantería», MUST caber en 320 px, no recibir foco ni clics y ocultarse al salir y para las tecnologías de asistencia. Se inserta como texto.
 
 #### Scenario: Teclado
 - **WHEN** el usuario llega con Tab a un libro cuyo título es «Inventario de luces mínimas»
-- **THEN** se ve la etiqueta con «Inventario de luces mínimas» completo, y se oculta al pasar al siguiente libro
+- **THEN** se ve el título completo junto al gato, sobre el gabinete y sin tapar ningún libro, y se oculta al pasar al siguiente libro
 
 #### Scenario: Borde de la repisa
 - **GIVEN** la repisa desplazada hasta el extremo derecho
 - **WHEN** el usuario enfoca el último libro
-- **THEN** la etiqueta se ve completa, centrada en el mueble, sin cortarse
+- **THEN** el título se ve completo junto al gato, sin cortarse
+
+#### Scenario: Teléfono chico
+- **WHEN** se enfoca un libro de título largo a 320x568
+- **THEN** el título se ve completo en varias líneas, sin salirse de la pantalla ni tocar el gabinete ni el título «Estantería»
 
 #### Scenario: Reducir movimiento
 - **GIVEN** el sistema con `prefers-reduced-motion: reduce`
 - **WHEN** el usuario enfoca un libro
-- **THEN** la etiqueta aparece al instante, sin animación
+- **THEN** el título aparece al instante, sin animación
 
 ### Requirement: Portada real opcional
 Si existe una imagen de portada para el ISBN del libro, el estante SHOULD mostrarla en la tapa del libro cuando este sale hacia adelante, y MUST NOT mostrarla ni pedirla con el libro en reposo. `estante.js` MUST mantener una lista explícita de los ISBN con imagen (hoy vacía) y MUST NOT pedir imágenes que no estén en esa lista, para no generar errores 404.
@@ -206,3 +210,35 @@ La estantería SHALL mostrar un gato negro (`img/gato.webp`, 364x960) de alto `c
 #### Scenario: Ancho mínimo
 - **WHEN** la página se ve a 390 px de ancho
 - **THEN** el gato se ve completo y ningún libro ni etiqueta queda debajo de él
+
+### Requirement: Lomos de cuero gastado
+Los lomos SHALL mostrar la textura `img/lomo-cuero.webp` teñida con el color de cada libro, conservando tapa de páginas, líneas doradas y sombra, sin cambiar tamaños ni layout. El título vertical MUST ser texto real con contraste AA.
+
+#### Scenario: Cinco colores
+- **WHEN** se ven libros de cuero, borravino, azul, verde y mostaza
+- **THEN** cada uno conserva su color y se nota la textura con vetas
+
+### Requirement: Tapa de cuero y estrella dorada
+Al salir hacia adelante, la tapa del libro SHALL mostrar cuero (`img/tapa-cuero.webp`) teñido con el color del libro y una estrella dorada (`img/estrella-dorada.webp`) centrada, de ~26 % del ancho de la tapa y con un leve resplandor. La estrella MUST ser decorativa, sin texto accesible.
+
+#### Scenario: Foco en un libro
+- **WHEN** un libro recibe foco con Tab
+- **THEN** su tapa se ve de cuero del color del libro con la estrella dorada centrada
+
+### Requirement: Título Estantería centrado
+El encabezado «Estantería» SHALL estar centrado horizontalmente sobre el gabinete, sin tapar al gato ni la luna, también en 320 px.
+
+#### Scenario: Centrado
+- **WHEN** se ve la portada a cualquier ancho
+- **THEN** el centro del texto «Estantería» coincide con el centro del gabinete
+
+### Requirement: Canto de páginas crema
+El canto de páginas de cada libro SHALL ser un bloque crema con líneas finas casi verticales, inclinadas como «/», dibujado como la cara superior 3D del libro entre el lomo y la tapa, con el ancho del lomo y la profundidad del libro. MUST NOT usar imágenes.
+
+#### Scenario: Reposo
+- **WHEN** se ve la estantería
+- **THEN** cada libro muestra su canto crema con líneas sobre el lomo, sin hueco ni sobresalidas
+
+#### Scenario: Libro levantado
+- **WHEN** un libro recibe foco con Tab
+- **THEN** el canto crema une el lomo con la tapa de cuero

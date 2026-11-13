@@ -241,3 +241,15 @@ test("el título real de 80 caracteres con espacios se conserva tal cual", funct
   assert.equal(real.length, 80);
   assert.equal(estante.tituloLibro({ titulo: "  " + real + "  " }), real);
 });
+
+test("la etiqueta del título vive en la escena, junto al gato, y no dentro del gabinete", function () {
+  var fs = require("node:fs");
+  var path = require("node:path");
+  var html = fs.readFileSync(path.join(__dirname, "../public/index.html"), "utf8");
+  var escena = html.indexOf('class="estante__escena"');
+  var mueble = html.indexOf('class="estante__mueble"');
+  var etiqueta = html.indexOf('id="estante-etiqueta"');
+  assert.ok(escena > -1 && mueble > escena, "escena y mueble presentes");
+  assert.ok(etiqueta > escena && etiqueta < mueble, "la etiqueta va entre el inicio de la escena y el gabinete");
+  assert.match(html, /<p id="estante-etiqueta" class="estante__etiqueta" aria-hidden="true" hidden><\/p>/);
+});

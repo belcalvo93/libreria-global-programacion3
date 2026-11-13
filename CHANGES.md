@@ -1,6 +1,6 @@
 # CHANGES — Secuencia de Implementación
 
-> Índice canónico de todos los changes del proyecto **Librería Página Viva** (Global de Programación III, Grupo 2 «git push and pray»).
+> Índice canónico de todos los changes del proyecto **Gatoteca Lunar** (Global de Programación III, Grupo 2 «git push and pray»).
 > Cada change es atómico: una persona lo implementa en una sesión y lo cierra con su propio PR.
 > **Leer este archivo antes de ejecutar cualquier `/opsx:propose`.**
 
@@ -51,7 +51,7 @@ C-09 cors-backend [x] (E) ── sin dependencias de código ──────�
 
 Notas de dependencia:
 - C-01 está hecha (PR #1): es la base de todo el frente.
-- `js/datos.js` y `js/persistencia.js` **no se borran** hasta C-07; hasta entonces las secciones que aún usan `DATOS` siguen funcionando.
+- `js/datos.js` y `js/persistencia.js` se borraron en C-07 (D-46); ninguna sección usaba ya `DATOS`.
 - C-04 llama a `window.renderCatalogo()` (lo expone C-03); es una dependencia **blanda**: C-04 debe guardar con `typeof window.renderCatalogo === "function"` y no bloquearse si C-03 aún no está mergeado.
 - C-08 y C-10 quedan acoplados: el dominio del front (que asigna Easypanel al crear el servicio; lo define Belén en C-08) alimenta `CORS_ORIGINS`. C-09 y C-10 dependen de ese dato, que sigue (TBD) hasta C-08.
 
@@ -92,7 +92,7 @@ GATE 6: C-11 ✓ + C-12 ✓
 C-01 ✓ → C-02 → C-03 | C-04 | C-05 (las tres en paralelo; manda la más lenta) → C-07 ★
 ```
 
-★ C-07 (limpieza de `datos.js` y `persistencia.js`) es la **última** tarea del camino crítico: depende de que H, R y J estén mergeados. Decisión: se mergea ANTES del deploy final del viernes 13 a la noche; si se atrasa, se redespliega el sábado (en Easypanel es un clic).
+★ C-07 (limpieza de `datos.js` y `persistencia.js`, hecha: D-46) fue la **última** tarea del camino crítico: depende de que H, R y J estén mergeados. Decisión: se mergea ANTES del deploy final del viernes 13 a la noche; si se atrasa, se redespliega el sábado (en Easypanel es un clic).
 
 Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 → C-10 → C-12 / C-11 → C-13`, apoyada en `C-08`. C-06 (estante y estética) no está en el camino crítico: es acotable o recortable si falta tiempo.
 
@@ -211,6 +211,18 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/05_reglas_de_negocio.md` (RN-06 precio histórico)
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
+### [C-06e] `paginas-tapa-estrella`
+- **Estado**: `[x]` hecho y **archivado**; revisión 13 del design system aprobada por Belén el 2026-11-13. Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
+- **Dueño**: B · **Scope**: tapa de cuero teñida (`tapa-cuero.webp`) y estrella dorada (`estrella-dorada.webp`), título «Estantería» centrado y nombre del libro junto al gato a la altura del borde superior del gabinete. Solo CSS e imágenes. Decisiones D-49 y D-50. **Páginas con imagen descartadas** (`paginas-forma.webp` no ensamblaba con el lomo): el canto vuelve al bloque crema original y la imagen se borró (D-51).
+
+### [C-06d] `lomos-cuero-titulo-gato`
+- **Estado**: `[x]` hecho y **archivado**; revisión 12 del design system aprobada por Belén el 2026-11-13 (junto con la 11). Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
+- **Dueño**: B · **Scope**: lomos de cuero gastado (`img/lomo-cuero.webp`), título del libro junto al gato sin fondo y ajuste de 320x568. Decisión D-48.
+
+### [C-06c] `pulido-diseno-ux`
+- **Estado**: `[x]` hecho y **archivado**; `Approval` de la revisión 11 del design system: approved (Belén, 2026-11-13). Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
+- **Dueño**: B · **Scope**: marca «Gatoteca Lunar», lema bajo el título, formulario «Libros» en 3 bloques con orden de autoría automático (`siguienteOrden`) y hover de los libros con inclinación y sombra. Decisión D-47.
+
 ### [C-06b] `tema-secciones`
 - **Estado**: `[x]` hecho y **archivado** (revisión 10 aprobada el 2026-11-12; specs sincronizadas en `openspec/specs/tema-visual/`); PR por abrir. Ajuste posterior: las rayitas del borde de páginas de los libros van inclinadas como «/» (D-45). No reordena ni renumera los demás changes.
 - **Dueño**: B · **Scope**: estrella fugaz recuperada en la cabecera y secciones de abajo en «cristal nocturno». Solo `frontend/public/css/styles.css`; sin `.js` ni cambios en `index.html`. Decisión D-43. Segunda pasada (Ventas e Historial; también `ventas.js`, `ventas.test.js` y clases en `index.html`): D-44.
@@ -232,7 +244,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
     - Portada real opcional (`img/portadas/<isbn>`) solo para los ISBN de una lista en `estante.js` (hoy vacía) y solo al salir el libro.
     - Muestra estados de carga, vacío y error.
   - **Gato y luna**: imágenes `img/gato.webp` (364x960, arriba a la izquierda del gabinete, mirando a la luna) y `img/luna.webp` (380x380, decorativas, `alt=""`, `aria-hidden`). El gato se sienta sobre el mueble y su resplandor respira; el gato (110 a 140 px) se sienta sobre el borde superior derecho del mueble y la luna (90 a 120 px) está entera arriba a la derecha, detrás del contenido y sin pisar la navegación. Origen de las imágenes: TBD.
-  - **Nav**: el mismo `<nav>`, ahora una franja fija con **marcapáginas colgantes** de una varilla dorada (la activa, dorada y más larga), y `aria-current="location"` por clic, hash o scroll. El título «Librería Página Viva» es un enlace que vuelve al inicio (`#inicio`).
+  - **Nav**: el mismo `<nav>`, ahora una franja fija con **marcapáginas colgantes** de una varilla dorada (la activa, dorada y más larga), y `aria-current="location"` por clic, hash o scroll. El título «Gatoteca Lunar» es un enlace que vuelve al inicio (`#inicio`).
   - **Escena continua**: la estantería no tiene tarjeta; el cielo estrellado se ve de borde a borde detrás de toda la portada.
   - **Movimiento**: todo se declara solo con `prefers-reduced-motion: no-preference`. Responsive de 320 a 1280 px. Sin recursos remotos.
   - **Archivos**:
@@ -256,7 +268,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/09_decisiones_y_supuestos.md` D-25 (alcance del estante) y `design-system/README.md`
 
 ### [C-07] `limpieza-datos-persistencia`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho y **archivado** (`openspec/changes/archive/`, specs sincronizadas); PR por abrir con «Closes #11». Se borraron `datos.js` y `persistencia.js` y sus `<script>`; ningún test los cubría
 - **Dueño**: B (Belén) · **Ej.**: cierre del front · **ÚLTIMA tarea del camino crítico** · **se mergea ANTES del deploy final del vie 13 a la noche** (D-23); si se atrasa, se redespliega el sábado (un clic en Easypanel)
 - **Scope**:
   - Borrar `frontend/public/js/datos.js` y `frontend/public/js/persistencia.js`.
@@ -390,7 +402,10 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
 | C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
 | C-06b | `tema-secciones` | B | transversal | `[x]` hecha y archivada (revisión 10 aprobada); PR por abrir | C-06 | BAJO |
-| C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[ ]` | C-03, C-04, C-05 | ALTO |
+| C-06c | `pulido-diseno-ux` | B | transversal | `[x]` hecha y archivada (revisión 11 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06b | BAJO |
+| C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha y archivada (revisión 12 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06c | BAJO |
+| C-06e | `paginas-tapa-estrella` | B | transversal | `[x]` hecha y archivada (revisión 13 aprobada el 2026-11-13; páginas con imagen descartadas, D-51); va en la rama `feat/c-07-limpieza` | C-06d | BAJO |
+| C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[x]` hecha (12/11), archivada | C-09, C-08 | ALTO |

@@ -1,8 +1,8 @@
-# Design system — Librería Página Viva
+# Design system — Gatoteca Lunar
 
 Mode: system-only
-Revision: 10
-Approval: approved (2026-11-12, by Belén Calvo)
+Revision: 13
+Approval: approved (Belén, 2026-11-13)
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
 > - La revisión 1 (tema claro del parcial) la aprobó la usuaria el 2026-11-10.
@@ -16,6 +16,9 @@ Approval: approved (2026-11-12, by Belén Calvo)
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
+> - La revisión 13 (2026-11-13, C-06e) pasa la tapa a cuero (`tapa-cuero.webp`) teñido con el color de cada libro y la estrella de la tapa a `estrella-dorada.webp` con resplandor, centra «Estantería» sobre el gabinete y ubica el nombre del libro junto al gato, a la altura del borde superior del gabinete. El canto de páginas con imagen (`paginas-forma.webp`) se probó y **se descartó** porque no ensamblaba con el lomo: el canto sigue siendo el bloque crema con líneas a 95° (D-51). **Aprobada por Belén el 2026-11-13**; es la revisión vigente.
+> - La revisión 12 (2026-11-13, change `lomos-cuero-titulo-gato`, C-06d) pone **lomos de cuero gastado** (textura `lomo-cuero.webp` teñida con el color de cada libro) y muestra el **título del libro junto al gato**, sin fondo, en lugar de la pastilla sobre el gabinete. **Aprobada por Belén el 2026-11-13**, junto con la 11; es la revisión vigente.
+> - La revisión 11 (2026-11-13, change `pulido-diseno-ux`, C-06c) cambia la marca a **Gatoteca Lunar**, agrega el **lema** bajo el título, ordena el formulario «Libros» en 3 bloques y suma inclinación y sombra a los libros de la estantería al hover o foco. **Aprobada por Belén el 2026-11-13**, junto con la 12.
 > - La revisión 10 (2026-11-12, change `tema-secciones`) recupera la **estrella fugaz** de la cabecera y pasa las secciones de abajo (Catálogo, Libros, Clientes, Ventas, Historial) a «**cristal nocturno**»: tarjetas azul noche translúcidas con borde dorado tenue, títulos con línea y ✦, formularios en grilla, botones primario/secundario, tablas y mensajes coherentes. No toca la portada ni la estantería. Una segunda pasada (Ventas e Historial) agrega botones secundario/compacto/fantasma, fila de libro, cliente por ID y paginación centrada. **Aprobada por Belén Calvo el 2026-11-12; reemplaza a la 9.**
 > - La revisión 9 fue la anterior aprobada (2026-11-12, por Belén Calvo). Las revisiones 3 a 8 fueron iteraciones intermedias que nunca se aprobaron y quedan reemplazadas por la 9; la última aprobada antes era la 2. La 9 **reemplaza a la 8**: el cielo pasa de estrellas hechas con CSS a la imagen `fondo-noche.webp` con un velo azul noche.
 > - La revisión 8 (2026-11-12) **reemplazó a la 7** (que no se aprobó) con tres cambios: la estantería **sin tarjeta** (el cielo estrellado continuo detrás de toda la portada), la navegación con **marcapáginas colgantes** de una varilla dorada y una **navegación fija** con el título como enlace al inicio. **Pendiente de aprobación.**
@@ -57,6 +60,9 @@ Approval: approved (2026-11-12, by Belén Calvo)
 |---|---|---|---|
 | `frontend/public/img/gato.webp` | 364x960, WebP transparente (alto y angosto; ya mira arriba a la derecha) | gato sentado arriba a la izquierda del gabinete, de alto `clamp(110px, 22dvh, 200px)`, mirando a la luna | TBD (autoría y licencia no registradas) |
 | `frontend/public/img/fondo-noche.webp` | 1920x1072, WebP (88 KB), cielo nocturno azul con estrellas y nebulosa | fondo de TODA la página, en `body::before` fijo (`cover`, centrado) con un velo azul noche encima (0.55 arriba, 0.7 abajo) | TBD (autoría y licencia no registradas) |
+| `frontend/public/img/tapa-cuero.webp` | 120x680, WebP en escala de grises. **Origen: recorte de un libro de imagen propia generada con Gemini por Belén Calvo.** | textura de la tapa (`.libro__tapa`), teñida con `--lomo-color` (overlay + capa negra al 32 %) |
+| `frontend/public/img/estrella-dorada.webp` | 117x175, WebP transparente. **Origen: recorte de un libro de imagen propia generada con Gemini por Belén Calvo.** | estrella decorativa de la tapa (`.libro__tapa::after`, ~26 % del ancho, con `drop-shadow` dorado) |
+| `frontend/public/img/lomo-cuero.webp` | 120x512, WebP en escala de grises (luminosidad media ~62 %), cuero con vetas y desgaste. **Origen: recorte de una imagen propia generada con Gemini por Belén Calvo.** | textura de los lomos (`.libro__lomo`), teñida con `--lomo-color` por `background-blend-mode: overlay` y oscurecida con una capa negra al 32 % para el contraste AA del título |
 | `frontend/public/img/luna.webp` | 380x380, WebP transparente (halo propio, sin estrellas alrededor) | luna de ~120 px (`clamp(4rem, 12dvh, 7.5rem)`), completa, arriba a la derecha de la cabecera y detrás del contenido; se oculta por debajo de 24rem | TBD (autoría y licencia no registradas) |
 
 - Ambas van con `<img>` de `width`/`height` fijos, `alt=""`, `aria-hidden="true"` y `decoding="async"`. El tamaño mostrado lo define el CSS.
@@ -191,7 +197,7 @@ Agregados de las revisiones 2 a 6 (C-06):
 
 ## Decisiones abiertas (TBD)
 
-- Nombre de marca final: (TBD). El parcial usa «Librería Página Viva» y C-06 lo mantiene.
+- Nombre de marca final: **Gatoteca Lunar** (decidido en C-06c, D-47; ya no es TBD). Reemplaza al nombre provisional del parcial.
 - Logo: (TBD). No hay logo de marca. `gato.webp` y `luna.webp` son decorativas y su origen (autoría y licencia) es TBD: no se inventa autoría.
 - Modo claro alternativo: no se hace. La revisión 2 es solo oscura.
 - ~~Movimiento/animaciones y `prefers-reduced-motion`~~: resuelto en la revisión 2 (regla 9).

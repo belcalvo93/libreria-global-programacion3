@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Librería Página Viva — Cliente HTTP de la API (Global, Ejercicio 1)
+   Gatoteca Lunar — Cliente HTTP de la API (Global, Ejercicio 1)
    Único lugar donde se arma la URL y se llama a fetch.
    - Base pública: "/api". Nginx reenvía /api/... al backend sin el prefijo.
    - Las rutas se escriben como en FastAPI, con su barra final: "/libros/".

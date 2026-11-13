@@ -47,6 +47,6 @@ Cada uno toca solo su archivo JS y su sección del `index.html`:
 | `js/ventas.js` + `<section id="ventas">` y `<section id="historial">` | Joaquín |
 | `backend/` | Elías |
 | `frontend/Dockerfile`, `default.conf.template`, `css/` general | Belén |
-| `js/datos.js`, `js/persistencia.js` | No se borran hasta la tarea final de limpieza de Belén (depende de H, R y J mergeados) |
+| `js/datos.js`, `js/persistencia.js` | Eliminados en C-07 (D-46); ya no existen |
 
 Orden de dependencias: `api.js` primero (lo usan altas y ventas); el estante/estética de Belén va después del catálogo de Hernán; la limpieza final va última.

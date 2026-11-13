@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Librería Página Viva — Alta de libros y clientes (Global, Ejercicio 2)
+   Gatoteca Lunar — Alta de libros y clientes (Global, Ejercicio 2)
    Consume editoriales, géneros, autores, libros y clientes a través de window.Api.
    Inserción solo como texto (textContent, nunca como HTML).
    ========================================================================== */
@@ -34,6 +34,20 @@
   function esEmailValido(valor) {
     var texto = limpiarTexto(valor);
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(texto);
+  }
+
+  // Siguiente número de orden libre (1, 2, 3...): el menor entero positivo que
+  // ninguna autoría de la lista usa todavía. Solo sugiere: la persona puede editarlo.
+  function siguienteOrden(autorias) {
+    var usados = {};
+    (Array.isArray(autorias) ? autorias : []).forEach(function (item) {
+      usados[String(Number(item && item.orden))] = true;
+    });
+    var candidato = 1;
+    while (usados[String(candidato)]) {
+      candidato += 1;
+    }
+    return candidato;
   }
 
   function validarAutoria(nueva, existentes) {
@@ -298,6 +312,9 @@
         btnQuitar.setAttribute("aria-label", "Quitar a " + item.nombre);
         btnQuitar.addEventListener("click", function () {
           autorias.splice(indice, 1);
+          if (autorOrdenInput) {
+            autorOrdenInput.value = String(siguienteOrden(autorias));
+          }
           renderAutorias();
           ocultarElemento(autorErrorMsg);
           ocultarElemento(libroErrorMsg);
@@ -392,7 +409,7 @@
         autorIdInput.value = "";
       }
       if (autorOrdenInput) {
-        autorOrdenInput.value = String(autorias.length + 1);
+        autorOrdenInput.value = String(siguienteOrden(autorias));
       }
       ocultarElemento(autorEncontradoMsg);
       ocultarElemento(autorErrorMsg);
@@ -450,7 +467,7 @@
         autorias = [];
         autorSeleccionado = null;
         if (autorOrdenInput) {
-          autorOrdenInput.value = "1";
+          autorOrdenInput.value = String(siguienteOrden(autorias));
         }
         ocultarElemento(autorEncontradoMsg);
         ocultarElemento(autorErrorMsg);
@@ -655,6 +672,7 @@
       esEnteroNoNegativo: esEnteroNoNegativo,
       esPrecioValido: esPrecioValido,
       esEmailValido: esEmailValido,
+      siguienteOrden: siguienteOrden,
       validarAutoria: validarAutoria,
       validarLibroFormulario: validarLibroFormulario,
       validarClienteFormulario: validarClienteFormulario,

@@ -1,4 +1,4 @@
-# Librería Página Viva (Global de Programación III) — Base de Conocimiento
+# Gatoteca Lunar (Global de Programación III) — Base de Conocimiento
 
 Base de conocimiento generada a partir de la consigna del Global, el contexto del grupo y el código del monorepo. Las fuentes originales están fuera del repo y no se copiaron. Lo desconocido figura como `(TBD)`.
 

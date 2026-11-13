@@ -11,8 +11,6 @@ frontend/
     index.html             secciones: catalogo, libros, clientes, ventas, historial
     css/styles.css         CSS del parcial (política de diseño light)
     js/api.js              cliente HTTP (en el PR de C-02, rama feat/api-cliente; queda en main al mergearlo)
-    js/datos.js            heredado del parcial (se elimina en la tarea final)
-    js/persistencia.js     heredado del parcial (se elimina en la tarea final)
     js/catalogo.js  js/altas.js  js/ventas.js
 backend/                   API del TP: app/ (core/, modules/<recurso>/{models,schemas,repository,service,router}.py),
                            migrations/, scripts/seed.py, test/*.http, Dockerfile, .dockerignore, env.example, requirements.txt, DEPLOY.md (del TP)
@@ -22,7 +20,7 @@ DEPLOY.md                  (raíz; pendiente, lo escribe Belén)
 evidencia/                 (raíz; pendiente, casos G-01 a G-07; el backend tiene su propio backend/evidencia/ del TP)
 knowledge-base/            esta KB
 ```
-Orden de carga de scripts en `index.html` (clásicos, sin módulos): `api.js` primero, luego los demás. En la rama `feat/api-cliente` (PR de C-02) `index.html` ya carga `api.js` primero; `main` lo incorpora al mergear ese PR. Hasta entonces `main` carga solo `datos.js`, `persistencia.js`, `catalogo.js`, `altas.js`, `ventas.js`.
+Orden de carga de scripts en `index.html` (clásicos, sin módulos): `api.js` primero, luego los demás. En la rama `feat/api-cliente` (PR de C-02) `index.html` ya carga `api.js` primero; `main` lo incorpora al mergear ese PR. Hoy `index.html` carga `api.js`, `catalogo.js`, `altas.js`, `ventas.js` y `estante.js` (sin `datos.js` ni `persistencia.js`, eliminados en C-07).
 
 ## Cliente HTTP: `js/api.js` (dueña: Belén)
 Expone `window.Api`:

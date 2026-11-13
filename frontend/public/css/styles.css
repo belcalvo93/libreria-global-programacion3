@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Librería Página Viva — Presentación (Ejercicio 2)
+   Gatoteca Lunar — Presentación (Ejercicio 2)
    Único archivo de estilos externo. Sin librerías, frameworks, CDNs ni
    recursos externos: fuentes del sistema (Georgia para títulos y pestañas). Se estiliza por clase y
    estructura (nunca por id) para que el Ejercicio 3 reutilice estos
@@ -193,10 +193,10 @@ main > *,
 header {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column; /* título y lema (portada__lema) apilados */
   align-items: center;
   justify-content: center;
-  gap: var(--esp-3);
+  gap: var(--esp-1);
   /* la luna cabe entera dentro de la cabecera: no llega al nav */
   box-sizing: border-box;
   height: var(--alto-cabecera);
@@ -218,9 +218,16 @@ header {
   user-select: none;
 }
 
+@media (max-width: 48rem) {
+  :root {
+    /* alto para título + lema en 2 o 3 líneas aunque la luna sea chica */
+    --alto-cabecera: max(calc(var(--luna) + 1.2rem), 7rem);
+  }
+}
+
 @media (max-width: 24rem) {
   :root {
-    --alto-cabecera: 4.25rem; /* sin luna */
+    --alto-cabecera: 5.75rem; /* sin luna: título + lema en 2 líneas */
     --alto-nav: 7.5rem;       /* a 320 px los marcapáginas pueden envolver en dos filas */
   }
 
@@ -270,6 +277,20 @@ header h1 {
   color: #f6dc8f; /* dorado claro, 12.3:1 contra el cielo; sin contorno */
   text-align: center;
   text-shadow: 0 0 0.6rem rgba(232, 196, 106, 0.4);
+}
+
+/* Lema bajo el título: bajada estática, más chica que el h1, en pergamino suave
+   (contraste > 10:1 sobre el cielo oscuro de la cabecera). Cabe en 2 o 3 líneas
+   a 320 px sin pisar la luna (la cabecera reserva su ancho) ni la nav. */
+.portada__lema {
+  max-width: 40rem;
+  color: #e8dcb8;
+  font-family: var(--fuente-titulo);
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
+  font-style: italic;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 0 0.5rem rgba(4, 5, 9, 0.9);
 }
 
 /* Franja de navegación fija (sticky): azul noche al 85 % y borde inferior dorado
@@ -684,8 +705,12 @@ output:focus-visible {
    ========================================================================== */
 @media (min-width: 48rem) {
   header {
-    flex-wrap: nowrap;
     padding: var(--esp-2) var(--esp-5);
+  }
+
+  /* el lema, centrado, no llega a la luna (que vive a la derecha) */
+  .portada__lema {
+    max-width: min(40rem, calc(100% - 2 * (var(--luna) + 1.5rem)));
   }
 
   main {
@@ -774,9 +799,12 @@ main > .card {
 
 .estante h2 {
   margin: 0;
-  padding: 0 0 0 calc(var(--gato-ancho) * 0.8 + var(--esp-3)); /* deja libre al gato */
+  /* Centrado sobre el gabinete (mismo ancho que la escena). El mismo margen a ambos
+     lados que el que ocupa el gato mantiene el texto centrado sin pisarlo. */
+  padding: 0 calc(var(--gato-ancho) * 0.8 + var(--esp-3));
   border-bottom: 0; /* sin línea: el gato no la cruza */
   line-height: 1.5rem;
+  text-align: center;
 }
 
 /* Gato nuevo (364x960), sentado arriba a la izquierda sobre el borde superior
@@ -872,27 +900,34 @@ main > .card {
   z-index: 2; /* el libro que sale queda por encima de sus vecinos */
 }
 
-/* Etiqueta única con el título completo: arriba y al centro del gabinete,
-   fuera del scroll, sobre las puntas de los libros. */
+/* Título del libro (hover o foco): texto suelto, sin fondo, borde ni pastilla. Va a
+   la derecha del gato (~1 rem de separación), con su borde inferior 0,4 rem por
+   encima del borde superior del gabinete (donde el gato está sentado), así que
+   queda cerca de la estantería sin tocarla. Crece hacia ARRIBA (translateY(-100%)),
+   nunca hacia los libros, y su ancho llega como máximo hasta el borde derecho de
+   la pantalla. Vive en la escena (no dentro del gabinete). */
 .estante__etiqueta {
+  --etiqueta-izq: calc(var(--gato-ancho) * 0.8 + 1rem);
   position: absolute;
-  top: 0.9rem;
-  inset-inline: 0;
-  z-index: 10;
+  top: calc(var(--gato-alto) * 0.7 - 0.4rem); /* el gabinete empieza en 0,7 del alto del gato */
+  left: var(--etiqueta-izq);
+  z-index: 2;
   inline-size: max-content;
-  max-inline-size: calc(100% - 1.5rem);
-  margin-inline: auto;
-  padding: 0.3rem 0.9rem;
-  border: 1px solid var(--magia-dorado-oscuro);
-  border-radius: var(--radio);
-  background: rgba(14, 17, 40, 0.94);
+  max-inline-size: min(32rem, calc(50vw + 50% - var(--etiqueta-izq) - 1rem));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
   color: #f6dc8f;
-  font-family: var(--fuente-titulo);
-  font-size: 1.05rem;
+  font-family: var(--fuente-encabezados);
+  font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.3;
-  text-align: center;
-  overflow-wrap: anywhere;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-align: left;
+  text-shadow: 0 0 0.6rem rgba(232, 196, 106, 0.55), 0 1px 3px rgba(4, 5, 9, 0.9);
+  overflow-wrap: break-word;
+  transform: translateY(-100%);
   pointer-events: none;
 }
 
@@ -977,7 +1012,13 @@ main > .card {
   background-image:
     linear-gradient(to bottom, transparent 0.45rem, var(--oro-lomo) 0.45rem 0.6rem, transparent 0.6rem 0.85rem, var(--oro-lomo) 0.85rem 0.98rem, transparent 0.98rem),
     linear-gradient(to top, transparent 0.5rem, var(--oro-lomo) 0.5rem 0.65rem, transparent 0.65rem),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.1) 18%, transparent 45%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.5));
+    linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.1) 18%, transparent 45%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.5)),
+    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)), /* oscurece el cuero: el título blanco llega a AA incluso en la mostaza */
+    url("../img/lomo-cuero.webp"); /* cuero gastado en grises (120x512), teñido con --lomo-color */
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: normal, normal, normal, normal, overlay;
   box-shadow: inset 0.2rem 0 0.25rem rgba(0, 0, 0, 0.4), inset -0.15rem 0 0.2rem rgba(0, 0, 0, 0.35), 0.1rem 0 0.25rem rgba(0, 0, 0, 0.5);
 }
 
@@ -994,7 +1035,7 @@ main > .card {
   font-weight: 700;
   line-height: 1.2;
   overflow-wrap: anywhere;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75), 0 0 0.35rem rgba(0, 0, 0, 0.5);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
 }
@@ -1007,9 +1048,17 @@ main > .card {
   block-size: 100%;
   border: 2px solid var(--oro-lomo);
   border-radius: 2px 5px 5px 2px;
-  background:
+  /* Cuero gris teñido con el color del libro (igual que el lomo): brillo dorado,
+     capa oscura al 32 % para el contraste y `tapa-cuero.webp` con overlay. */
+  background-color: var(--lomo-color);
+  background-image:
     radial-gradient(circle at 50% 38%, rgba(232, 196, 106, 0.25), transparent 55%),
-    var(--lomo-color);
+    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
+    url("../img/tapa-cuero.webp");
+  background-size: 100% 100%, 100% 100%, cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: normal, normal, overlay;
   transform: translateZ(calc(var(--libro-prof) / -2)) rotateY(90deg) translateZ(calc(var(--lomo-ancho) / 2));
 }
 
@@ -1021,16 +1070,18 @@ main > .card {
   border-radius: 2px;
 }
 
+/* Estrella dorada (imagen decorativa, sin texto): centrada, ~26 % del ancho de la
+   tapa y con un leve resplandor dorado. */
 .libro__tapa::after {
-  content: "\2726"; /* estrella ornamental */
+  content: "";
   position: absolute;
-  top: 28%;
-  inset-inline: 0;
-  color: var(--oro-lomo);
-  font-size: 1.75rem;
-  line-height: 1;
-  text-align: center;
-  text-shadow: 0 0 0.5rem var(--magia-brillo);
+  top: 24%;
+  left: 50%;
+  inline-size: 26%;
+  aspect-ratio: 117 / 175; /* proporción de estrella-dorada.webp */
+  background: url("../img/estrella-dorada.webp") center / contain no-repeat;
+  filter: brightness(1.2) drop-shadow(0 0 0.5rem rgba(232, 196, 106, 0.85));
+  transform: translateX(-50%);
 }
 
 .libro__portada {
@@ -1081,6 +1132,22 @@ main > .card {
 @media (max-width: 48rem) {
   :root {
     --alto-max: 40dvh;
+  }
+}
+
+/* 320 px de ancho: lomos algo más bajos para que la escena entre en 320x568. */
+@media (max-width: 24rem) {
+  :root {
+    --alto-max: 36dvh;
+  }
+}
+
+/* 320 px: el hueco entre «Estantería» y el gabinete es de ~50 px; con letra de
+   0,8 rem un título de 85 caracteres (3 líneas) entra sin tocar el encabezado. */
+@media (max-width: 24rem) {
+  .estante__etiqueta {
+    font-size: 0.8rem;
+    line-height: 1.2;
   }
 }
 
@@ -1621,6 +1688,59 @@ p:has(> #detalle-venta-total) {
 
 
 /* ==========================================================================
+   15d. Formulario «Libros» en 3 bloques (change pulido-diseno-ux)
+   <fieldset class="form__bloque"> con <legend>: 1. Datos, 2. Autores, 3. Guardar.
+   ========================================================================== */
+.form__bloque {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--esp-4);
+  min-width: 0;
+  margin: 0;
+  padding: var(--esp-4) var(--esp-4) var(--esp-5);
+  border: 1px solid rgba(232, 196, 106, 0.22);
+  border-radius: 12px;
+  background: rgba(14, 17, 40, 0.35);
+}
+
+.form__bloque > legend {
+  padding: 0 var(--esp-2);
+  color: var(--color-primario);
+  font-family: var(--fuente-encabezados);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Autores: recuadro propio, un poco más marcado; la ayuda, la lista y los
+   mensajes ocupan todo el ancho. */
+.form__bloque--autores {
+  border-color: rgba(232, 196, 106, 0.4);
+  background: rgba(35, 40, 72, 0.4);
+}
+
+.form__bloque > p,
+.form__bloque > .tabla-contenedor {
+  grid-column: 1 / -1;
+}
+
+.form__bloque > .btn.btn--ancho,
+.btn.btn--ancho {
+  grid-column: 1 / -1;
+  width: 100%;
+  justify-self: stretch;
+}
+
+@media (min-width: 48rem) {
+  .form__bloque {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--esp-5);
+  }
+}
+
+
+/* ==========================================================================
    16. Movimiento (design.md D4)
    TODA `animation` y `transition` vive solo aquí, dentro de `no-preference`:
    con «reducir movimiento» nada se anima, los libros no giran ni se mueven y
@@ -1647,16 +1767,33 @@ p:has(> #detalle-venta-total) {
     transition: transform 350ms var(--mov-curva), transform-origin 350ms var(--mov-curva);
   }
 
-  /* El libro sale al frente, sube 14 px y gira mostrando su tapa. */
+  .libro__lomo,
+  .libro__tapa {
+    transition: box-shadow 350ms var(--mov-curva), border-color 350ms var(--mov-curva);
+  }
+
+  /* El libro sale al frente, sube 14 px, gira mostrando su tapa y se inclina
+     apenas (rotateZ), con una sombra más marcada. No cambia su tamaño ni el
+     layout: solo transform y box-shadow. */
   .libro:focus-visible {
-    transform: translateY(-14px) translateZ(1rem) rotateY(-32deg);
+    transform: translateY(-14px) translateZ(1rem) rotateY(-32deg) rotateZ(-1.5deg);
     transform-origin: 50% 50% calc(var(--libro-prof) / -2); /* gira sobre el centro del libro */
+  }
+
+  .libro:focus-visible .libro__lomo,
+  .libro:focus-visible .libro__tapa {
+    box-shadow: 0 1rem 1.4rem rgba(0, 0, 0, 0.6), 0 0 0.9rem var(--magia-brillo), 0 0 0.3rem var(--magia-brillo);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .libro:hover {
-      transform: translateY(-14px) translateZ(1rem) rotateY(-32deg);
+      transform: translateY(-14px) translateZ(1rem) rotateY(-32deg) rotateZ(-1.5deg);
       transform-origin: 50% 50% calc(var(--libro-prof) / -2);
+    }
+
+    .libro:hover .libro__lomo,
+    .libro:hover .libro__tapa {
+      box-shadow: 0 1rem 1.4rem rgba(0, 0, 0, 0.6), 0 0 0.9rem var(--magia-brillo), 0 0 0.3rem var(--magia-brillo);
     }
   }
 

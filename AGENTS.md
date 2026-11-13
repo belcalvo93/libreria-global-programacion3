@@ -1,4 +1,4 @@
-# Librería Página Viva (Global de Programación III) — Instrucciones para Agentes
+# Gatoteca Lunar (Global de Programación III) — Instrucciones para Agentes
 
 > Lo PRIMERO que todo agente lee al entrar al repo. Generado desde `knowledge-base/` y `CHANGES.md`.
 > `CLAUDE.md` solo importa este archivo (`@AGENTS.md`): editar únicamente acá.
@@ -65,7 +65,7 @@ Fuente: `.atl/skill-registry.md`. Cargá la skill del contexto ANTES de escribir
 Plan completo en [CHANGES.md](CHANGES.md) (13 changes, 4 fases). **Leelo y revisá las dependencias y los «Leer antes» del change ANTES de `/opsx:propose`.**
 
 - **Fase 1** — C-01 `imagen-frontend-docker` (B, hecha) · C-02 `cliente-http-api-js` (B, `js/api.js`, en revisión; tras mergear el PR de esta fundación, Belén hace su change retroactivo propose/archive y su PR: lo primero del miércoles 11).
-- **Fase 2** — C-03 `catalogo-api` (H) · C-04 `altas-libros-clientes` (R) · C-05 `ventas-historial` (J) · C-06 `estante-estetica` (B) · C-07 `limpieza-datos-persistencia` (B).
+- **Fase 2** — C-03 `catalogo-api` (H) · C-04 `altas-libros-clientes` (R) · C-05 `ventas-historial` (J) · C-06 `estante-estetica` (B) · C-07 `limpieza-datos-persistencia` (B, hecha).
 - **Fase 3** — C-09 `cors-backend` (E) · C-08 `despliegue-frontend-easypanel` (B) · C-10 `apilibreria-desde-monorepo` (E).
 - **Fase 4** — C-12 `deploy-md` (B) · C-11 `evidencia-casos-g` (todos) · C-13 `zip-entrega` (E).
 - **Camino crítico**: `C-01 → C-02 → C-03 | C-04 | C-05 → C-07`. Abiertos ahora: cierre de C-02 y C-09 (independiente).
@@ -92,7 +92,7 @@ Plan completo en [CHANGES.md](CHANGES.md) (13 changes, 4 fases). **Leelo y revis
 
 **Propiedad y alcance**
 - NUNCA tocar archivos ajenos → cada integrante modifica solo su archivo JS y su sección del `index.html` (ver `knowledge-base/03_actores_y_roles.md`).
-- NUNCA borrar `js/datos.js` ni `js/persistencia.js` → solo en C-07 (Belén), cuando H, R y J estén mergeados. C-07 se mergea ANTES del deploy final del viernes 13 a la noche; si se atrasa, se redespliega el sábado.
+- `js/datos.js` y `js/persistencia.js` ya no existen (C-07, D-46): no los recrees ni uses `DATOS`; los datos salen siempre de la API.
 - NUNCA editar `backend/` ni `frontend/` fuera de tu change → solo el dueño del change correspondiente.
 - NUNCA subir `.env` ni credenciales → solo `env.example` con nombres de variables.
 

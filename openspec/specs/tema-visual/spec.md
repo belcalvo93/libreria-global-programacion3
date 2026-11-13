@@ -13,7 +13,7 @@ La portada (cabecera, navegación y estantería) SHALL verse como una sola escen
 - **THEN** el cielo estrellado se ve sin cortes detrás de la estantería y la estantería no tiene tarjeta
 
 ### Requirement: Título que vuelve al inicio
-El título «Librería Página Viva» SHALL ser un enlace a `#inicio`, con el mismo aspecto de hoy (sin subrayado ni color de enlace) y foco visible. El principio de la portada MUST tener el id `inicio`.
+El título «Gatoteca Lunar» SHALL ser un enlace a `#inicio`, con el mismo aspecto de hoy (sin subrayado ni color de enlace) y foco visible. El principio de la portada MUST tener el id `inicio`.
 
 #### Scenario: Volver al inicio
 - **GIVEN** la página desplazada a una sección de abajo
@@ -54,7 +54,7 @@ El título principal, los encabezados `h2` y `h3` y las etiquetas de navegación
 - **THEN** no hay pedidos de archivos de fuente ni a otros dominios
 
 ### Requirement: Título principal dorado
-El título «Librería Página Viva» SHALL verse en Georgia de peso normal (no negrita), de tamaño `clamp(1.6rem, 3.5vw, 2.25rem)`, en dorado claro con un resplandor tenue (`text-shadow`). MUST NOT llevar contorno ni borde en las letras. Su contraste contra el cielo MUST ser de al menos 4.5:1.
+El título «Gatoteca Lunar» SHALL verse en Georgia de peso normal (no negrita), de tamaño `clamp(1.6rem, 3.5vw, 2.25rem)`, en dorado claro con un resplandor tenue (`text-shadow`). MUST NOT llevar contorno ni borde en las letras. Su contraste contra el cielo MUST ser de al menos 4.5:1.
 
 #### Scenario: Título nítido
 - **WHEN** se ve la página a 390 px y a 1366 px
@@ -137,3 +137,31 @@ Ventas e Historial SHALL usar componentes propios: cliente por ID en una línea,
 #### Scenario: Móvil
 - **WHEN** se ve a 390x844
 - **THEN** no hay scroll horizontal de página y Anterior, Página N y Siguiente caben en una línea
+
+### Requirement: Marca Gatoteca Lunar
+El sitio SHALL llamarse «Gatoteca Lunar» en el `<title>`, el `<h1>` y el pie de página.
+
+#### Scenario: Título de la página
+- **WHEN** se abre la página
+- **THEN** el título de la pestaña, el h1 y el pie dicen «Gatoteca Lunar»
+
+### Requirement: Lema bajo el título
+Bajo el título SHALL haber un párrafo estático (`.portada__lema`) con el texto «En este lugar, entre estantes y estrellas, cada libro guarda una noche por descubrir.», más chico que el título y con contraste AA. MUST NOT superponerse con la luna, el gato, la estantería ni la nav, y la portada MUST seguir midiendo 100dvh.
+
+#### Scenario: Móvil
+- **WHEN** se ve a 320x568
+- **THEN** el lema se lee completo en 2 o 3 líneas y no hay scroll horizontal
+
+### Requirement: Libros de la estantería al hover
+Al pasar el mouse o dar foco, un libro SHALL levantarse con una leve inclinación y una sombra más marcada, con transición suave solo bajo `prefers-reduced-motion: no-preference`, sin cambiar su tamaño.
+
+#### Scenario: Hover
+- **WHEN** el mouse pasa sobre un libro
+- **THEN** el libro sale al frente con inclinación y sombra y sus medidas no cambian
+
+### Requirement: Escena entera en 320x568
+La portada (cabecera con lema, nav y estantería) SHALL entrar completa en 320x568 sin que la escena de la estantería desborde su área.
+
+#### Scenario: Teléfono chico
+- **WHEN** se ve a 320x568
+- **THEN** la escena queda dentro del área de la estantería y la portada mide 100dvh
