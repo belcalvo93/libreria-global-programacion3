@@ -1,0 +1,90 @@
+G-01 · Catálogo de libros desde la API — C-03 / C-11
+Fecha: 2026-11-13 · Responsable: Hernán González
+URL pública probada: https://grupo2-elias-frontend.ugpvou.easypanel.host/
+Commit en main al ejecutar la prueba: 4af13ed
+Sin valores de variables ni credenciales privadas.
+
+== Archivos de evidencia asociados (en evidencia/)
+- G-01_1_paginacion.png        (Página 2 con limit=5&offset=5 y género «Sin clasificar»)
+- G-01_2_busqueda.png          (Búsqueda parcial por título «Ficciones» con coincidencias)
+- G-01_3_sin_coincidencias.png (Búsqueda «zzzzz» sin coincidencias)
+- G-01_4_detalle.png           (Detalle de «Antología de la literatura fantástica» con autorías ordenadas)
+
+== 1. Listado inicial y paginación con limit y offset (G-01_1_paginacion.png)
+Pasos:
+1. Abrir https://grupo2-elias-frontend.ugpvou.easypanel.host/ y ubicarse en la sección «Catálogo».
+2. Verificar la carga inicial de la Página 1 (GET /api/libros/?limit=5&offset=0 -> 200 OK, 5 libros).
+3. Hacer clic en el botón «Siguiente» para avanzar a la Página 2 (offset=5).
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/?limit=5&offset=5
+- Código de estado: 200 OK (Content-Type: application/json, Server: nginx/1.30.6)
+- Respuesta JSON:
+  [{"id":6,"isbn":"978-950-00-0007-3","titulo":"Antología de la literatura fantástica","precio":"30000.00","stock":4,"editorial":{"id":1,"nombre":"Sudamericana","pais":"Argentina"},"genero":null}]
+
+Resultado observado en la UI:
+- La tabla muestra el libro «Antología de la literatura fantástica» (ISBN 978-950-00-0007-3, Precio 30000.00, Editorial Sudamericana).
+- Como genero es null en la respuesta, la columna Género muestra «Sin clasificar».
+- El indicador de paginación muestra «Página 2», el botón «Anterior» queda habilitado y el botón «Siguiente» queda deshabilitado al haber recibido menos de 5 registros (1 < limit).
+
+== 2. Búsqueda por título con coincidencias (G-01_2_busqueda.png)
+Pasos:
+1. En el campo «Buscar por título» escribir «Ficciones».
+2. Hacer clic en «Buscar en el catálogo».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/?limit=5&offset=0&titulo=Ficciones
+- Código de estado: 200 OK
+- Respuesta JSON:
+  [{"id":2,"isbn":"978-950-00-0002-8","titulo":"Ficciones","precio":"18000.00","stock":8,"editorial":{"id":3,"nombre":"Emecé","pais":"Argentina"},"genero":{"id":2,"nombre":"Cuento"}}]
+
+Resultado observado en la UI:
+- El offset se reinicia a 0 («Página 1»).
+- La tabla muestra únicamente la fila de «Ficciones» (ISBN 978-950-00-0002-8, Precio 18000.00, Editorial Emecé, Género Cuento) con su botón «Ver detalle».
+
+== 3. Búsqueda por título sin coincidencias (G-01_3_sin_coincidencias.png)
+Pasos:
+1. En el campo «Buscar por título» escribir «zzzzz».
+2. Hacer clic en «Buscar en el catálogo».
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/?limit=5&offset=0&titulo=zzzzz
+- Código de estado: 200 OK (Content-Length: 2)
+- Respuesta JSON:
+  []
+
+Resultado observado en la UI:
+- La tabla del catálogo se oculta (atributo hidden).
+- Se muestra el mensaje de estado con texto: «No se encontraron libros con ese título.».
+- El indicador vuelve a «Página 1» con los botones «Anterior» y «Siguiente» deshabilitados.
+
+== 4. Detalle de un libro con autorías ordenadas (G-01_4_detalle.png)
+Pasos:
+1. Limpiar el filtro de búsqueda, volver a la Página 2 y hacer clic en «Ver detalle» en la fila de «Antología de la literatura fantástica» (id 6).
+
+Petición observada en F12 -> Network (Fetch/XHR):
+- Método: GET
+- URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/libros/6
+- Código de estado: 200 OK (Content-Length: 506)
+- Respuesta JSON:
+  {"id":6,"isbn":"978-950-00-0007-3","titulo":"Antología de la literatura fantástica","precio":"30000.00","stock":4,"editorial":{"id":1,"nombre":"Sudamericana","pais":"Argentina"},"genero":null,"autores":[{"autor":{"id":5,"nombre":"Jorge Luis Borges","nacionalidad":"Argentina"},"rol":"autor","orden":1},{"autor":{"id":3,"nombre":"Silvina Ocampo","nacionalidad":"Argentina"},"rol":"coautor","orden":2},{"autor":{"id":4,"nombre":"Adolfo Bioy Casares","nacionalidad":"Argentina"},"rol":"coautor","orden":3}]}
+
+Resultado observado en la UI:
+- Se abre el panel «Detalle del libro» y recibe el foco accesible.
+- Se muestran los datos del libro:
+  · Título: Antología de la literatura fantástica
+  · ISBN: 978-950-00-0007-3
+  · Precio: 30000.00 (formateado sin recalcular)
+  · Stock: 4
+  · Editorial: Sudamericana
+  · Género: Sin clasificar
+- La tabla de autorías muestra los 3 autores ordenados por «orden» ascendente:
+  1. Jorge Luis Borges — rol: autor — orden: 1
+  2. Silvina Ocampo — rol: coautor — orden: 2
+  3. Adolfo Bioy Casares — rol: coautor — orden: 3
+- El botón «Cerrar detalle» oculta el panel y devuelve el foco al botón que lo abrió.
+
+Resultado general G-01: OK
