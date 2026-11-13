@@ -130,7 +130,7 @@ Con movimiento permitido, al pasar el cursor o al enfocar un libro con el teclad
 - **THEN** su tapa no queda cortada por el borde de la repisa
 
 ### Requirement: Etiqueta con el título completo
-Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto (sin fondo, borde ni pastilla), en Georgia negrita dorada con resplandor, a la derecha del gato y a la altura del borde superior del gabinete, con unos píxeles de aire sobre él y creciendo hacia arriba. MUST verse igual con mouse y con teclado, no superponerse a los libros, al gabinete ni al título «Estantería», caber en 320 px, no recibir foco ni clics, y ocultarse al quitar el cursor o el foco y para las tecnologías de asistencia. Se inserta como texto.
+Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto, sin fondo, en Georgia negrita dorada con resplandor, a la derecha del gato y a la altura del borde superior del gabinete, creciendo hacia arriba. MUST NOT superponerse a los libros, al gabinete ni a «Estantería», MUST caber en 320 px, no recibir foco ni clics y ocultarse al salir y para las tecnologías de asistencia. Se inserta como texto.
 
 #### Scenario: Teclado
 - **WHEN** el usuario llega con Tab a un libro cuyo título es «Inventario de luces mínimas»
