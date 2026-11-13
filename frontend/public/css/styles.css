@@ -1079,15 +1079,15 @@ main > .card {
   border-radius: inherit;
 }
 
-/* Tope: borde de páginas crema con líneas finas casi verticales, inclinadas hacia la
-   derecha arriba como «/» (asoma por la perspectiva). */
+/* Tope: borde de páginas con la imagen paginas-forma.webp (paralelogramo de hojas
+   con borde ondulado, fondo transparente). Misma posición y tamaño que antes. */
 .libro__tope {
-  top: calc((var(--lomo-alto) - var(--libro-prof)) / 2);
+  bottom: calc(100% - 0.2rem); /* apoya el canto sobre el borde superior del lomo */
   left: 0;
   inline-size: 100%;
-  block-size: var(--libro-prof);
-  background: repeating-linear-gradient(95deg, #f3e7c0 0 2px, #cdbb86 2px 3px); /* casi vertical, inclinada como «/» */
-  transform: translateZ(calc(var(--libro-prof) / -2)) rotateX(90deg) translateZ(calc(var(--lomo-alto) / 2));
+  block-size: auto;
+  aspect-ratio: 496 / 158; /* proporción de paginas-forma.webp: se ajusta al ancho del libro */
+  background: url("../img/paginas-forma.webp") 0 0 / 100% 100% no-repeat;
 }
 
 /* Estado «sin movimiento» (siempre): solo cambian el brillo y el borde. El
