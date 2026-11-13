@@ -261,6 +261,112 @@
     }
   }
 
+  /* ----- Cola del gato (C-06g) ----- */
+
+  // Niveles de la cola, de quieta a agitada. Con el cursor a menos de 1.2 altos
+  // del gato, la punta da golpecitos; a menos de 0.4, toda la cola se agita.
+  var NIVELES_COLA = ["calma", "atenta", "inquieta"];
+  var DISTANCIA_ATENTA = 1.2;
+  var DISTANCIA_INQUIETA = 0.4;
+  var ESPERA_CALMA_MS = 3000;
+  // Punto de referencia de la cola dentro del gato (fracción de su caja): la
+  // mitad de la curva, debajo de las patas a la izquierda.
+  var CENTRO_COLA = { x: 0.3, y: 0.86 };
+  // Animación que agrega cada nivel: al bajar se espera a que termine un ciclo
+  // (vale 0°) para quitarla sin salto.
+  var ANIMACION_DEL_NIVEL = { atenta: "punta-golpe", inquieta: "cola-latigo" };
+
+  function estadoColaPorDistancia(distancia, altoGato) {
+    if (typeof distancia !== "number" || !isFinite(distancia) || !(altoGato > 0)) {
+      return "calma";
+    }
+    if (distancia < altoGato * DISTANCIA_INQUIETA) {
+      return "inquieta";
+    }
+    if (distancia < altoGato * DISTANCIA_ATENTA) {
+      return "atenta";
+    }
+    return "calma";
+  }
+
+  // Subir es inmediato (las animaciones nuevas arrancan en 0°); bajar, de a un nivel.
+  function pasoCola(actual, deseado) {
+    var a = NIVELES_COLA.indexOf(actual);
+    var d = NIVELES_COLA.indexOf(deseado);
+    if (a === -1 || d === -1 || d === a) {
+      return actual;
+    }
+    return d > a ? deseado : NIVELES_COLA[a - 1];
+  }
+
+  function conectarColaGato() {
+    var gato = document.querySelector(".gato");
+    var actual = "calma";
+    var deseado = "calma";
+    var cuadroPendiente = false;
+    var ultimoPuntero = null;
+    var temporizador = null;
+
+    if (!gato || typeof window.matchMedia !== "function" ||
+        !window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+      return;
+    }
+
+    function mostrar(nivel) {
+      actual = nivel;
+      gato.setAttribute("data-cola", nivel);
+    }
+
+    function querer(nivel) {
+      deseado = nivel;
+      if (NIVELES_COLA.indexOf(deseado) > NIVELES_COLA.indexOf(actual)) {
+        mostrar(pasoCola(actual, deseado));
+      }
+    }
+
+    function medir() {
+      var caja;
+      var dx;
+      var dy;
+      cuadroPendiente = false;
+      if (!ultimoPuntero) {
+        return;
+      }
+      caja = gato.getBoundingClientRect();
+      dx = ultimoPuntero.x - (caja.left + caja.width * CENTRO_COLA.x);
+      dy = ultimoPuntero.y - (caja.top + caja.height * CENTRO_COLA.y);
+      querer(estadoColaPorDistancia(Math.sqrt(dx * dx + dy * dy), caja.height));
+      if (temporizador !== null) {
+        window.clearTimeout(temporizador);
+      }
+      // Sin movimiento durante un rato, el gato se tranquiliza aunque el cursor siga cerca.
+      temporizador = window.setTimeout(function () {
+        querer("calma");
+      }, ESPERA_CALMA_MS);
+    }
+
+    document.addEventListener("pointermove", function (evento) {
+      ultimoPuntero = { x: evento.clientX, y: evento.clientY };
+      if (!cuadroPendiente) {
+        cuadroPendiente = true;
+        window.requestAnimationFrame(medir);
+      }
+    }, { passive: true });
+
+    document.documentElement.addEventListener("pointerleave", function () {
+      querer("calma");
+    });
+
+    // Al terminar un ciclo de la animación del nivel actual, baja un nivel si hace falta.
+    gato.addEventListener("animationiteration", function (evento) {
+      if (evento.animationName === ANIMACION_DEL_NIVEL[actual] && deseado !== actual) {
+        mostrar(pasoCola(actual, deseado));
+      }
+    });
+
+    mostrar("calma");
+  }
+
   // Marca aria-current="location" solo en el enlace de la sección activa.
   function marcarSeccionActiva(enlaces, id) {
     enlaces.forEach(function (enlace) {
@@ -314,6 +420,7 @@
     document.addEventListener("DOMContentLoaded", function () {
       cargarEstante();
       conectarNavegacion();
+      conectarColaGato();
     });
   }
 
@@ -334,6 +441,8 @@
       etiquetaLibro: etiquetaLibro,
       decidirVistaEstante: decidirVistaEstante,
       elegirSeccionActiva: elegirSeccionActiva,
+      estadoColaPorDistancia: estadoColaPorDistancia,
+      pasoCola: pasoCola,
       PARAMETROS_ESTANTE: PARAMETROS_ESTANTE
     };
   }

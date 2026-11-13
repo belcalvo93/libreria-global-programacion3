@@ -253,3 +253,50 @@ test("la etiqueta del título vive en la escena, junto al gato, y no dentro del 
   assert.ok(etiqueta > escena && etiqueta < mueble, "la etiqueta va entre el inicio de la escena y el gabinete");
   assert.match(html, /<p id="estante-etiqueta" class="estante__etiqueta" aria-hidden="true" hidden><\/p>/);
 });
+
+/* ----- Cola del gato (C-06g) ----- */
+
+test("estadoColaPorDistancia: lejos de la cola, calma", function () {
+  assert.equal(estante.estadoColaPorDistancia(500, 200), "calma");
+  assert.equal(estante.estadoColaPorDistancia(241, 200), "calma");
+});
+
+test("estadoColaPorDistancia: a menos de 1.2 altos del gato, atenta", function () {
+  assert.equal(estante.estadoColaPorDistancia(239, 200), "atenta");
+  assert.equal(estante.estadoColaPorDistancia(100, 200), "atenta");
+});
+
+test("estadoColaPorDistancia: a menos de 0.4 altos del gato, inquieta", function () {
+  assert.equal(estante.estadoColaPorDistancia(79, 200), "inquieta");
+  assert.equal(estante.estadoColaPorDistancia(0, 120), "inquieta");
+});
+
+test("estadoColaPorDistancia: datos inválidos dan calma", function () {
+  assert.equal(estante.estadoColaPorDistancia(NaN, 200), "calma");
+  assert.equal(estante.estadoColaPorDistancia(10, 0), "calma");
+  assert.equal(estante.estadoColaPorDistancia(undefined, 200), "calma");
+});
+
+test("pasoCola: subir de nivel es inmediato", function () {
+  assert.equal(estante.pasoCola("calma", "atenta"), "atenta");
+  assert.equal(estante.pasoCola("calma", "inquieta"), "inquieta");
+  assert.equal(estante.pasoCola("atenta", "inquieta"), "inquieta");
+});
+
+test("pasoCola: bajar se hace de a un nivel", function () {
+  assert.equal(estante.pasoCola("inquieta", "calma"), "atenta");
+  assert.equal(estante.pasoCola("atenta", "calma"), "calma");
+  assert.equal(estante.pasoCola("inquieta", "atenta"), "atenta");
+});
+
+test("pasoCola: mismo nivel o estado desconocido no cambia", function () {
+  assert.equal(estante.pasoCola("atenta", "atenta"), "atenta");
+  assert.equal(estante.pasoCola("calma", "volar"), "calma");
+});
+
+test("la cola del gato tiene base y punta dentro de su giro", function () {
+  var fs = require("node:fs");
+  var path = require("node:path");
+  var html = fs.readFileSync(path.join(__dirname, "../public/index.html"), "utf8");
+  assert.match(html, /<span class="gato__cola">\s*<span class="gato__cola-giro">\s*<span class="gato__cola-base"><\/span>\s*<span class="gato__cola-punta"><\/span>\s*<\/span>\s*<\/span>/);
+});
