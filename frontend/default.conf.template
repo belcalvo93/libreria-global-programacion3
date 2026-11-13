@@ -14,6 +14,14 @@ server {
         try_files $uri =404;
     }
 
+    # Íconos de la pestaña (C-06h, derivados de la luna): cache de una semana,
+    # así un cambio de ícono se ve sin renombrar archivos.
+    location ~ ^/(favicon\.ico|favicon-32\.png|apple-touch-icon\.png)$ {
+        expires 7d;
+        add_header Cache-Control "public";
+        try_files $uri =404;
+    }
+
     # Música de fondo (C-06g): mismo cache que las imágenes. nginx responde los
     # pedidos Range (206) de archivos estáticos por defecto; el navegador los usa
     # para el loop y para buscar dentro del audio.
