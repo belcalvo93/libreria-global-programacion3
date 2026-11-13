@@ -799,9 +799,12 @@ main > .card {
 
 .estante h2 {
   margin: 0;
-  padding: 0 0 0 calc(var(--gato-ancho) * 0.8 + var(--esp-3)); /* deja libre al gato */
+  /* Centrado sobre el gabinete (mismo ancho que la escena). El mismo margen a ambos
+     lados que el que ocupa el gato mantiene el texto centrado sin pisarlo. */
+  padding: 0 calc(var(--gato-ancho) * 0.8 + var(--esp-3));
   border-bottom: 0; /* sin línea: el gato no la cruza */
   line-height: 1.5rem;
+  text-align: center;
 }
 
 /* Gato nuevo (364x960), sentado arriba a la izquierda sobre el borde superior
