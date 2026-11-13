@@ -193,10 +193,10 @@ main > *,
 header {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column; /* título y lema (portada__lema) apilados */
   align-items: center;
   justify-content: center;
-  gap: var(--esp-3);
+  gap: var(--esp-1);
   /* la luna cabe entera dentro de la cabecera: no llega al nav */
   box-sizing: border-box;
   height: var(--alto-cabecera);
@@ -218,9 +218,16 @@ header {
   user-select: none;
 }
 
+@media (max-width: 48rem) {
+  :root {
+    /* alto para título + lema en 2 o 3 líneas aunque la luna sea chica */
+    --alto-cabecera: max(calc(var(--luna) + 1.2rem), 7rem);
+  }
+}
+
 @media (max-width: 24rem) {
   :root {
-    --alto-cabecera: 4.25rem; /* sin luna */
+    --alto-cabecera: 7rem; /* sin luna */
     --alto-nav: 7.5rem;       /* a 320 px los marcapáginas pueden envolver en dos filas */
   }
 
@@ -270,6 +277,20 @@ header h1 {
   color: #f6dc8f; /* dorado claro, 12.3:1 contra el cielo; sin contorno */
   text-align: center;
   text-shadow: 0 0 0.6rem rgba(232, 196, 106, 0.4);
+}
+
+/* Lema bajo el título: bajada estática, más chica que el h1, en pergamino suave
+   (contraste > 10:1 sobre el cielo oscuro de la cabecera). Cabe en 2 o 3 líneas
+   a 320 px sin pisar la luna (la cabecera reserva su ancho) ni la nav. */
+.portada__lema {
+  max-width: 40rem;
+  color: #e8dcb8;
+  font-family: var(--fuente-titulo);
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
+  font-style: italic;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 0 0.5rem rgba(4, 5, 9, 0.9);
 }
 
 /* Franja de navegación fija (sticky): azul noche al 85 % y borde inferior dorado
@@ -684,8 +705,12 @@ output:focus-visible {
    ========================================================================== */
 @media (min-width: 48rem) {
   header {
-    flex-wrap: nowrap;
     padding: var(--esp-2) var(--esp-5);
+  }
+
+  /* el lema, centrado, no llega a la luna (que vive a la derecha) */
+  .portada__lema {
+    max-width: min(40rem, calc(100% - 2 * (var(--luna) + 1.5rem)));
   }
 
   main {
