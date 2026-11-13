@@ -130,11 +130,11 @@ Con movimiento permitido, al pasar el cursor o al enfocar un libro con el teclad
 - **THEN** su tapa no queda cortada por el borde de la repisa
 
 ### Requirement: Etiqueta con el título completo
-Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto (sin fondo, borde ni pastilla), en Georgia negrita dorada con resplandor, a la derecha del gato y bajo «Estantería». MUST verse igual con mouse y con teclado, no superponerse a los libros ni al gabinete, caber en 320 px, no recibir foco ni clics, y ocultarse al quitar el cursor o el foco y para las tecnologías de asistencia. Se inserta como texto.
+Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostrar el título completo como texto suelto (sin fondo, borde ni pastilla), en Georgia negrita dorada con resplandor, a la derecha del gato y a la altura del borde superior del gabinete, con unos píxeles de aire sobre él y creciendo hacia arriba. MUST verse igual con mouse y con teclado, no superponerse a los libros, al gabinete ni al título «Estantería», caber en 320 px, no recibir foco ni clics, y ocultarse al quitar el cursor o el foco y para las tecnologías de asistencia. Se inserta como texto.
 
 #### Scenario: Teclado
 - **WHEN** el usuario llega con Tab a un libro cuyo título es «Inventario de luces mínimas»
-- **THEN** se ve el título completo junto al gato sin tapar ningún libro, y se oculta al pasar al siguiente libro
+- **THEN** se ve el título completo junto al gato, sobre el gabinete y sin tapar ningún libro, y se oculta al pasar al siguiente libro
 
 #### Scenario: Borde de la repisa
 - **GIVEN** la repisa desplazada hasta el extremo derecho
@@ -143,7 +143,7 @@ Al pasar el cursor o al enfocar un libro con el teclado, el estante SHALL mostra
 
 #### Scenario: Teléfono chico
 - **WHEN** se enfoca un libro de título largo a 320x568
-- **THEN** el título se ve completo en varias líneas, sin salirse de la pantalla ni tocar el gabinete
+- **THEN** el título se ve completo en varias líneas, sin salirse de la pantalla ni tocar el gabinete ni el título «Estantería»
 
 #### Scenario: Reducir movimiento
 - **GIVEN** el sistema con `prefers-reduced-motion: reduce`
@@ -219,11 +219,11 @@ Los lomos SHALL mostrar la textura `img/lomo-cuero.webp` teñida con el color de
 - **THEN** cada uno conserva su color y se nota la textura con vetas
 
 ### Requirement: Canto de páginas con imagen
-El canto de páginas de cada libro SHALL dibujarse con `img/paginas-forma.webp`, apoyado sobre el borde superior del lomo, con el ancho del lomo y la proporción de la imagen, sin cambiar el tamaño ni el layout del libro.
+El canto de páginas de cada libro SHALL dibujarse con `img/paginas-forma.webp`, ensamblado al lomo: su esquina izquierda coincide con la esquina superior izquierda del lomo, su borde inferior queda unos píxeles por detrás del lomo sin hueco, sobresale a lo sumo 6 px a la derecha y nada a la izquierda, con un labio de cuero fino sobre el borde del lomo. MUST usar porcentajes o variables (sirve para cualquier ancho de lomo) y no cambiar el tamaño ni el layout del libro.
 
 #### Scenario: Alineación
 - **WHEN** se ve la estantería
-- **THEN** el canto de páginas de cada libro empieza en el borde izquierdo de su lomo y tiene su mismo ancho
+- **THEN** el canto de páginas de cada libro empieza en el borde izquierdo de su lomo, sin hueco entre ambos, y sobresale como máximo 6 px a la derecha
 
 ### Requirement: Tapa de cuero y estrella dorada
 Al salir hacia adelante, la tapa del libro SHALL mostrar cuero (`img/tapa-cuero.webp`) teñido con el color del libro y una estrella dorada (`img/estrella-dorada.webp`) centrada, de ~26 % del ancho de la tapa y con un leve resplandor. La estrella MUST ser decorativa, sin texto accesible.
@@ -231,3 +231,10 @@ Al salir hacia adelante, la tapa del libro SHALL mostrar cuero (`img/tapa-cuero.
 #### Scenario: Foco en un libro
 - **WHEN** un libro recibe foco con Tab
 - **THEN** su tapa se ve de cuero del color del libro con la estrella dorada centrada
+
+### Requirement: Título Estantería centrado
+El encabezado «Estantería» SHALL estar centrado horizontalmente sobre el gabinete, sin tapar al gato ni la luna, también en 320 px.
+
+#### Scenario: Centrado
+- **WHEN** se ve la portada a cualquier ancho
+- **THEN** el centro del texto «Estantería» coincide con el centro del gabinete

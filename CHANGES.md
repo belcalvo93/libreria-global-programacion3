@@ -213,7 +213,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 
 ### [C-06e] `paginas-tapa-estrella`
 - **Estado**: `[x]` hecho y **archivado**; revisión 13 del design system pendiente de aprobación. Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
-- **Dueño**: B · **Scope**: canto de páginas con `paginas-forma.webp`, tapa de cuero teñida (`tapa-cuero.webp`) y estrella dorada (`estrella-dorada.webp`). Solo CSS e imágenes. Decisión D-49.
+- **Dueño**: B · **Scope**: canto de páginas con `paginas-forma.webp`, tapa de cuero teñida (`tapa-cuero.webp`) y estrella dorada (`estrella-dorada.webp`). Solo CSS e imágenes. Decisión D-49. Ajuste final (misma rama): canto de páginas ensamblado al lomo, título «Estantería» centrado y nombre del libro junto al gato a la altura del borde superior del gabinete (D-50).
 
 ### [C-06d] `lomos-cuero-titulo-gato`
 - **Estado**: `[x]` hecho y **archivado**; revisión 12 del design system aprobada por Belén el 2026-11-13 (junto con la 11). Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
