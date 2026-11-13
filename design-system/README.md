@@ -89,6 +89,12 @@ Approval: pending
 - No se dibujan con CSS ni SVG. Son decorativas.
 - Portadas reales opcionales: `frontend/public/img/portadas/<isbn>.jpg|webp`, solo para los ISBN de la lista `PORTADAS_DISPONIBLES` de `estante.js` (hoy vacía).
 
+## Audio (revisión 15)
+
+| Archivo | Formato | Uso | Origen |
+|---|---|---|---|
+| `frontend/public/audio/ambiente.mp3` | MP3, 168 s, 96 kbps, ~2 MB (recortado desde el segundo 8, con fade-in) | música de fondo opcional (`#musica-fondo`, botón `#boton-musica`) | **Origen y licencia: tema «Midnight in the Gatoteca», generado por Belén con Gemini Hydrogen (plan pago); uso en este trabajo académico sin fines comerciales.** |
+
 ## Tokens (`:root`)
 
 ### Revisión 1 (vigente en el código hasta el apply de C-06)

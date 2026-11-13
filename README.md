@@ -59,7 +59,7 @@ El front llama siempre a `/api/...` (por ejemplo `fetch("/api/libros/")`); nginx
 
 ## Música de fondo
 
-La página tiene una música ambiental **opcional**: el tema «Midnight in the Gatoteca» (`frontend/public/audio/ambiente.mp3`, 168 s, 96 kbps, ~2 MB, recortado desde el segundo 8 y con fade-in), generado y aportado por Belén Calvo. *(Herramienta de generación y licencia: a confirmar por Belén.)*
+La página tiene una música ambiental **opcional**: el tema «Midnight in the Gatoteca» (`frontend/public/audio/ambiente.mp3`, 168 s, 96 kbps, ~2 MB, recortado desde el segundo 8 y con fade-in). Origen y licencia: tema «Midnight in the Gatoteca», generado por Belén con Gemini Hydrogen (plan pago); uso en este trabajo académico sin fines comerciales.
 
 - No suena al abrir la página: arranca a volumen bajo con la **primera interacción** (clic, toque o tecla), porque los navegadores bloquean el audio automático.
 - El botón redondo de abajo a la derecha (🔊 / 🔇) la **silencia o la activa**. Si la silenciaste, seguir usando la página no la vuelve a encender.
