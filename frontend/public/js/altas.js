@@ -180,11 +180,20 @@
     }
     elemento.textContent = texto;
     elemento.hidden = false;
+    elemento.removeAttribute("hidden");
   }
 
   function ocultarElemento(elemento) {
     if (elemento) {
       elemento.hidden = true;
+      elemento.setAttribute("hidden", "");
+    }
+  }
+
+  function mostrarElemento(elemento) {
+    if (elemento) {
+      elemento.hidden = false;
+      elemento.removeAttribute("hidden");
     }
   }
 
@@ -290,6 +299,9 @@
         btnQuitar.addEventListener("click", function () {
           autorias.splice(indice, 1);
           renderAutorias();
+          ocultarElemento(autorErrorMsg);
+          ocultarElemento(libroErrorMsg);
+          ocultarElemento(libroOkMsg);
           if (autorIdInput) {
             autorIdInput.focus();
           }
@@ -298,9 +310,13 @@
         tr.appendChild(tdAccion);
         tbodyAutorias.appendChild(tr);
       });
-      var tiene = autorias.length > 0;
-      tablaAutorias.hidden = !tiene;
-      sinAutoriasMsg.hidden = tiene;
+      if (autorias.length > 0) {
+        mostrarElemento(tablaAutorias);
+        ocultarElemento(sinAutoriasMsg);
+      } else {
+        ocultarElemento(tablaAutorias);
+        mostrarElemento(sinAutoriasMsg);
+      }
     }
 
     async function buscarAutorPorId() {
@@ -310,6 +326,8 @@
       var idTexto = limpiarTexto(autorIdInput.value);
       ocultarElemento(autorEncontradoMsg);
       ocultarElemento(autorErrorMsg);
+      ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
       autorSeleccionado = null;
 
       if (!esEnteroPositivo(idTexto)) {
@@ -329,7 +347,7 @@
             detalleAutor += " (" + autor.nacionalidad + ")";
           }
           autorEncontradoMsg.textContent = detalleAutor;
-          autorEncontradoMsg.hidden = false;
+          mostrarElemento(autorEncontradoMsg);
         }
       } catch (error) {
         autorSeleccionado = null;
@@ -346,6 +364,8 @@
 
     function agregarAutoriaALista() {
       ocultarElemento(autorErrorMsg);
+      ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
       var idTexto = autorIdInput ? limpiarTexto(autorIdInput.value) : "";
       if (!autorSeleccionado || Number(idTexto) !== Number(autorSeleccionado.id)) {
         mostrarError(autorErrorMsg, "Buscá y confirmá el autor por su ID antes de agregarlo.");
@@ -375,7 +395,9 @@
         autorOrdenInput.value = String(autorias.length + 1);
       }
       ocultarElemento(autorEncontradoMsg);
+      ocultarElemento(autorErrorMsg);
       ocultarElemento(libroErrorMsg);
+      ocultarElemento(libroOkMsg);
       renderAutorias();
     }
 
@@ -386,6 +408,8 @@
       }
       ocultarElemento(libroErrorMsg);
       ocultarElemento(libroOkMsg);
+      ocultarElemento(autorErrorMsg);
+      ocultarElemento(autorEncontradoMsg);
 
       var datosFormulario = {
         titulo: tituloInput.value,
@@ -419,7 +443,7 @@
               formatearAutoresResumen(libroCreado.autores)
             ])
           );
-          tablaLibros.hidden = false;
+          mostrarElemento(tablaLibros);
           ocultarElemento(librosVaciaMsg);
         }
         formLibro.reset();
@@ -430,11 +454,12 @@
         }
         ocultarElemento(autorEncontradoMsg);
         ocultarElemento(autorErrorMsg);
+        ocultarElemento(libroErrorMsg);
         renderAutorias();
         if (libroOkMsg) {
           libroOkMsg.textContent =
             "Libro agregado correctamente: " + libroCreado.titulo + " (ID " + libroCreado.id + ").";
-          libroOkMsg.hidden = false;
+          mostrarElemento(libroOkMsg);
         }
         if (typeof window.renderCatalogo === "function") {
           window.renderCatalogo();
@@ -482,14 +507,15 @@
               clienteCreado.email || ""
             ])
           );
-          tablaClientes.hidden = false;
+          mostrarElemento(tablaClientes);
           ocultarElemento(clientesVaciaMsg);
         }
         formCliente.reset();
+        ocultarElemento(clienteErrorMsg);
         if (clienteOkMsg) {
           clienteOkMsg.textContent =
             "Cliente agregado correctamente: " + clienteCreado.nombre + " (ID " + clienteCreado.id + ").";
-          clienteOkMsg.hidden = false;
+          mostrarElemento(clienteOkMsg);
         }
       } catch (error) {
         mostrarError(
@@ -522,10 +548,11 @@
       }
       try {
         var cliente = await Api.get("/clientes/" + encodeURIComponent(idTexto));
+        ocultarElemento(buscarClienteErrorMsg);
         if (clienteResultadoId) { clienteResultadoId.textContent = String(cliente.id); }
         if (clienteResultadoNombre) { clienteResultadoNombre.textContent = cliente.nombre || ""; }
         if (clienteResultadoEmail) { clienteResultadoEmail.textContent = cliente.email || ""; }
-        if (clienteResultadoPanel) { clienteResultadoPanel.hidden = false; }
+        if (clienteResultadoPanel) { mostrarElemento(clienteResultadoPanel); }
       } catch (error) {
         ocultarElemento(clienteResultadoPanel);
         mostrarError(
@@ -544,6 +571,7 @@
         autorSeleccionado = null;
         ocultarElemento(autorEncontradoMsg);
         ocultarElemento(autorErrorMsg);
+        ocultarElemento(libroErrorMsg);
       });
       autorIdInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -552,7 +580,15 @@
         }
       });
     }
+    if (autorRolSelect) {
+      autorRolSelect.addEventListener("change", function () {
+        ocultarElemento(autorErrorMsg);
+      });
+    }
     if (autorOrdenInput) {
+      autorOrdenInput.addEventListener("input", function () {
+        ocultarElemento(autorErrorMsg);
+      });
       autorOrdenInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
           event.preventDefault();
@@ -574,6 +610,32 @@
     }
     if (formBuscarCliente) {
       formBuscarCliente.addEventListener("submit", manejarBuscarCliente);
+    }
+
+    [tituloInput, isbnInput, precioInput, stockInput, editorialSelect, generoSelect].forEach(function (campo) {
+      if (campo) {
+        var tipoEvento = campo.tagName === "SELECT" ? "change" : "input";
+        campo.addEventListener(tipoEvento, function () {
+          ocultarElemento(libroErrorMsg);
+          ocultarElemento(libroOkMsg);
+        });
+      }
+    });
+
+    [clienteNombreInput, clienteEmailInput].forEach(function (campo) {
+      if (campo) {
+        campo.addEventListener("input", function () {
+          ocultarElemento(clienteErrorMsg);
+          ocultarElemento(clienteOkMsg);
+        });
+      }
+    });
+
+    if (clienteIdBuscarInput) {
+      clienteIdBuscarInput.addEventListener("input", function () {
+        ocultarElemento(buscarClienteErrorMsg);
+        ocultarElemento(clienteResultadoPanel);
+      });
     }
 
     renderAutorias();
