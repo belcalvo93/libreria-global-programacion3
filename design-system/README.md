@@ -2,7 +2,7 @@
 
 Mode: system-only
 Revision: 12
-Approval: pending
+Approval: approved (Belén, 2026-11-13)
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
 > - La revisión 1 (tema claro del parcial) la aprobó la usuaria el 2026-11-10.
@@ -16,8 +16,8 @@ Approval: pending
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
-> - La revisión 12 (2026-11-13, change `lomos-cuero-titulo-gato`, C-06d) pone **lomos de cuero gastado** (textura `lomo-cuero.webp` teñida con el color de cada libro) y muestra el **título del libro junto al gato**, sin fondo, en lugar de la pastilla sobre el gabinete. **Pendiente de aprobación**, junto con la 11 (se aprueban juntas); la última aprobada sigue siendo la 10.
-> - La revisión 11 (2026-11-13, change `pulido-diseno-ux`, C-06c) cambia la marca a **Gatoteca Lunar**, agrega el **lema** bajo el título, ordena el formulario «Libros» en 3 bloques y suma inclinación y sombra a los libros de la estantería al hover o foco. **Pendiente de aprobación** (la da Belén después de verla); hasta entonces la última aprobada es la 10.
+> - La revisión 12 (2026-11-13, change `lomos-cuero-titulo-gato`, C-06d) pone **lomos de cuero gastado** (textura `lomo-cuero.webp` teñida con el color de cada libro) y muestra el **título del libro junto al gato**, sin fondo, en lugar de la pastilla sobre el gabinete. **Aprobada por Belén el 2026-11-13**, junto con la 11; es la revisión vigente.
+> - La revisión 11 (2026-11-13, change `pulido-diseno-ux`, C-06c) cambia la marca a **Gatoteca Lunar**, agrega el **lema** bajo el título, ordena el formulario «Libros» en 3 bloques y suma inclinación y sombra a los libros de la estantería al hover o foco. **Aprobada por Belén el 2026-11-13**, junto con la 12.
 > - La revisión 10 (2026-11-12, change `tema-secciones`) recupera la **estrella fugaz** de la cabecera y pasa las secciones de abajo (Catálogo, Libros, Clientes, Ventas, Historial) a «**cristal nocturno**»: tarjetas azul noche translúcidas con borde dorado tenue, títulos con línea y ✦, formularios en grilla, botones primario/secundario, tablas y mensajes coherentes. No toca la portada ni la estantería. Una segunda pasada (Ventas e Historial) agrega botones secundario/compacto/fantasma, fila de libro, cliente por ID y paginación centrada. **Aprobada por Belén Calvo el 2026-11-12; reemplaza a la 9.**
 > - La revisión 9 fue la anterior aprobada (2026-11-12, por Belén Calvo). Las revisiones 3 a 8 fueron iteraciones intermedias que nunca se aprobaron y quedan reemplazadas por la 9; la última aprobada antes era la 2. La 9 **reemplaza a la 8**: el cielo pasa de estrellas hechas con CSS a la imagen `fondo-noche.webp` con un velo azul noche.
 > - La revisión 8 (2026-11-12) **reemplazó a la 7** (que no se aprobó) con tres cambios: la estantería **sin tarjeta** (el cielo estrellado continuo detrás de toda la portada), la navegación con **marcapáginas colgantes** de una varilla dorada y una **navegación fija** con el título como enlace al inicio. **Pendiente de aprobación.**
