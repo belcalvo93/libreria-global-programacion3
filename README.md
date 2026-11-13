@@ -57,6 +57,14 @@ Abrir http://127.0.0.1:8080 · Comprobar http://127.0.0.1:8080/api/health/ready 
 
 El front llama siempre a `/api/...` (por ejemplo `fetch("/api/libros/")`); nginx lo reenvía al backend sin el prefijo.
 
+## Música de fondo
+
+La página tiene una música ambiental **opcional**: el tema «Midnight in the Gatoteca» (`frontend/public/audio/ambiente.mp3`, 168 s, 96 kbps, ~2 MB, recortado desde el segundo 8 y con fade-in), generado y aportado por Belén Calvo. *(Herramienta de generación y licencia: a confirmar por Belén.)*
+
+- No suena al abrir la página: arranca a volumen bajo con la **primera interacción** (clic, toque o tecla), porque los navegadores bloquean el audio automático.
+- El botón redondo de abajo a la derecha (🔊 / 🔇) la **silencia o la activa**. Si la silenciaste, seguir usando la página no la vuelve a encender.
+- Se pausa sola si cambiás de pestaña y retoma al volver (si no estaba silenciada). No se guarda nada en el navegador: cada visita empieza igual.
+
 ## Uso del frontend: búsqueda por ID
 
 La API del backend no expone endpoints de listado para autores ni para clientes (`GET /autores/` y `GET /clientes/` no existen). Por eso, en las secciones **Libros** (autorías) y **Clientes**, tanto los autores como los clientes se buscan por su **ID** numérico (`GET /api/autores/{id}` y `GET /api/clientes/{id}`). Con los datos iniciales del seed hay autores del `1` al `5` y clientes del `1` al `3`.
