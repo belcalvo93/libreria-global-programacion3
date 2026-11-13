@@ -398,6 +398,8 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
 | C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
 | C-06b | `tema-secciones` | B | transversal | `[x]` hecha y archivada (revisión 10 aprobada); PR por abrir | C-06 | BAJO |
+| C-06c | `pulido-diseno-ux` | B | transversal | `[x]` hecha y archivada (revisión 11 pendiente de aprobación); va en la rama `feat/c-07-limpieza` | C-06b | BAJO |
+| C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha y archivada (revisión 12 pendiente de aprobación); va en la rama `feat/c-07-limpieza` | C-06c | BAJO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
