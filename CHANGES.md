@@ -211,6 +211,10 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/05_reglas_de_negocio.md` (RN-06 precio histórico)
   - `knowledge-base/13_casos_g_y_evidencia.md` G-04, G-05, G-06
 
+### [C-06e] `paginas-tapa-estrella`
+- **Estado**: `[x]` hecho y **archivado**; revisión 13 del design system pendiente de aprobación. Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
+- **Dueño**: B · **Scope**: canto de páginas con `paginas-forma.webp`, tapa de cuero teñida (`tapa-cuero.webp`) y estrella dorada (`estrella-dorada.webp`). Solo CSS e imágenes. Decisión D-49.
+
 ### [C-06d] `lomos-cuero-titulo-gato`
 - **Estado**: `[x]` hecho y **archivado**; revisión 12 del design system aprobada por Belén el 2026-11-13 (junto con la 11). Sale en la misma rama que C-07 (`feat/c-07-limpieza`). No reordena los demás changes.
 - **Dueño**: B · **Scope**: lomos de cuero gastado (`img/lomo-cuero.webp`), título del libro junto al gato sin fondo y ajuste de 320x568. Decisión D-48.
@@ -400,6 +404,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-06b | `tema-secciones` | B | transversal | `[x]` hecha y archivada (revisión 10 aprobada); PR por abrir | C-06 | BAJO |
 | C-06c | `pulido-diseno-ux` | B | transversal | `[x]` hecha y archivada (revisión 11 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06b | BAJO |
 | C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha y archivada (revisión 12 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06c | BAJO |
+| C-06e | `paginas-tapa-estrella` | B | transversal | `[x]` hecha y archivada (revisión 13 pendiente de aprobación); va en la rama `feat/c-07-limpieza` | C-06d | BAJO |
 | C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
 | C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
