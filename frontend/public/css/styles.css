@@ -234,25 +234,25 @@ header {
 }
 
 /* Estrella fugaz (solo se anima con `no-preference`; sin movimiento queda en
-   opacity 0). Cabeza luminosa a la derecha y estela dorada → blanca a la
-   izquierda en una sola capa. z-index -1: detrás del texto y de la nav, delante
-   del cielo (igual que la luna). No ocupa lugar (absolute) ni recibe clics. */
-header::after {
+   opacity 0). Vive en `body::after`, una capa FIJA al viewport (no en la
+   cabecera): así cruza el cielo debajo de la nav en lugar de quedar tapada por
+   la franja (z-index 100) ni recortada por el alto de la cabecera. z-index -1:
+   detrás de todo el contenido y delante del cielo (body::before). Cabeza blanca
+   con brillo y estela dorada→blanca de 11 rem. No ocupa lugar ni recibe clics. */
+body::after {
   content: "";
-  position: absolute;
-  top: 8%;
-  left: 6%;
+  position: fixed;
+  top: calc(var(--alto-cabecera) + var(--alto-nav) + 3dvh);
+  left: 3vw;
   z-index: -1;
-  inline-size: 9rem;
-  block-size: 4px;
-  border-radius: 999px;
+  inline-size: 11rem;
+  block-size: 1.25rem;
   background:
-    radial-gradient(circle at 100% 50%, #ffffff 0 1.5px, rgba(255, 246, 216, 0.9) 3px, transparent 6px),
-    linear-gradient(to right, transparent, rgba(232, 196, 106, 0.55) 55%, var(--magia-estrella));
-  filter: drop-shadow(0 0 4px rgba(255, 224, 140, 0.9));
+    radial-gradient(circle at 100% 50%, #ffffff 0 2px, rgba(255, 246, 216, 0.9) 4px, rgba(255, 224, 140, 0.35) 7px, transparent 10px),
+    linear-gradient(to right, transparent, rgba(232, 196, 106, 0.6) 55%, var(--magia-estrella)) center / 100% 3px no-repeat;
+  filter: drop-shadow(0 0 5px rgba(255, 224, 140, 0.95));
   opacity: 0;
-  transform: rotate(12deg);
-  transform-origin: 0 50%;
+  transform: rotate(10deg);
   pointer-events: none;
 }
 
@@ -1627,8 +1627,8 @@ p:has(> #detalle-venta-total) {
    la etiqueta aparece al instante. Sin `!important`.
    ========================================================================== */
 @media (prefers-reduced-motion: no-preference) {
-  header::after {
-    animation: estrella-fugaz 10s linear 2s infinite;
+  body::after {
+    animation: estrella-fugaz 9s linear 1.5s infinite;
   }
 
   .luna {
@@ -1693,11 +1693,11 @@ p:has(> #detalle-venta-total) {
   }
 
   @keyframes estrella-fugaz {
-    0% { opacity: 0; transform: rotate(12deg) translateX(0); }
-    2% { opacity: 1; }
-    10% { opacity: 1; }
-    14% { opacity: 0; transform: rotate(12deg) translateX(min(48vw, 38rem)); }
-    100% { opacity: 0; transform: rotate(12deg) translateX(min(48vw, 38rem)); }
+    0% { opacity: 0; transform: rotate(10deg) translateX(0); }
+    3% { opacity: 1; }
+    14% { opacity: 1; }
+    17% { opacity: 0; transform: rotate(10deg) translateX(min(62vw, 60rem)); }
+    100% { opacity: 0; transform: rotate(10deg) translateX(min(62vw, 60rem)); }
   }
 
   @keyframes halo-luna {
