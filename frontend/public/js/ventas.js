@@ -46,7 +46,7 @@
     for (var i = 0; i < renglones.length; i++) {
       var numero = i + 1;
       if (!enteroPositivo(renglones[i].libroId)) {
-        return "Elegí el libro " + numero + ".";
+        return "Elegí qué libro va en la fila " + numero + ".";
       }
       if (!enteroPositivo(renglones[i].cantidad)) {
         return "La cantidad del libro " + numero + " tiene que ser un número entero mayor que cero.";
@@ -327,7 +327,7 @@
     precio.p.className = "venta-fila__precio";
     var etiquetaPrecio = document.createElement("span");
     etiquetaPrecio.className = "venta-fila__etiqueta";
-    etiquetaPrecio.textContent = "Precio";
+    etiquetaPrecio.textContent = "Precio del catálogo";
     precio.p.appendChild(etiquetaPrecio);
     precio.p.appendChild(precio.output);
 

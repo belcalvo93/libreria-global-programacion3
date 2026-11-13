@@ -28,7 +28,7 @@ test("validarBorrador exige el ID del cliente y al menos un libro", function () 
 });
 
 test("validarBorrador exige libro elegido y cantidad entera positiva en cada fila", function () {
-  assert.equal(ventas.validarBorrador("2", [{ libroId: "", cantidad: "1" }]), "Elegí el libro 1.");
+  assert.equal(ventas.validarBorrador("2", [{ libroId: "", cantidad: "1" }]), "Elegí qué libro va en la fila 1.");
   assert.match(ventas.validarBorrador("2", [{ libroId: "1", cantidad: "1" }, { libroId: "3", cantidad: "0" }]),
     /cantidad del libro 2/);
   assert.match(ventas.validarBorrador("2", [{ libroId: "1", cantidad: "1.5" }]), /cantidad del libro 1/);
