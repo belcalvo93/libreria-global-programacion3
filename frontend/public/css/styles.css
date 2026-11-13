@@ -1044,9 +1044,17 @@ main > .card {
   block-size: 100%;
   border: 2px solid var(--oro-lomo);
   border-radius: 2px 5px 5px 2px;
-  background:
+  /* Cuero gris teñido con el color del libro (igual que el lomo): brillo dorado,
+     capa oscura al 32 % para el contraste y `tapa-cuero.webp` con overlay. */
+  background-color: var(--lomo-color);
+  background-image:
     radial-gradient(circle at 50% 38%, rgba(232, 196, 106, 0.25), transparent 55%),
-    var(--lomo-color);
+    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
+    url("../img/tapa-cuero.webp");
+  background-size: 100% 100%, 100% 100%, cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-blend-mode: normal, normal, overlay;
   transform: translateZ(calc(var(--libro-prof) / -2)) rotateY(90deg) translateZ(calc(var(--lomo-ancho) / 2));
 }
 
@@ -1058,16 +1066,18 @@ main > .card {
   border-radius: 2px;
 }
 
+/* Estrella dorada (imagen decorativa, sin texto): centrada, ~26 % del ancho de la
+   tapa y con un leve resplandor dorado. */
 .libro__tapa::after {
-  content: "\2726"; /* estrella ornamental */
+  content: "";
   position: absolute;
-  top: 28%;
-  inset-inline: 0;
-  color: var(--oro-lomo);
-  font-size: 1.75rem;
-  line-height: 1;
-  text-align: center;
-  text-shadow: 0 0 0.5rem var(--magia-brillo);
+  top: 24%;
+  left: 50%;
+  inline-size: 26%;
+  aspect-ratio: 117 / 175; /* proporción de estrella-dorada.webp */
+  background: url("../img/estrella-dorada.webp") center / contain no-repeat;
+  filter: brightness(1.2) drop-shadow(0 0 0.5rem rgba(232, 196, 106, 0.85));
+  transform: translateX(-50%);
 }
 
 .libro__portada {
