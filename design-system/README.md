@@ -1,7 +1,7 @@
 # Design system — Gatoteca Lunar
 
 Mode: system-only
-Revision: 15
+Revision: 16
 Approval: pending
 
 > Política «light»: se **reutiliza** el CSS del parcial. No se crea un sistema nuevo ni se piden mockups por change.
@@ -16,6 +16,12 @@ Approval: pending
 >   - la luna es mucho más chica (90 px en móvil y 120 px desde 48rem), completa y sin pisar la navegación;
 >   - el gato se sienta sobre el borde superior derecho del mueble (110 a 140 px) sin pisar el encabezado «Estante»;
 >   - el título de cada lomo va **en blanco, directo sobre el cuero, sin óvalo ni fondo y sin recortes** (nunca «…»), y los lomos son más anchos y más altos y de alturas desparejas a propósito.
+> - La revisión 16 (2026-11-13, C-06h `detalles-finales`, rama `feat/c-06h-detalles`) **pendiente de aprobación de Belén**. No cambia paleta, tipografía ni imágenes:
+>   - **favicon de la luna**: `favicon.ico` (16/32/48 px), `favicon-32.png` y `apple-touch-icon.png` (180 px, sobre azul noche) derivados de `luna.webp`, y `<meta name="theme-color" content="#0e1128">` (el azul de `--magia-franja` / `--color-fondo`; `#0a0e28` no existe entre las variables `--magia-*`);
+>   - **«Saltar al contenido»** (`.saltar`): primer enlace del `<body>`, fuera de pantalla hasta el foco; con foco entra arriba a la izquierda sobre el nav (`z-index` 200), fondo azul noche al 95 %, borde y texto `--color-primario`, foco `--color-foco`. Lleva a `#catalogo` (`tabindex="-1"`, contorno dorado solo con teclado);
+>   - **fundido de la música**: sube de 0 a 0.3 en 1.5 s y baja en 0.6 s antes de pausar (no es visual, se anota por la experiencia);
+>   - **pie**: `padding-bottom` + 4 rem para que el botón de música no tape el texto del pie (verificado a 320 px: 28 px libres).
+>   Mientras la 16 está pendiente, la 15 (C-06g) también sigue pendiente.
 > - La revisión 15 (2026-11-13, C-06g `musica-fondo`, rama `feat/c-06g-musica`) **pendiente de aprobación de Belén**. No cambia paleta, tipografía ni imágenes:
 >   - **botón de música** (`.boton-musica`, sección 15e del CSS): círculo de 44x44 px fijo abajo a la derecha (lejos del nav, la luna y el gato), cristal nocturno (`--magia-franja` con desenfoque, respaldo opaco sin `backdrop-filter`), borde dorado apagado que pasa a `--color-primario` en hover y mientras suena, halo `--magia-brillo` sonando, ícono 🔊/🔇 teñido de dorado con `filter` (los emojis traen colores propios) y foco de 3 px `--color-foco`. Solo su transición de borde y brillo vive en `no-preference`;
 >   - **cola del gato en dos tramos**: la misma `gato.webp` en tres recortes (cuerpo, base de la cola del 65 al 85 % y punta del 83 al 100 %, articulada en 18 % 84 %). En calma la punta repite el vaivén de la base con 0.4 s de retraso (onda) y cada tanto se enrosca; con el cursor a menos de 1.2 altos del gato da golpecitos (`punta-golpe`, 1.6 s) y a menos de 0.4 toda la cola se agita (`cola-latigo`, 1.2 s). Vuelve a la calma al terminar el ciclo, sin saltos. Con «reducir movimiento» queda quieta.
@@ -94,6 +100,14 @@ Approval: pending
 | Archivo | Formato | Uso | Origen |
 |---|---|---|---|
 | `frontend/public/audio/ambiente.mp3` | MP3, 168 s, 96 kbps, ~2 MB (recortado desde el segundo 8, con fade-in) | música de fondo opcional (`#musica-fondo`, botón `#boton-musica`) | **Origen y licencia: tema «Midnight in the Gatoteca», generado por Belén con Gemini Hydrogen (plan pago); uso en este trabajo académico sin fines comerciales.** |
+
+## Íconos de la pestaña (revisión 16)
+
+| Archivo | Tamaño | Uso | Origen |
+|---|---|---|---|
+| `frontend/public/favicon.ico` | 16, 32 y 48 px en un archivo, fondo transparente | ícono de la pestaña (`<link rel="icon">`, también `/favicon.ico` por defecto) | **Derivado de `img/luna.webp`**: recorte cuadrado centrado sobre el disco de la luna (caja 40,40–340,340 de 380x380), reducido con Lanczos (Pillow). Sin dibujo nuevo |
+| `frontend/public/favicon-32.png` | 32x32, transparente | ícono PNG para navegadores que lo prefieren | igual que `favicon.ico` |
+| `frontend/public/apple-touch-icon.png` | 180x180, fondo `#0e1128` | ícono al guardar la página en iOS (rellena la transparencia con negro, por eso lleva fondo) | el mismo recorte de `luna.webp` al 84 % sobre azul noche |
 
 ## Tokens (`:root`)
 
