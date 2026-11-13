@@ -26,7 +26,10 @@
       <div class="estante__escena">
         <h2 id="estante-titulo">Estantería</h2>
         <p id="estante-etiqueta" class="estante__etiqueta" aria-hidden="true" hidden></p>
-        <img class="gato" src="img/gato.webp" width="364" height="960" alt="" aria-hidden="true" decoding="async">
+        <span class="gato" aria-hidden="true">
+          <img class="gato__cuerpo" src="img/gato.webp" width="364" height="960" alt="" decoding="async">
+          <span class="gato__cola"></span>
+        </span>
         <div class="estante__mueble">
           <ul class="estante__repisa" aria-label="Libros de la estantería"></ul>
         </div>
@@ -170,10 +173,7 @@
             </table>
           </div>
         </fieldset>
-        <fieldset class="form__bloque">
-          <legend>3. Guardar</legend>
-          <button id="libro-guardar" class="btn btn--ancho" type="submit">Agregar libro</button>
-        </fieldset>
+        <button id="libro-guardar" class="btn btn--ancho" type="submit">Agregar libro</button>
       </form>
       <p id="mensaje-error-libro" class="mensaje mensaje--error" role="alert" hidden>No se pudo agregar el libro. Revisá los datos.</p>
       <p id="mensaje-ok-libro" class="mensaje mensaje--ok" hidden>Libro agregado correctamente.</p>
