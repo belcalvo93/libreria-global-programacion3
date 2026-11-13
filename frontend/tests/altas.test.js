@@ -196,3 +196,19 @@ test("formatearPrecio y formatearAutoresResumen formatean respuestas de la API",
   assert.equal(altas.formatearAutoresResumen([]), "");
   assert.equal(altas.formatearAutoresResumen(null), "");
 });
+
+test("siguienteOrden sugiere 1 con la lista vacía o inválida", function () {
+  assert.equal(altas.siguienteOrden([]), 1);
+  assert.equal(altas.siguienteOrden(undefined), 1);
+});
+
+test("siguienteOrden sugiere el siguiente número libre después de cada autoría", function () {
+  assert.equal(altas.siguienteOrden([{ orden: 1 }]), 2);
+  assert.equal(altas.siguienteOrden([{ orden: 1 }, { orden: 2 }]), 3);
+});
+
+test("siguienteOrden rellena huecos y respeta órdenes escritos a mano", function () {
+  assert.equal(altas.siguienteOrden([{ orden: 2 }]), 1);
+  assert.equal(altas.siguienteOrden([{ orden: 1 }, { orden: 3 }]), 2);
+  assert.equal(altas.siguienteOrden([{ orden: "1" }, { orden: "2" }]), 3);
+});

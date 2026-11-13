@@ -102,69 +102,79 @@
     <section id="libros" class="card">
       <h2>Libros</h2>
       <form id="form-libro" class="form" novalidate>
-        <div class="form__grupo">
-          <label for="libro-titulo">Título</label>
-          <input type="text" id="libro-titulo" name="libro-titulo">
-        </div>
-        <div class="form__grupo">
-          <label for="libro-isbn">ISBN</label>
-          <input type="text" id="libro-isbn" name="libro-isbn">
-        </div>
-        <div class="form__grupo">
-          <label for="libro-precio">Precio</label>
-          <input type="number" id="libro-precio" name="libro-precio" min="0.01" step="0.01">
-        </div>
-        <div class="form__grupo">
-          <label for="libro-stock">Stock</label>
-          <input type="number" id="libro-stock" name="libro-stock" min="0" step="1">
-        </div>
-        <div class="form__grupo">
-          <label for="libro-editorial">Editorial</label>
-          <select id="libro-editorial" name="libro-editorial">
-            <option value="">Elegí una editorial</option>
-          </select>
-        </div>
-        <div class="form__grupo">
-          <label for="libro-genero">Género</label>
-          <select id="libro-genero" name="libro-genero">
-            <option value="">Sin clasificar</option>
-          </select>
-        </div>
-        <div class="form__grupo">
-          <label for="autor-id-buscar">ID del autor</label>
-          <input type="number" id="autor-id-buscar" name="autor-id-buscar" min="1" step="1">
-          <button id="autor-buscar" class="btn" type="button">Buscar autor</button>
-        </div>
-        <div class="form__grupo">
-          <label for="autor-rol">Rol de autoría</label>
-          <select id="autor-rol" name="autor-rol">
-            <option value="autor">autor</option>
-            <option value="coautor">coautor</option>
-            <option value="traductor">traductor</option>
-            <option value="ilustrador">ilustrador</option>
-          </select>
-          <label for="autor-orden">Orden</label>
-          <input type="number" id="autor-orden" name="autor-orden" min="1" step="1" value="1">
-          <button id="autor-agregar" class="btn" type="button">Agregar autoría</button>
-        </div>
-        <p id="autor-encontrado" class="mensaje" role="status" hidden></p>
-        <p id="mensaje-error-autor" class="mensaje mensaje--error" role="alert" hidden></p>
-        <button id="libro-guardar" class="btn" type="submit">Agregar libro</button>
+        <fieldset class="form__bloque">
+          <legend>1. Datos del libro</legend>
+          <div class="form__grupo">
+            <label for="libro-titulo">Título</label>
+            <input type="text" id="libro-titulo" name="libro-titulo">
+          </div>
+          <div class="form__grupo">
+            <label for="libro-isbn">ISBN</label>
+            <input type="text" id="libro-isbn" name="libro-isbn">
+          </div>
+          <div class="form__grupo">
+            <label for="libro-precio">Precio</label>
+            <input type="number" id="libro-precio" name="libro-precio" min="0.01" step="0.01">
+          </div>
+          <div class="form__grupo">
+            <label for="libro-stock">Stock</label>
+            <input type="number" id="libro-stock" name="libro-stock" min="0" step="1">
+          </div>
+          <div class="form__grupo">
+            <label for="libro-editorial">Editorial</label>
+            <select id="libro-editorial" name="libro-editorial">
+              <option value="">Elegí una editorial</option>
+            </select>
+          </div>
+          <div class="form__grupo">
+            <label for="libro-genero">Género</label>
+            <select id="libro-genero" name="libro-genero">
+              <option value="">Sin clasificar</option>
+            </select>
+          </div>
+        </fieldset>
+        <fieldset class="form__bloque form__bloque--autores">
+          <legend>2. Autores</legend>
+          <p class="texto-apoyo">Buscá al autor por su ID, elegí su rol y agregalo. Tiene que haber al menos uno.</p>
+          <div class="form__grupo">
+            <label for="autor-id-buscar">ID del autor</label>
+            <input type="number" id="autor-id-buscar" name="autor-id-buscar" min="1" step="1">
+            <button id="autor-buscar" class="btn btn--secundario" type="button">Buscar autor</button>
+          </div>
+          <div class="form__grupo">
+            <label for="autor-rol">Rol de autoría</label>
+            <select id="autor-rol" name="autor-rol">
+              <option value="autor">autor</option>
+              <option value="coautor">coautor</option>
+              <option value="traductor">traductor</option>
+              <option value="ilustrador">ilustrador</option>
+            </select>
+            <label for="autor-orden">Orden</label>
+            <input type="number" id="autor-orden" name="autor-orden" min="1" step="1" value="1">
+            <button id="autor-agregar" class="btn btn--secundario" type="button">Agregar autoría</button>
+          </div>
+          <p id="autor-encontrado" class="mensaje" role="status" hidden></p>
+          <p id="mensaje-error-autor" class="mensaje mensaje--error" role="alert" hidden></p>
+          <p id="mensaje-libro-sin-autorias" class="mensaje">Todavía no agregaste autorías al libro.</p>
+          <div class="tabla-contenedor">
+            <table id="tabla-libro-autorias" class="tabla" hidden>
+              <thead>
+                <tr>
+                  <th scope="col">Autor</th>
+                  <th scope="col">Rol</th>
+                  <th scope="col">Orden</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </fieldset>
+        <fieldset class="form__bloque">
+          <legend>3. Guardar</legend>
+          <button id="libro-guardar" class="btn btn--ancho" type="submit">Agregar libro</button>
+        </fieldset>
       </form>
-      <p id="mensaje-libro-sin-autorias" class="mensaje">Todavía no agregaste autorías al libro.</p>
-      <div class="tabla-contenedor">
-        <table id="tabla-libro-autorias" class="tabla" hidden>
-          <thead>
-            <tr>
-              <th scope="col">Autor</th>
-              <th scope="col">Rol</th>
-              <th scope="col">Orden</th>
-              <th scope="col">Acción</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
       <p id="mensaje-error-libro" class="mensaje mensaje--error" role="alert" hidden>No se pudo agregar el libro. Revisá los datos.</p>
       <p id="mensaje-ok-libro" class="mensaje mensaje--ok" hidden>Libro agregado correctamente.</p>
       <div class="tabla-contenedor">
