@@ -67,8 +67,8 @@ Plan completo en [CHANGES.md](CHANGES.md) (13 changes, 4 fases). **Leelo y revis
 - **Fase 1** — C-01 `imagen-frontend-docker` (B, [x] PR #1) · C-02 `cliente-http-api-js` (B, [x] PR #4).
 - **Fase 2** — C-03 `catalogo-api` (H, [x] PR #19) · C-04 `altas-libros-clientes` (R, [x] PR #22) · C-05 `ventas-historial` (J, [x] PR #23) · C-06 `estante-estetica` (B, [x] PRs #20, #25, #27, #28, #29) · C-07 `limpieza-datos-persistencia` (B, [x] PR #26).
 - **Fase 3** — C-09 `cors-backend` (E, [x] PR #18) · C-08 `despliegue-frontend-easypanel` (B, [x] desplegado) · C-10 `apilibreria-desde-monorepo` (E, [x] PR #21).
-- **Fase 4** — C-12 `deploy-md` (B/R, [x] rama `docs/c-12-deploy-readme`) · C-11 `evidencia-casos-g` (todos, en recolección) · C-13 `zip-entrega` (E, pendiente).
-- **Camino crítico**: Completado satisfactoriamente desde C-01 hasta C-12. Restan únicamente la recolección de evidencias finales (C-11) y el empaquetado del ZIP de entrega (C-13).
+- **Fase 4** — C-12 `deploy-md` (B/R, [x] PR #30) · C-11 `evidencia-casos-g` (todos, [x] PRs #31 a #34, G-01 a G-07 en `evidencia/`) · C-13 `zip-entrega` (E, [x] `herramientas/armar_zip.sh` → `Grupo2_Git_Push_&_Pray.zip`).
+- **Camino crítico**: completado de C-01 a C-13. El ZIP se arma con `bash herramientas/armar_zip.sh` (desde `main`, fuera del repo) y se verifica solo; queda subirlo al aula y mantener la URL pública funcionando durante la corrección.
 
 ---
 
