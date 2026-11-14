@@ -46,7 +46,7 @@ C-09 cors-backend [x] (E) ── sin dependencias de código ──────�
                               C-08 + C-10 ──────────────────────┼── C-12 deploy-md [x] (B)
                               C-03,C-04,C-05 + C-08 + C-10 ─────┴── C-11 evidencia-casos-g [x] (todos, junta E)
                                                                          │
-                                          C-11 + C-12 ───────────────── C-13 zip-entrega (E)
+                                          C-11 + C-12 ───────────────── C-13 zip-entrega [x] (E)
 ```
 
 Notas de dependencia:
@@ -387,7 +387,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/01_vision_y_objetivos.md` §Demostración mínima
 
 ### [C-13] `zip-entrega`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecha (13/11), archivada (`openspec/changes/archive/2026-11-13-zip-entrega/`). Script `herramientas/armar_zip.sh` (`git archive` desde `main` + verificación de obligatorios, prohibidos y secretos); genera `Grupo2_Git_Push_&_Pray.zip` en la carpeta padre del repo (fuera del repositorio), sin `backend/DEPLOY.md` ni `backend/evidencia/`
 - **Dueño**: E (Elías) · **Ej.**: 5 · US-5.5
 - **Scope**:
   - ZIP por grupo con `frontend/`, `backend/`, `README.md`, `DEPLOY.md` y `evidencia/`, incluyendo Dockerfiles, configuración versionada de nginx y archivos de ejemplo de variables.
@@ -426,7 +426,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[x]` hecha (12/11), archivada | C-09, C-08 | ALTO |
 | C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[x]` hecha (PRs #31, #32, #33 y G-07) | C-03, C-04, C-05, C-08, C-10 | BAJO |
 | C-12 | `deploy-md` | B | 5 | `[x]` hecha (PR #30, `docs/c-12-deploy-readme`) | C-08, C-10 | BAJO |
-| C-13 | `zip-entrega` | E | 5 | `[ ]` | C-11, C-12 | MEDIO |
+| C-13 | `zip-entrega` | E | 5 | `[x]` hecha (13/11), archivada · `herramientas/armar_zip.sh` → `Grupo2_Git_Push_&_Pray.zip` | C-11, C-12 | MEDIO |
 
 **Totales**: 13 changes en 4 fases · 6 gates de paralelismo (GATE 0 a GATE 6, con 2 forks) · camino crítico de 5 changes terminando en C-07.
 
