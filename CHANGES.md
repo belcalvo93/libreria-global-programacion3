@@ -32,19 +32,19 @@ C-01 imagen-frontend-docker [x]  (B)
  │     ├── C-03 catalogo-api [x] (H, G-01)
  │     │     ├── C-06 estante-estetica [x] (B, archivado; PR por abrir)
  │     │     └──┐
- │     ├── C-04 altas-libros-clientes (R, G-02/G-03) ──┤  (aviso blando a C-03: window.renderCatalogo)
- │     └── C-05 ventas-historial (J, G-04/G-05/G-06) ──┤
+ │     ├── C-04 altas-libros-clientes [x] (R, G-02/G-03) ──┤  (aviso blando a C-03: window.renderCatalogo)
+ │     └── C-05 ventas-historial [x] (J, G-04/G-05/G-06) ──┤
  │                                                      │
- │        C-03 + C-04 + C-05 mergeados ─────────────────┼── C-07 limpieza-datos-persistencia (B)  ★ ÚLTIMA del camino crítico
+ │        C-03 + C-04 + C-05 mergeados ─────────────────┼── C-07 limpieza-datos-persistencia [x] (B)  ★ ÚLTIMA del camino crítico
  │                                                      │
- │        C-03 + C-04 + C-05 mergeados ─────────────────┴── C-08 despliegue-frontend-easypanel (B)
+ │        C-03 + C-04 + C-05 mergeados ─────────────────┴── C-08 despliegue-frontend-easypanel [x] (B)
  │                                                              │
 C-09 cors-backend [x] (E) ── sin dependencias de código ──────────┤
  │                                                              ▼
  └────────────────────────────────────────── C-10 apilibreria-desde-monorepo [x] (E)   [necesita C-09 y el dominio de C-08]
                                                                 │
                               C-08 + C-10 ──────────────────────┼── C-12 deploy-md [x] (B)
-                              C-03,C-04,C-05 + C-08 + C-10 ─────┴── C-11 evidencia-casos-g (todos, junta E)
+                              C-03,C-04,C-05 + C-08 + C-10 ─────┴── C-11 evidencia-casos-g [x] (todos, junta E)
                                                                          │
                                           C-11 + C-12 ───────────────── C-13 zip-entrega (E)
 ```
@@ -72,15 +72,15 @@ GATE 2: C-03 ✓ (catálogo mergeado)
   → C-06 estante-estetica                    [B]
 
 GATE 3: C-03 ✓ + C-04 ✓ + C-05 ✓            ← FORK de cierre
-  → C-07 limpieza-datos-persistencia         [B]
-  → C-08 despliegue-frontend-easypanel       [B — con C-07 mergeado ANTES del deploy final del vie 13 noche]
+  → C-07 limpieza-datos-persistencia [x]     [B]
+  → C-08 despliegue-frontend-easypanel [x]   [B — con C-07 mergeado ANTES del deploy final del vie 13 noche]
 
 GATE 4: C-08 ✓ (dominio del front) + C-09 ✓ (CORS)
-  → C-10 apilibreria-desde-monorepo          [E]
+  → C-10 apilibreria-desde-monorepo [x]      [E]
 
 GATE 5: C-08 ✓ + C-10 ✓ (vie 13 noche → sáb 14)
   → C-12 deploy-md [x]                      [B]
-  → C-11 evidencia-casos-g                   [H: G-01 · R: G-02, G-03 · J: G-04, G-05, G-06 · B: G-07 imagen · E: G-07 deploy y recolección]
+  → C-11 evidencia-casos-g [x]               [H: G-01 · R: G-02, G-03 · J: G-04, G-05, G-06 · B: G-07 imagen · E: G-07 deploy y recolección]
 
 GATE 6: C-11 ✓ + C-12 ✓
   → C-13 zip-entrega                         [E]
@@ -316,7 +316,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/03_actores_y_roles.md` §RBAC (mitigaciones: backend no expuesto, `extra="forbid"`)
 
 ### [C-08] `despliegue-frontend-easypanel`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecha en Easypanel el 13/11 y archivada en OpenSpec (`openspec/changes/archive/2026-11-13-despliegue-frontend-easypanel/`; spec en `openspec/specs/despliegue-frontend/spec.md`). `frontend` despliega `main` desde `/frontend` (commit `4af13ed`), dominio público `https://grupo2-elias-frontend.ugpvou.easypanel.host/`, proxy `/api/` hacia `apilibreria:8000` y `/api/health/ready` = 200 (evidencia `evidencia/G-07_frontend_*`).
 - **Dueño**: B (Belén) · **Ej.**: 5 · US-5.3 · **Caso**: G-07 (imagen)
 - **Scope**:
   - Servicio App `frontend` en el proyecto `grupo2-elias`: repo `belcalvo93/libreria-global-programacion3`, rama `main`, Build Path `/frontend`, builder Dockerfile (`Dockerfile`).
@@ -370,7 +370,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/01_vision_y_objetivos.md` (consigna y entrega)
 
 ### [C-11] `evidencia-casos-g`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecha: evidencias de G-01 (PR #31), G-02 y G-03 (PR #32), G-04, G-05 y G-06 (PR #33), y G-07 backend y frontend reunidas en `evidencia/`.
 - **Dueño**: todos ejecutan sus casos; **E** junta la evidencia en `evidencia/` (carpeta aún inexistente en la raíz)
 - **Scope**:
   - Ejecutar desde la **URL pública** con datos ficticios: G-01 (H), G-02 y G-03 (R), G-04, G-05 y G-06 (J), G-07 (B imagen / E deploy).
@@ -410,22 +410,22 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
 | C-01 | `imagen-frontend-docker` | B | 4 | `[x]` hecha (PR #1) | — | BAJO |
 | C-02 | `cliente-http-api-js` | B | 1 (técnica) | `[x]` hecha (PR #4), retroactivo archivado | C-01 | ALTO |
 | C-03 | `catalogo-api` | H | 1 · G-01 | `[x]` hecha (PR #19), archivada | C-02 | MEDIO |
-| C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[x]` hecha y archivada; PR por abrir (falta prueba E2E detrás de nginx) | C-02 (blanda C-03) | MEDIO |
-| C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[ ]` | C-02 | MEDIO |
-| C-06 | `estante-estetica` | B | transversal | `[x]` hecha y archivada (revisión 9 aprobada); PR por abrir | C-03 | MEDIO |
-| C-06b | `tema-secciones` | B | transversal | `[x]` hecha y archivada (revisión 10 aprobada); PR por abrir | C-06 | BAJO |
-| C-06c | `pulido-diseno-ux` | B | transversal | `[x]` hecha y archivada (revisión 11 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06b | BAJO |
-| C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha y archivada (revisión 12 aprobada el 2026-11-13); va en la rama `feat/c-07-limpieza` | C-06c | BAJO |
-| C-06e | `paginas-tapa-estrella` | B | transversal | `[x]` hecha y archivada (revisión 13 aprobada el 2026-11-13; páginas con imagen descartadas, D-51); va en la rama `feat/c-07-limpieza` | C-06d | BAJO |
-| C-06f | `pulido-visual` | E | transversal | `[x]` hecha y archivada (retroactivo; revisión 14 aprobada por Belén el 2026-11-13); PR de `feat/pulido-visual` | C-07 | BAJO |
-| C-06g | `musica-fondo` | B | transversal | `[x]` hecha y archivada (revisión 15 aprobada el 2026-11-13); PR de `feat/c-06g-musica` | C-06f | BAJO |
-| C-06h | `detalles-finales` | B | transversal | `[x]` hecha y archivada (revisión 16 aprobada el 2026-11-13); PR de `feat/c-06h-detalles` | C-06g | BAJO |
-| C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha y archivada; PR por abrir | C-03, C-04, C-05 | ALTO |
-| C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[ ]` | C-01, C-02, C-03, C-04, C-05 | ALTO |
+| C-04 | `altas-libros-clientes` | R | 2 · G-02, G-03 | `[x]` hecha (PR #22), archivada | C-02 (blanda C-03) | MEDIO |
+| C-05 | `ventas-historial` | J | 3 · G-04, G-05, G-06 | `[x]` hecha (PR #23), archivada | C-02 | MEDIO |
+| C-06 | `estante-estetica` | B | transversal | `[x]` hecha (PR #20), archivada (revisión 9 aprobada) | C-03 | MEDIO |
+| C-06b | `tema-secciones` | B | transversal | `[x]` hecha (PR #25), archivada (revisión 10 aprobada) | C-06 | BAJO |
+| C-06c | `pulido-diseno-ux` | B | transversal | `[x]` hecha (PR #26), archivada (revisión 11 aprobada el 2026-11-13) | C-06b | BAJO |
+| C-06d | `lomos-cuero-titulo-gato` | B | transversal | `[x]` hecha (PR #26), archivada (revisión 12 aprobada el 2026-11-13) | C-06c | BAJO |
+| C-06e | `paginas-tapa-estrella` | B | transversal | `[x]` hecha (PR #26), archivada (revisión 13 aprobada el 2026-11-13; páginas con imagen descartadas, D-51) | C-06d | BAJO |
+| C-06f | `pulido-visual` | E | transversal | `[x]` hecha (PR #27), archivada (retroactivo; revisión 14 aprobada por Belén el 2026-11-13) | C-07 | BAJO |
+| C-06g | `musica-fondo` | B | transversal | `[x]` hecha (PR #28), archivada (revisión 15 aprobada el 2026-11-13) | C-06f | BAJO |
+| C-06h | `detalles-finales` | B | transversal | `[x]` hecha (PR #29), archivada (revisión 16 aprobada el 2026-11-13) | C-06g | BAJO |
+| C-07 | `limpieza-datos-persistencia` | B | cierre del front | `[x]` hecha (PR #26), archivada | C-03, C-04, C-05 | ALTO |
+| C-08 | `despliegue-frontend-easypanel` | B | 5 · G-07 | `[x]` hecha (13/11), archivada | C-01, C-02, C-03, C-04, C-05 | ALTO |
 | C-09 | `cors-backend` | E | 5 | `[x]` hecha (PR #18), archivada | — | ALTO |
 | C-10 | `apilibreria-desde-monorepo` | E | 5 · G-07 | `[x]` hecha (12/11), archivada | C-09, C-08 | ALTO |
-| C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[ ]` | C-03, C-04, C-05, C-08, C-10 | BAJO |
-| C-12 | `deploy-md` | B | 5 | `[x]` hecha (rama `docs/c-12-deploy-readme`) | C-08, C-10 | BAJO |
+| C-11 | `evidencia-casos-g` | todos / E | G-01..G-07 | `[x]` hecha (PRs #31, #32, #33 y G-07) | C-03, C-04, C-05, C-08, C-10 | BAJO |
+| C-12 | `deploy-md` | B | 5 | `[x]` hecha (PR #30, `docs/c-12-deploy-readme`) | C-08, C-10 | BAJO |
 | C-13 | `zip-entrega` | E | 5 | `[ ]` | C-11, C-12 | MEDIO |
 
 **Totales**: 13 changes en 4 fases · 6 gates de paralelismo (GATE 0 a GATE 6, con 2 forks) · camino crítico de 5 changes terminando en C-07.

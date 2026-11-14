@@ -1,0 +1,50 @@
+Caso G-07 — Despliegue del frontend y build de la imagen (change C-08: despliegue-frontend-easypanel)
+Fecha: 2026-11-13
+Servicio: grupo2-elias / frontend (Easypanel)
+
+1) Configuracion del servicio en Easypanel (sin valores sensibles)
+   - Proyecto: grupo2-elias
+   - Servicio: frontend (App)
+   - Fuente: GitHub belcalvo93/libreria-global-programacion3, rama main, Build Path /frontend, Dockerfile Dockerfile
+   - Imagen base: nginx:1.30-alpine
+   - Variables de entorno (solo nombres): API_UPSTREAM (apunta al servicio interno apilibreria en el puerto 8000, sin esquema ni barra final)
+   - Dominio publico HTTPS: https://grupo2-elias-frontend.ugpvou.easypanel.host/ -> destino interno HTTP puerto 80
+
+2) Construccion de la imagen Docker (G-07 — Build de la imagen del front)
+   - Ultimo despliegue verificado en Easypanel:
+     "Deploy service: Merge pull request #29 from belcalvo93/feat/c-06h-detalles" (commit 4af13ed)
+   - Etapas ejecutadas en el log de construccion (ver G-07_frontend_build_log.png):
+     #5 resolve docker.io/library/nginx:1.30-alpine@sha256:583b7f2fce1cdb8da5ad5c39ebd3c33b98b87d493190e548bdee1fa8c619c311 0.1s done
+     #6 [2/3] COPY public/ /usr/share/nginx/html/ -> DONE 0.1s
+     #7 [3/3] COPY default.conf.template /etc/nginx/templates/default.conf.template -> DONE 0.0s
+     #8 exporting to image -> naming to docker.io/easypanel/grupo2-elias/frontend:latest done
+     ### Success (Fri, 13 Nov 2026 07:32:22 GMT)
+
+3) Acceso publico por HTTPS al frontend
+   $ curl -sI https://grupo2-elias-frontend.ugpvou.easypanel.host/
+   HTTP/1.1 200 OK
+   Accept-Ranges: bytes
+   Content-Length: 18561
+   Content-Type: text/html
+   Server: nginx/1.30.6
+
+4) Salud del backend a traves del proxy reverso nginx (/api/health/ready = 200)
+   $ curl -si https://grupo2-elias-frontend.ugpvou.easypanel.host/api/health/ready
+   HTTP/1.1 200 OK
+   Content-Length: 30
+   Content-Type: application/json
+   Server: nginx/1.30.6
+   Vary: Origin
+
+   {"estado":"listo","base":"ok"}
+
+   - Verificado tambien desde el navegador (DevTools -> Network y Console, ver G-07_frontend_https_health.png):
+     Request URL: https://grupo2-elias-frontend.ugpvou.easypanel.host/api/health/ready
+     Request Method: GET
+     Status Code: 200 OK
+     Response JSON: {"estado":"listo","base":"ok"}
+
+5) Capturas adjuntas en evidencia/
+   - G-07_frontend_https_health.png: aplicacion cargada por HTTPS en https://grupo2-elias-frontend.ugpvou.easypanel.host/ y peticion GET /api/health/ready devolviendo 200 OK con {"estado":"listo","base":"ok"}.
+   - G-07_frontend_deployments.png: historial de implementaciones exitosas del servicio grupo2-elias / frontend en Easypanel.
+   - G-07_frontend_build_log.png: log de construccion de la imagen Docker (nginx:1.30-alpine, COPY public/, COPY default.conf.template y exportacion de la imagen con estado Success).
