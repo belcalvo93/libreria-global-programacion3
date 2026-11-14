@@ -29,11 +29,15 @@ El ZIP SHALL contener solo `frontend/`, `backend/`, `README.md`, `DEPLOY.md` y `
 - **THEN** la verificación termina con código distinto de 0 e informa en español qué falta
 
 ### Requirement: El ZIP no lleva contenido prohibido
-El ZIP MUST NOT contener archivos `.env` (nombre `.env` o terminado en `.env`, salvo `env.example`), `.venv/`, `node_modules/`, `__pycache__/`, `backend/DEPLOY.md`, `backend/evidencia/`, `openspec/` ni `knowledge-base/`.
+El ZIP MUST NOT contener archivos `.env` (nombre `.env` o terminado en `.env`, salvo `env.example`), `.venv/`, `node_modules/`, `__pycache__/`, `backend/DEPLOY.md`, la evidencia del despliegue anterior del backend (`backend/evidencia/vps/`, `backend/evidencia/imagen-local.txt`, `backend/evidencia/integracion.txt`), `openspec/` ni `knowledge-base/`. Los `backend/evidencia/C-07_*.txt` (cantidad fija de consultas, citados en `backend/README.md`) SHALL incluirse.
 
 #### Scenario: Restos del TP previo excluidos
 - **WHEN** se arma el ZIP desde `main`
-- **THEN** no contiene `backend/DEPLOY.md` ni `backend/evidencia/`, aunque sigan versionados en el repo
+- **THEN** no contiene `backend/DEPLOY.md` ni la evidencia del despliegue anterior del backend, aunque sigan versionados en el repo
+
+#### Scenario: Evidencia de C-07 del backend incluida
+- **WHEN** se arma el ZIP desde `main`
+- **THEN** contiene `backend/evidencia/C-07_consultas.txt`, `C-07_libros.txt` y `C-07_ventas.txt`, así el enlace de `backend/README.md` a esa carpeta lleva a la evidencia de consultas
 
 #### Scenario: Contenido prohibido detectado
 - **WHEN** se verifica un ZIP que contiene un `.env` o `backend/DEPLOY.md`

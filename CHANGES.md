@@ -387,7 +387,7 @@ Cadena de entrega (corre en paralelo y se cierra con evidencia y ZIP): `C-09 →
   - `knowledge-base/01_vision_y_objetivos.md` §Demostración mínima
 
 ### [C-13] `zip-entrega`
-- **Estado**: `[x]` hecha (13/11), archivada (`openspec/changes/archive/2026-11-13-zip-entrega/`). Script `herramientas/armar_zip.sh` (`git archive` desde `main` + verificación de obligatorios, prohibidos y secretos); genera `Grupo2_Git_Push_&_Pray.zip` en la carpeta padre del repo (fuera del repositorio), sin `backend/DEPLOY.md` ni `backend/evidencia/`
+- **Estado**: `[x]` hecha (13/11), archivada (`openspec/changes/archive/2026-11-13-zip-entrega/`). Script `herramientas/armar_zip.sh` (`git archive` desde `main` + verificación de obligatorios, prohibidos y secretos); genera `Grupo2_Git_Push_&_Pray.zip` en la carpeta padre del repo (fuera del repositorio), sin `backend/DEPLOY.md` ni la evidencia del despliegue anterior (`backend/evidencia/vps/`, `imagen-local.txt`, `integracion.txt`); sí incluye los `backend/evidencia/C-07_*.txt`, que cita `backend/README.md`
 - **Dueño**: E (Elías) · **Ej.**: 5 · US-5.5
 - **Scope**:
   - ZIP por grupo con `frontend/`, `backend/`, `README.md`, `DEPLOY.md` y `evidencia/`, incluyendo Dockerfiles, configuración versionada de nginx y archivos de ejemplo de variables.

@@ -29,7 +29,14 @@ PREFIJO="Grupo2_Git_Push_&_Pray"
 # Lo que pide la consigna (y nada más).
 CONTENIDO=(frontend backend README.md DEPLOY.md evidencia)
 # Restos del despliegue del TP previo (URL vieja): siguen en el repo, no en el ZIP.
-EXCLUIDOS=(":(exclude)backend/DEPLOY.md" ":(exclude)backend/evidencia")
+# De backend/evidencia/ SÍ van los C-07_*.txt (cantidad fija de consultas, sin
+# N+1), que cita backend/README.md; el resto es del despliegue anterior.
+EXCLUIDOS=(
+  ":(exclude)backend/DEPLOY.md"
+  ":(exclude)backend/evidencia/vps"
+  ":(exclude)backend/evidencia/imagen-local.txt"
+  ":(exclude)backend/evidencia/integracion.txt"
+)
 
 OBLIGATORIOS=(
   README.md
@@ -42,6 +49,9 @@ OBLIGATORIOS=(
   backend/env.example
   backend/requirements.txt
   backend/alembic.ini
+  backend/evidencia/C-07_consultas.txt
+  backend/evidencia/C-07_libros.txt
+  backend/evidencia/C-07_ventas.txt
 )
 CASOS_G=(G-01 G-02 G-03 G-04 G-05 G-06 G-07)
 
@@ -163,7 +173,8 @@ verificar() {
     -e '(^|/)__pycache__/' \
     -e '\.pyc$' \
     -e '^backend/DEPLOY\.md$' \
-    -e '^backend/evidencia/' \
+    -e '^backend/evidencia/vps/' \
+    -e '^backend/evidencia/(imagen-local|integracion)\.txt$' \
     -e '^openspec/' \
     -e '^knowledge-base/' \
     "$tmp/entradas.txt" | grep -v -E '(^|/)env\.example$' || true)"
